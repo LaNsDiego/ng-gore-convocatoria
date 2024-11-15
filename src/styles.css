@@ -1,0 +1,149 @@
+/* You can add global styles to this file, and also import other style files */
+/* @import "primeng/resources/themes/lara-light-blue/theme.css"; */
+/* @import "assets/themes/mytheme/theme.scss"; */
+
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
+/* @import "primeng/resources/themes/mdc-light-deeppurple/theme.css"; */
+@import "primeng/resources/primeng.css";
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+body{
+  margin: 0;
+  /* background-color: var(--blue-50); */
+}
+.p-sidebar-left {
+  background: #1b232d;
+  /* width: 21em; */
+}
+.p-sidebar {
+  color: var(--surface-ground);
+}
+.p-menu .p-submenu-header {
+  color: var(--surface-ground);
+}
+.p-sidebar .p-sidebar-header .p-sidebar-close, .p-sidebar .p-sidebar-header .p-sidebar-icon {
+  color: var(--surface-ground);
+}
+.p-menu .p-menuitem > .p-menuitem-content .p-menuitem-link .p-menuitem-icon {
+  color: var(--surface-ground);
+  font-size: 1.1rem;
+}
+.p-menu .p-menuitem > .p-menuitem-content .p-menuitem-link .p-menuitem-text {
+  color: var(--surface-ground);
+  font-size: 1.1rem;
+}
+
+.p-menu .p-submenu-header span{
+  font-size: 0.8rem !important;
+
+}
+
+
+.p-menu.p-menu-overlay{
+  background: var(--primary-color);
+}
+
+.layout-content {
+  max-width: 1580px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media screen and (max-width: 1580px) {
+  .layout-content {
+      max-width: auto;
+  }
+}
+
+p-inputnumber, .p-inputnumber {
+  width: 100%;
+}
+
+ * {
+  scrollbar-width: thin;  /* Para Firefox */
+  scrollbar-color: #888 #f1f1f1;  /* Para Firefox */
+
+}
+
+/* Estilos para WebKit (Chrome, Safari) */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+
+* {
+  scrollbar-width: thin;  /* Para Firefox */
+  scrollbar-color: #888 transparent;  /* Para Firefox */
+}
+
+/* Estilos para WebKit (Chrome, Safari) */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  /* background: ; */
+  opacity: 0.5;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 30px;
+  border: 2px solid #f1f1f1;
+  border-top-left-radius: 10px;    /* Esquinas redondeadas arriba */
+  border-top-right-radius: 10px;   /* Esquinas redondeadas arriba */
+  border-bottom-left-radius: 10px; /* Esquinas redondeadas abajo */
+  border-bottom-right-radius: 10px;/* Esquinas redondeadas abajo */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+/* BORDER NODE WEBKIT BUTTON */
+a:-webkit-any-link:focus-visible {
+  outline-offset: 0px !important;
+}
+
+
+/* bg custom gradients */
+
+.gradient-1 {
+  /* background-image: linear-gradient(120deg, #00531e 0%, #001305 20%,#001305 80%,#00531e 100%); */
+  background-color: black;
+}
+
+.bg-custom-alpha{
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bg-green-custom{
+  background-color: #29e96f;
+}
+
+.border-round-4xl{
+  border-radius: 2rem;
+}
+
+.placeholder-white::placeholder {
+  color: white;
+  opacity: 0.8;
+  text-transform: none;
+}

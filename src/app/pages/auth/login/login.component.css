@@ -1,0 +1,89 @@
+.container-social {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .social-icons a {
+    font-size: 24px;
+    color: #495057;
+    text-decoration: none;
+  }
+
+  .social-icons a:hover {
+    color: #007bff;
+  }
+
+
+  /* Contenedor del fondo */
+.login-background {
+    position: relative;
+    height: 100vh; /* Altura de la ventana gráfica */
+    overflow: hidden;
+    /* background: linear-gradient(180deg, transparent 20%, var(--primary-color)  100%); */
+    z-index: 1; /* Asegúrate de que esté detrás del card */
+  }
+
+  /* Animación para los círculos */
+  @keyframes slide {
+    0% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(25px, 25px);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+
+  /* Estilos para los círculos */
+  .login-background::before,
+  .login-background::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    animation: slide 10s ease-in-out infinite;
+    z-index: 0; /* Detrás del login */
+  }
+
+  /* Primer círculo */
+  .login-background::before {
+    top: 10%;
+    left: -10%;
+    width: 350px;
+    height: 350px;
+    background-color: rgba(158, 156, 156, 0.1);
+    animation-delay: 0s; /* Puedes ajustar el retraso de la animación */
+  }
+
+  /* Segundo círculo */
+  .login-background::after {
+    bottom: 10%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background-color: rgba(158, 156, 156, 0.1);
+    animation-delay: 6s; /* Puedes ajustar el retraso de la animación */
+  }
+
+
+  /* Panel de login */
+  p-panel {
+    position: relative;
+    z-index: 2; /* Por encima de los círculos y el fondo */
+    background: rgba(255, 255, 255, 0.95); /* Asegúrate de que el fondo sea ligeramente opaco */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar el panel */
+    border-radius: 8px; /* Esquinas redondeadas */
+  }
+
+  .cover-image{
+    background: radial-gradient(circle, rgba(6, 12, 31, 0.9) 16%, rgba(6, 18, 61, 0.6) 100%);
+    /* opacity: 0.7; */
+  }

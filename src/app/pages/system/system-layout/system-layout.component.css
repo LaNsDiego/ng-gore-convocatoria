@@ -1,0 +1,79 @@
+:host ::ng-deep .p-sidebar-content{
+  padding-bottom: 3em;
+}
+
+:host ::ng-deep .p-panelmenu .p-panelmenu-panel {
+  box-shadow: none;
+}
+
+:host ::ng-deep .p-panelmenu-header-content,
+/* :host ::ng-deep .p-panelmenu-header-content a:visited:not(.active-link), */
+:host ::ng-deep .p-menuitem-content,
+:host ::ng-deep .p-panelmenu-content,
+:host ::ng-deep .p-menuitem-content a:visited
+{
+  color: white;
+  background-color: #1b232d;
+}
+
+:host ::ng-deep .p-panelmenu-header-content a.active-link {
+  font-weight: bold;
+  border-radius: 0.5em;
+  color: #4680ff !important;
+  background-color: rgba(36, 72, 255, 0.2) !important;
+}
+
+:host ::ng-deep .p-menuitem-content a.active-link,
+:host ::ng-deep .p-menuitem-content a:visited.active-link{
+
+  color: #4680ff !important;
+  background-color: rgba(36, 72, 255, 0.2) !important;
+  border-radius: 0.5em;
+}
+
+:host ::ng-deep .p-menuitem-content a
+{
+  text-decoration-color: white !important;
+  color:white;
+  margin-bottom: 0.5em;
+  padding-left: 1.5em !important;
+}
+
+:host ::ng-deep .p-toggleable-content{
+
+  padding-left: 1em !important;
+  padding-right: 1em;
+}
+
+:host ::ng-deep .p-panelmenu-header-content {
+  margin-left: 4px;
+  margin-right: 4px;
+  position: relative;
+}
+
+:host ::ng-deep .p-panelmenu-header-content a {
+  color : white;
+  text-decoration-color: white;
+}
+
+
+:host ::ng-deep .p-menuitem-content a:hover,
+:host ::ng-deep .p-panelmenu-header-content a:hover
+{
+  border-radius: 5px;
+  color: #4680ff !important;
+  background-color: rgba(36, 72, 255, 0.2) !important;
+}
+
+/* :host ::ng-deep .p-panelmenu-header-content:hover::before{
+  content: "";
+  border-radius: 0.5rem;
+  opacity: 0.5;
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  right: 2px;
+  background-color: #4680ff;
+} */
+

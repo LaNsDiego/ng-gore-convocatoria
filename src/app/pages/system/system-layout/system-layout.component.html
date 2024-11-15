@@ -1,0 +1,140 @@
+<p-menubar>
+    <ng-template pTemplate="start">
+        <p-button icon="pi pi-bars" [rounded]="true" [text]="true" (click)="toggleSidebar()"/>
+    </ng-template>
+    <ng-template pTemplate="end">
+      <div class="flex flex-col justify-content-center align-items-center">
+      <p-chip label="SISTEMA DE CONVOCATORIA"  styleClass="mr-6 uppercase"/>
+      <div class="flex flex-col justify-content-center align-items-center">
+        <!-- <p-button
+        [icon]="toolbarStore.isDark() ? 'pi pi-sun' : 'pi pi-moon'"
+         severity="help"
+         [rounded]="true"
+         [text]="true"
+        (click)="toggleDarkMode()"
+        pTooltip="Cambiar de modo"
+        tooltipPosition="left"
+        class="pr-4"></p-button>
+
+        <p-button
+        [icon]="'pi pi-palette'"
+         severity="help"
+         [rounded]="true"
+         [text]="true"
+        (click)="toolbarStore.showThemes()"
+        pTooltip="Temas"
+        tooltipPosition="left"
+        class="pr-4"></p-button> -->
+
+      <p-menu #userMenu [popup]="true" [model]="userMenuItems"></p-menu>
+        <p-avatar
+            label="U"
+            styleClass="mr-2"
+            size="large"
+            [style]="{ 'background-color': '#dee9fc', color: '#1a2551' }"
+            shape="circle"
+            (click)="userMenu.toggle($event)">
+        </p-avatar>
+      </div>
+      </div>
+    </ng-template>
+</p-menubar>
+
+
+<p-sidebar
+  [(visible)]="visibleSidebar"
+  class="layout-menu-dark mb-4"
+  [modal]="false"
+  position="left"
+  closeOnEscape="false"
+  [baseZIndex]="10000"
+  [styleClass]="this.toolbarStore.isDark() ? 'border-dark' : 'border-light p-sidebar-light-color'"
+  (onHide)="onSidebarClose()"
+  >
+  <ng-template pTemplate="header" data-simplebar>
+
+
+    <div [style]="{ display: 'flex', alignItems: 'center', gap: '16px' }">
+      <p-avatar
+      image="https://ableproadmin.com/assets/images/user/avatar-1.jpg"
+      styleClass="mr-2" size="large"
+      shape="circle"
+      ></p-avatar>
+      <div>
+        <div><b>{{  user().name }}</b></div>
+        <!-- <div>{{ user().role_id }}</div> -->
+        <div>ADMINISTRADOR</div>
+
+        <div class="my-2">
+
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+  @for (itemGroup of items; track $index) {
+    @if (itemGroup.group) {
+      <div class="w-full my-2 p-2">
+        <span class="font-semibold">{{itemGroup.label}}</span>
+      </div>
+    }
+    <p-panelMenu [model]="itemGroup.items" styleClass="w-full bg-transparent">
+      <ng-template pTemplate="item" let-item>
+        <!-- ITEM HIJOS -->
+        <ng-container *ngIf="item.route && !item.items && !item.url; else Dropdown" >
+            <a [routerLink]="item.route" [routerLinkActive]="'active-link'" class="flex justify-content-between align-items-baseline px-2 py-2 w-full no-underline cursor-pointer">
+              <div  class="px-2 py-2">
+                <span [class]="item.icon" class="label-color"></span>
+                <span class="ml-2 label-color">{{ item.label }}</span>
+              </div>
+              <div>
+                <p-badge *ngIf="item.badge" severity="secondary" class="ml-auto mr-2" [value]="item.badge" />
+                <i *ngIf="item.items" class="pi pi-angle-down label-color ml-auto"></i>
+              </div>
+            </a>
+        </ng-container>
+        <!-- ITEM GROUP O PADRE -->
+         <ng-template #Dropdown>
+          <ng-container *ngIf="item.items && !item.route && !item.url; else childDropdown" >
+            <a class="flex justify-content-between  align-items-baseline px-2 py-2 w-full cursor-pointer no-underline">
+              <div [routerLink]="item.route" class="px-2 py-2 ">
+                <span [class]="item.icon" class="label-color"></span>
+                <span class="ml-2 label-color">{{ item.label }}</span>
+              </div>
+              <div>
+                <p-badge *ngIf="item.badge" severity="secondary" class="ml-auto mr-2" [value]="item.badge" />
+                <i *ngIf="item.items" class="pi pi-angle-down label-color ml-auto"></i>
+              </div>
+            </a>
+        </ng-container>
+
+            <ng-template #childDropdown>
+              <a [routerLink]="item.url" [routerLinkActive]="'active-link'" class="flex justify-content-between align-items-baseline pl-2 pr-2 py-2 w-full cursor-pointer no-underline">
+                <div class="px-2 py-2">
+                  <span [class]="item.icon" class="label-color"></span>
+                  <span class="ml-2 label-color">{{ item.label }}</span>
+                </div>
+                <div>
+                  <p-badge *ngIf="item.badge" severity="secondary" class="ml-auto mr-2" [value]="item.badge" />
+                  <i *ngIf="item.items" class="pi pi-angle-down label-color ml-auto"></i>
+                </div>
+              </a>
+            </ng-template>
+        </ng-template>
+    </ng-template>
+  </p-panelMenu>
+  }
+</p-sidebar>
+
+<div [ngStyle]="{'margin-left.px': visibleSidebar && isScreenWide  ? 239 : 0, 'transition': 'margin-left 0.3s ease' }"
+     [style]="{height:'calc(100vh - 67px)'}"
+     class="flex flex-column justify-content-between container-return">
+  <!-- Main Content -->
+  <div class="layout-content px-3">
+    <router-outlet></router-outlet>
+  </div>
+
+  <!-- Footer -->
+  <app-footer-layout/>
+</div>

@@ -1,0 +1,26 @@
+<p-dialog 
+header="CREAR CARGOS" 
+[modal]="true"
+[breakpoints]="{'575px': '100vw'}"
+[style]="{ width: '500px',maxHeight: '100%'}"
+[draggable]="false"
+[resizable]="false"
+[visible]="jobTitleStore.isOpenCreate()"
+(visibleChange)="onCloseModalCreate($event)">
+    <form class="grid pt-2" [formGroup]="frmCreate">
+        <div class="col-12">
+            <p-floatLabel>
+                <input pInputText id="name" formControlName="name"  class="w-full"/>
+                <label for="name">Nombre *</label>
+            </p-floatLabel>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessageOnCreate('name') }}
+            </small>
+        </div>
+
+        <div class="col-12 flex justify-content-end">
+            <p-button label="GUARDAR" iconPos="left" icon="pi pi-save" [outlined]="true" (onClick)="handleSubmit()"/>
+        </div>
+    </form>
+    
+</p-dialog>

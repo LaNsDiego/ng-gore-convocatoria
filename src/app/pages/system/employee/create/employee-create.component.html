@@ -1,0 +1,107 @@
+<p-dialog
+header="CREAR PERSONAL"
+[modal]="true"
+[breakpoints]="{'575px': '100vw'}"
+[style]="{ width: '500px',maxHeight: '100%'}"
+[draggable]="false"
+[resizable]="false"
+[visible]="employeeStore.isOpenCreate()"
+(visibleChange)="onCloseModalCreate($event)">
+    <form class="grid pt-2" [formGroup]="frmCreate">
+        <div class="col-12">
+            <p-dropdown
+            styleClass="w-full"
+            appendTo="body"
+            (onChange)="onChangeSelectedDocumentType($event)"
+            [options]="document_types"
+            optionLabel="name"
+            [showClear]="true"
+            placeholder="Seleccione un tipo de documento *">
+            <ng-template let-document_type pTemplate="item">
+                <b>{{ document_type.abbreviation }}</b>: {{ document_type.name }}
+            </ng-template>
+            </p-dropdown>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('document_type') }}
+            </small>
+        </div>
+
+        <div class="col-12">
+            <p-floatLabel>
+                <input pInputText id="document_number" formControlName="document_number"  class="w-full"/>
+                <label for="document_number">N° Documento *</label>
+            </p-floatLabel>
+
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('document_number') }}
+            </small>
+        </div>
+        <div class="col-12">
+            <p-floatLabel>
+                <input pInputText id="name" formControlName="name"  class="w-full"/>
+                <label for="name">Nombre *</label>
+            </p-floatLabel>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('name') }}
+            </small>
+        </div>
+        <div class="col-12">
+            <p-dropdown
+            styleClass="w-full"
+            appendTo="body"
+            (onChange)="onChangeSelectedJobTitle($event)"
+            [options]="job_titles()"
+            optionLabel="name"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            placeholder="Seleccione un cargo *">
+            </p-dropdown>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('job_title_id') }}
+            </small>
+        </div>
+        <div class="col-12">
+            <p-dropdown
+            styleClass="w-full"
+            appendTo="body"
+            (onChange)="onChangeSelectedEstablishment($event)"
+            [options]="establishments()"
+            optionLabel="name"
+            [filter]="true"
+            filterBy="code,name"
+            [showClear]="true"
+            placeholder="Seleccione un establecimiento *">
+                <ng-template let-establishment pTemplate="item">
+                    {{ establishment.code }} - {{ establishment.name }}
+                </ng-template>
+            </p-dropdown>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+                {{ getErrorMessage('establishment_id') }}
+            </small>
+        </div>
+        <div class="col-12">
+            <p-floatLabel>
+                <input pInputText id="email" formControlName="email"  class="w-full"/>
+                <label for="email">Email</label>
+            </p-floatLabel>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('email') }}
+            </small>
+        </div>
+        <div class="col-12">
+            <p-floatLabel>
+                <input pInputText id="phone_number" formControlName="phone_number"  class="w-full"/>
+                <label for="phone_number">Numero celular</label>
+            </p-floatLabel>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('phone_number') }}
+            </small>
+        </div>
+
+        <div class="col-12 flex justify-content-end">
+        <p-button label="GUARDAR" iconPos="left" icon="pi pi-save" [outlined]="true" (onClick)="handleSubmit()"/>
+        </div>
+    </form>
+
+</p-dialog>

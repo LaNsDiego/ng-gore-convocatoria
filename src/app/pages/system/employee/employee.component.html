@@ -1,0 +1,119 @@
+<div class="w-100 py-3 flex justify-content-between">
+    <div>
+        <p-breadcrumb  styleClass="max-w-full pt-2" [style]="{background:'transparent', padding:'0px'}" [model]="items">
+            <ng-template pTemplate="item" let-item>
+                <ng-container *ngIf="item.route; else elseBlock">
+                    <a [routerLink]="item.route" class="p-menuitem-link bg-transparent p-0">
+                        <span class="text-primary">{{ item.label }}</span>
+                    </a>
+                </ng-container>
+                <ng-template #elseBlock>
+                    <a [href]="item.url "class="p-menuitem-link bg-transparent">
+                        <span class="text-color">{{ item.label }}</span>
+                    </a>
+                </ng-template>
+            </ng-template>
+        </p-breadcrumb>
+        <div class="flex flex-column">
+          <h1 class="text-2xl pt-3">Personal</h1>
+          <h3 class="text-xl text-gray-700 mt-2">Registro y control de personal</h3>
+        </div>
+    </div>
+    <div>
+        <div class="flex justify-content-end py-3">
+            <p-button label="NUEVO" icon="pi pi-save" size="large" (click)="onOpenModalCreateEmployee()"/>
+          </div>
+    </div>
+</div>
+
+<p-card>
+    <ng-template pTemplate="header">
+        <div class="grid px-3 pt-3">
+            <div class="col-12 text-right">
+                <p-iconField iconPosition="left">
+                    <p-inputIcon>
+                        <i class="pi pi-search"></i>
+                    </p-inputIcon>
+                    <input
+                        pInputText
+                        class="w-auto"
+                        type="text"
+                        (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
+                        placeholder="Buscador" />
+                </p-iconField>
+            </div>
+        </div>
+    </ng-template>
+
+    <p-table
+    #dt1
+    [value]="employeeStore.entities()"
+    selectionMode="single"
+    dataKey="id"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [rows]="5"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[5, 10, 25, 50]"
+    [paginator]="true"
+    currentPageReportTemplate="Visualizar {first} a {last} de {totalRecords} registros"
+    [globalFilterFields]="['id', 'document_number','name','job_title.name','establishment.code','establishment.name']"
+    styleClass="p-datatable-gridlines">
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th>
+                N°
+            </th>
+            <th pSortableColumn="document_number">
+                Documento <p-sortIcon field="document_number" />
+            </th>
+            <th pSortableColumn="name">
+                Nombre <p-sortIcon field="name" />
+            </th>
+            <th pSortableColumn="job_title.name'">
+                Cargo <p-sortIcon field="job_title.name'" />
+            </th>
+            <th pSortableColumn="establishment.name">
+                Area <p-sortIcon field="establishment.name" />
+            </th>
+            <th>
+                Opciones
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-employee let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="employee">
+            <td>
+                {{rowIndex + 1}}
+            </td>
+            <td>
+                <b>{{ employee.document_type }}</b> : {{ employee.document_number }}
+            </td>
+            <td>
+                {{ employee.name }}
+            </td>
+            <td>
+                {{ employee.job_title.name }}
+            </td>
+            <td>
+                <b>{{ employee.establishment.code }}</b> :  {{ employee.establishment.name }}
+            </td>
+            <td class="py-1 flex  justify-content-center">
+                <p-menu #menu [model]="options()" appendTo="body" [popup]="true" />
+                <p-button (click)="onClickEmployeeControl(employee)" severity="warning" [rounded]="true" [text]="false" label="CONTROL" icon="pi pi-address-book" styleClass="mr-2"/>
+                <p-button (click)="onOpenMenuOptionsRowTable($event,menu,employee)" [rounded]="true" outlined="true" [text]="true" icon="pi pi-ellipsis-v" styleClass="border-1"/>
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="6">No se encontraron registros.</td>
+        </tr>
+    </ng-template>
+    </p-table>
+</p-card>
+
+<app-employee-create />
+<app-employee-edit />
