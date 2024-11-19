@@ -1,7 +1,7 @@
 export type ProjectEntity = {
-    id : number
-    code : string
-    name : string
-    area_id : number
-    responsible_employee_id: number
+  id : number
+  functional_sequence : string
+  specific_expenditure : string
+
+
 }

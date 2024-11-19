@@ -6,4 +6,4 @@ export const AUTH_ROUTES: Routes = [
     {
         path: '', component: LoginComponent
     }
-];
+]

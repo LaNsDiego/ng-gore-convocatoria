@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
   ) {
     this.frmLogin = this.fb.group({
-      email : new FormControl('admin@gmail.com',[Validators.required]),
+      email : new FormControl('00455556',[Validators.required]),
       password : new FormControl('12345678',[Validators.required]),
     })
     // this.toolbarStore.restoreStorageIsDark()
@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit {
             // const decodedJWT = this.authStore.decodeJWT(response.access_token)
             // this.authStore.setUserAuthenticated(decodedJWT.user)
 
-            this.router.navigate(['/system'])
+            this.router.navigate(['/system/panel'])
 
 
           },

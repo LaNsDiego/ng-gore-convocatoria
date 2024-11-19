@@ -28,7 +28,13 @@ import { EmployeeStore } from '@/app/stores/EmployeeStore';
     BreadcrumbModule,
     CardModule,
     ButtonModule,
-    DialogModule,MenuModule,EmployeeCreateComponent,EmployeeEditComponent,IconFieldModule, InputIconModule, InputTextModule
+    DialogModule,
+    MenuModule,
+    EmployeeCreateComponent,
+    EmployeeEditComponent,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule
 
   ],
   templateUrl: './employee.component.html',
@@ -125,13 +131,15 @@ export class EmployeeComponent   {
     }
   }
 
-  onClickEmployeeControl(entity : EmployeeEntity|null){
+  goToExperience(entity : EmployeeEntity|null){
     if(entity){
-      this.router.navigate(['/system/personal-control',entity.id])
+      this.router.navigate(['/system/experiencia-laboral',entity.id])
     }else{
       console.warn("El personal para controlar no esta seleccionado")
     }
   }
+
+
   onOpenMenuOptionsRowTable(event : MouseEvent, menu : any, row : any){
     this.selectedRow.update(() => row)
     menu.toggle(event)

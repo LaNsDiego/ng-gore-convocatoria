@@ -1,5 +1,5 @@
-<p-dialog 
-header="CREAR CARGOS" 
+<p-dialog
+header="CREAR CARGOS"
 [modal]="true"
 [breakpoints]="{'575px': '100vw'}"
 [style]="{ width: '500px',maxHeight: '100%'}"
@@ -8,19 +8,59 @@ header="CREAR CARGOS"
 [visible]="jobTitleStore.isOpenCreate()"
 (visibleChange)="onCloseModalCreate($event)">
     <form class="grid pt-2" [formGroup]="frmCreate">
-        <div class="col-12">
+        <div class="col-12 flex-column">
             <p-floatLabel>
-                <input pInputText id="name" formControlName="name"  class="w-full"/>
-                <label for="name">Nombre *</label>
+                <input pInputText id="code" formControlName="code"  class="w-full"/>
+                <label for="code">Código *</label>
             </p-floatLabel>
-            <small class="text-xs text-pink-600" style="height: 1em;">
-              {{ getErrorMessageOnCreate('name') }}
+            <small class="text-sm text-pink-600" style="height: 1em;">
+              {{ getErrorMessageOnCreate('code') }}
             </small>
         </div>
 
+      <div class="col-12 flex-column">
+        <p-dropdown
+          formControlName="status"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="statusOptions()"
+          optionLabel="label"w
+          optionValue="label"
+          [showClear]="true"
+          placeholder="Seleccione un estado *">
+          </p-dropdown>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessageOnCreate('status') }}
+          </small>
+      </div>
+
+        <div class="col-12 flex-column">
+          <p-floatLabel>
+            <input pInputText id="name" formControlName="name"  class="w-full"/>
+            <label for="name">Nombre *</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessageOnCreate('name') }}
+          </small>
+        </div>
+
+        <div class="col-12 flex-column">
+          <p-floatLabel>
+            <textarea
+                formControlName="observation"
+                id="observation"
+                rows="5" cols="10"
+                pInputTextarea>
+            </textarea>
+            <label for="observation">Observación</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessageOnCreate('observation') }}
+          </small>
+        </div>
         <div class="col-12 flex justify-content-end">
             <p-button label="GUARDAR" iconPos="left" icon="pi pi-save" [outlined]="true" (onClick)="handleSubmit()"/>
         </div>
     </form>
-    
+
 </p-dialog>

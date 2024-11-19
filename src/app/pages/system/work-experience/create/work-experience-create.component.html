@@ -1,0 +1,135 @@
+<p-dialog
+header="Nuevo experiencia laboral"
+[modal]="true"
+[breakpoints]="{'960px': '100vw'}"
+[style]="{ width: '960px',maxHeight: '100%'}"
+[draggable]="false"
+[resizable]="false"
+[visible]="workExperienceStore.isOpenCreate()"
+(visibleChange)="onCloseModalCreate($event)"
+[formGroup]="frmCreate">
+    <p-fieldset legend="Datos personales">
+      <form class="grid">
+        <div class="col-6 flex flex-column justify-content-center">
+          <div class="flex column-gap-4">
+              <label for="">Tipo de sector</label>
+              <label>
+                <input type="radio" formControlName="sector_type" name="sector_type" value="publico" /> Publico
+              </label>
+              <label>
+                <input type="radio" formControlName="sector_type" name="sector_type" value="privado" /> Privado
+              </label>
+            </div>
+
+            <small class="text-sm text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('document_type') }}
+            </small>
+        </div>
+
+        <div class="col-6 flex flex-column">
+          <p-dropdown
+          formControlName="sex"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="experienceTypes()"
+          optionLabel="label"
+          optionValue="label"
+          [showClear]="true"
+          placeholder="Seleccione un tipo experiencia *">
+          </p-dropdown>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('sex') }}
+          </small>
+      </div>
+
+
+        <div class="col-6 flex flex-column">
+            <p-floatLabel>
+                <input pInputText id="name" formControlName="name"  class="w-full"/>
+                <label for="name">Entidad *</label>
+            </p-floatLabel>
+            <small class="text-sm text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('name') }}
+            </small>
+        </div>
+        <div class="col-6 flex flex-column">
+            <p-floatLabel>
+                <input pInputText id="father_last_name" formControlName="father_last_name"  class="w-full"/>
+                <label for="father_last_name">Cargo ocupado *</label>
+            </p-floatLabel>
+            <small class="text-sm text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('name') }}
+            </small>
+        </div>
+
+        <div class="col-6 flex flex-column">
+          <p-floatLabel>
+              <p-calendar
+                  formControlName="date_of_birth"
+                  [styleClass]="'w-full'"
+                  appendTo="body"
+                  [iconDisplay]="'input'"
+                  dataType="string"
+                  [showButtonBar]="true"
+                  inputId="date_of_birth"/>
+              <label for="date_of_birth">Fecha de inicio</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('date_of_birth') }}
+          </small>
+        </div>
+
+        <div class="col-6 flex flex-column">
+          <p-floatLabel>
+              <p-calendar
+                  formControlName="date_of_birth"
+                  [styleClass]="'w-full'"
+                  appendTo="body"
+                  [iconDisplay]="'input'"
+                  dataType="string"
+                  [showButtonBar]="true"
+                  inputId="date_of_birth"/>
+              <label for="date_of_birth">Fecha de fin</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('date_of_birth') }}
+          </small>
+        </div>
+
+
+        <div class="col-12 flex-column">
+          <p-floatLabel>
+            <textarea
+                formControlName="observation"
+                id="observation"
+                rows="5" cols="10"
+                pInputTextarea>
+            </textarea>
+            <label for="observation">Funciones principales desempeñadas</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('observation') }}
+          </small>
+        </div>
+
+        <div class="col-12 flex justify-content-end px-0">
+          <div class="w-full flex justify-content-end">
+            <p-fileUpload
+              mode="basic"
+              chooseLabel="SUBIR ARCHIVO"
+              chooseIcon="pi pi-upload"
+              maxFileSize="1000000"
+              (onSelect)="null"
+              (onUpload)="null" />
+          </div>
+        </div>
+
+
+    </form>
+    </p-fieldset>
+
+
+    <div class="col-12 flex justify-content-end px-0">
+      <p-button label="GUARDAR" iconPos="left" icon="pi pi-save" [outlined]="true" (onClick)="handleSubmit()"/>
+    </div>
+</p-dialog>

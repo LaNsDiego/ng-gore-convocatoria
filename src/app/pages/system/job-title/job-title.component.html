@@ -18,7 +18,7 @@
     </div>
     <div>
         <div class="flex justify-content-end py-3">
-            <p-button label="NUEVO" icon="pi pi-save" size="large" (click)="onOpenModalCreateJobTitleService()"/> 
+            <p-button label="NUEVO" icon="pi pi-save" size="large" (click)="onOpenModalCreateJobTitleService()"/>
           </div>
     </div>
 </div>
@@ -62,19 +62,31 @@
                 N°
             </th>
             <th pSortableColumn="name" style="width:25%">
-                Nombre <p-sortIcon field="name" />
+                CÓDIGO <p-sortIcon field="name" />
             </th>
-            <th>Opciones</th>
+            <th pSortableColumn="name" style="width:25%">
+                NOMBRE <p-sortIcon field="name" />
+            </th>
+            <th pSortableColumn="name" style="width:25%">
+                ESTADO <p-sortIcon field="name" />
+            </th>
+            <th>ACCIONES</th>
         </tr>
     </ng-template>
-    
+
     <ng-template pTemplate="body" let-jobtitle let-rowIndex="rowIndex">
         <tr [pSelectableRow]="jobtitle">
             <td>
                 {{rowIndex + 1}}
             </td>
             <td>
+                {{ jobtitle.code }}
+            </td>
+            <td>
                 {{ jobtitle.name }}
+            </td>
+            <td>
+                {{ jobtitle.status }}
             </td>
             <td class="py-1 text-center">
                 <p-menu #menu [model]="options()" appendTo="body" [popup]="true" />
@@ -82,7 +94,7 @@
             </td>
         </tr>
     </ng-template>
-    
+
     <ng-template pTemplate="emptymessage">
         <tr>
             <td colspan="7">No se encontraron registros.</td>
@@ -92,4 +104,4 @@
 </p-card>
 
 <app-job-title-create/>
-<app-job-title-edit/> 
+<app-job-title-edit/>

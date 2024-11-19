@@ -14,7 +14,7 @@ import { AuthService } from '@/app/services/auth.service';
 import { UserEntity } from '@/app/domain/entities/UserEntity';
 import { FooterLayoutComponent } from './footer/footer-layout.component';
 // import { hasAccess } from '@/helpers';
-import { DtoResponseTreeRoleHasPermissionList } from '@/app/domain/dtos/permission/DtoResponseTreeRoleHasPermissionList';
+// import { DtoResponseTreeRoleHasPermissionList } from '@/app/domain/dtos/permission/DtoResponseTreeRoleHasPermissionList';
 import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
 import { ChipModule } from 'primeng/chip';
@@ -67,7 +67,7 @@ export class SystemLayoutComponent implements OnInit{
     role_id : 0,
   })
 
-  permissions = signal<DtoResponseTreeRoleHasPermissionList>([])
+  permissions = signal<any[]>([])
 
   constructor(private router: Router) {
     // this.toolbarStore.restoreStorageIsDark()
@@ -100,9 +100,11 @@ export class SystemLayoutComponent implements OnInit{
         group:true,
         items: [
           { label: 'Cargos', icon: 'pi pi-fw pi-briefcase', route: ['/system/cargos'] , visible : true, badge : 'NUEVO'},
-          { label: 'Actividades laborales', icon: 'pi pi-fw pi-list-check', route: ['/system/actividades-laborales'],visible : true, badge : 'NUEVO' },
-          { label: 'Personal', icon: 'pi pi-fw pi-id-card', route: ['/system/personales'] , tooltip : 'Registro y control de personal', visible : true },
-
+          { label: 'Perfiles', icon: 'pi pi-fw pi-slack', route: ['/system/perfiles'] , visible : true, badge : 'NUEVO'},
+          // { label: 'Actividades laborales', icon: 'pi pi-fw pi-list-check', route: ['/system/actividades-laborales'],visible : true, badge : 'NUEVO' },
+          // { label: 'Personal', icon: 'pi pi-fw pi-id-card', route: ['/system/personales'] , tooltip : 'Registro y control de personal', visible : true },
+          { label: 'Requerimiento Personal', icon: 'pi pi-fw pi-id-card', route: ['/system/requerimiento-personal'] , tooltip : 'Requerimiento de personal', visible : true },
+          { label: 'Datos personales', icon: 'pi pi-fw pi-id-card', route: ['/system/datos-personales'] , tooltip : 'Datos personales', visible : true },
 
         ]
       },

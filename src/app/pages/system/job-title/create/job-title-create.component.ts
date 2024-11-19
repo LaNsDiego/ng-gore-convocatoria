@@ -4,18 +4,26 @@ import { HelperStore } from '@/app/stores/HelpersStore';
 import { JobTitleStore } from '@/app/stores/JobTitleStore';
 import { getErrorByKey } from '@/helpers';
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @Component({
   selector: 'app-job-title-create',
   standalone: true,
   imports: [
-    ReactiveFormsModule,DialogModule,FloatLabelModule,ButtonModule,InputTextModule
+    ReactiveFormsModule,
+    DialogModule,
+    FloatLabelModule,
+    ButtonModule,
+    InputTextModule,
+    DropdownModule,
+    InputTextareaModule
   ],
   templateUrl: './job-title-create.component.html',
   styleUrl: './job-title-create.component.css'
@@ -25,8 +33,18 @@ export class JobTitleCreateComponent {
   jobTitleService = inject(JobTitleService)
   helperStore = inject(HelperStore)
   formBuilder = inject(FormBuilder)
+
+
+  statusOptions = signal<any[]>([
+    { label : 'Activo' },
+    { label : 'Inactivo' },
+  ])
+
   frmCreate = this.formBuilder.group({
+    code : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    status : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    observation : new FormControl<string>('',{ validators : [] , nonNullable : true }),
   })
 
   onCloseModalCreate(a : boolean){
@@ -38,17 +56,18 @@ export class JobTitleCreateComponent {
     this.frmCreate.markAllAsTouched()
     if(this.frmCreate.status === 'VALID'){
       const values = this.frmCreate.getRawValue()
-      this.jobTitleService.store(values as DtoJobTitleCreate)
+      this.jobTitleService.store(values)
       .subscribe({
         next : (response) => {
-          console.log({ response})
+          console.log(response)
           this.jobTitleStore.closeModalCreate()
           this.frmCreate.reset()
-          this.helperStore.showToast({severity : 'success', summary : 'Success', detail : 'JobTitle Service created successfully'})
-          this.jobTitleStore.addEntity(response.created)
+          this.helperStore.showToast({severity : 'success', summary : 'Success', detail : response.message})
+          this.jobTitleStore.doList()
         },
         error : (error) => {
-          console.log({error})
+          console.error(error)
+          this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
         }
 
       })

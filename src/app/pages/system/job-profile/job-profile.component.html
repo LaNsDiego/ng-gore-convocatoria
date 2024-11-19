@@ -1,0 +1,112 @@
+<div class="w-100 py-3 flex justify-content-between">
+  <div>
+      <p-breadcrumb  styleClass="max-w-full pt-2" [style]="{background:'transparent', padding:'0px'}" [model]="items">
+          <ng-template pTemplate="item" let-item>
+              <ng-container *ngIf="item.route; else elseBlock">
+                  <a [routerLink]="item.route" class="p-menuitem-link bg-transparent p-0">
+                      <span class="text-primary">{{ item.label }}</span>
+                  </a>
+              </ng-container>
+              <ng-template #elseBlock>
+                  <a [href]="item.url "class="p-menuitem-link bg-transparent">
+                      <span class="text-color">{{ item.label }}</span>
+                  </a>
+              </ng-template>
+          </ng-template>
+      </p-breadcrumb>
+      <h1 class="text-2xl pt-3">PERFILES</h1>
+  </div>
+  <div>
+      <div class="flex justify-content-end py-3">
+          <p-button label="NUEVO" icon="pi pi-save" size="large" (click)="jobProfileStore.openModalCreate()"/>
+        </div>
+  </div>
+</div>
+
+<p-card>
+  <ng-template pTemplate="header">
+      <div class="grid px-3 pt-3">
+          <div class="col-12 text-right">
+              <p-iconField iconPosition="left">
+                  <p-inputIcon>
+                      <i class="pi pi-search"></i>
+                  </p-inputIcon>
+                  <input
+                      pInputText
+                      class="w-auto"
+                      type="text"
+                      (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
+                      placeholder="Buscador" />
+              </p-iconField>
+          </div>
+      </div>
+  </ng-template>
+
+  <p-table
+  #dt1
+  [value]="jobProfileStore.entities()"
+  selectionMode="single"
+  dataKey="id"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [rows]="5"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[5, 10, 25, 50]"
+  [paginator]="true"
+  currentPageReportTemplate="Visualizar {first} a {last} de {totalRecords} registros"
+  [globalFilterFields]="['id','name','description','request_name']"
+  styleClass="p-datatable-gridlines">
+
+  <ng-template pTemplate="header">
+      <tr>
+          <th>
+              N°
+          </th>
+          <th pSortableColumn="request_name" style="width:25%">
+              PUESTO <p-sortIcon field="request_name" />
+          </th>
+          <th pSortableColumn="name" style="width:25%">
+              NOMBRE <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="description" style="width:25%">
+              DESCRIPCIÓN <p-sortIcon field="description" />
+          </th>
+          <th pSortableColumn="name" style="width:25%">
+              ESTADO <p-sortIcon field="name" />
+          </th>
+          <th>ACCIONES</th>
+      </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-jobtitle let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="jobtitle">
+          <td>
+              {{rowIndex + 1}}
+          </td>
+          <td>
+              {{ jobtitle.job_title.name }}
+          </td>
+          <td>
+              {{ jobtitle.request_name }}
+          </td>
+          <td>
+              {{ jobtitle.description }}
+          </td>
+          <td>
+              {{ jobtitle.status }}
+          </td>
+          <td class="py-1 text-center">
+              <p-menu #menu [model]="options()" appendTo="body" [popup]="true" />
+              <p-button (click)="onOpenMenuOptionsRowTable($event,menu,jobtitle)" [rounded]="true" [text]="true" icon="pi pi-ellipsis-v"/>
+          </td>
+      </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+      <tr>
+          <td colspan="7">No se encontraron registros.</td>
+      </tr>
+  </ng-template>
+  </p-table>
+</p-card>
+
+<app-job-profile-create/>

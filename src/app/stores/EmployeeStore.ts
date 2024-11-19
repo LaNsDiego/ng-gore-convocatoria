@@ -41,6 +41,8 @@ export const EmployeeStore = signalStore(
             doList(){
                 employeeService.list().subscribe({
                     next : (entities) => {
+                      console.log("employees",entities);
+
                       patchState(state,{ entities })
                     },
                     error : (error) => {

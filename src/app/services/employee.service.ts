@@ -21,11 +21,19 @@ export class EmployeeService {
   }
 
   store(values : DtoEmployeeCreate){
-    return this.http.post<{message : string , created : DtoResponseEmployee}>(`${environment.apiUrl}/employees/store`, values)
+    const formData = new FormData();
+    Object.keys(values).forEach(key => {
+      formData.append(key, (values as any)[key]);
+    })
+    return this.http.post<{message : string , created : DtoResponseEmployee}>(`${environment.apiUrl}/employees/store`, formData)
   }
 
   update(values : DtoEmployeeEdit){
-    return this.http.post<{message : string}>(`${environment.apiUrl}/employees/update`, values)
+    const formData = new FormData();
+    Object.keys(values).forEach(key => {
+      formData.append(key, (values as any)[key]);
+    })
+    return this.http.post<{message : string}>(`${environment.apiUrl}/employees/update`, formData)
   }
 
   delete(employee_id : number){

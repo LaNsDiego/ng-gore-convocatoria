@@ -1,13 +1,5 @@
 import { AbstractControl, FormGroup, ValidatorFn } from "@angular/forms"
-
-
-import { DtoResponseEstablishment } from "./app/domain/dtos/establishment/DtoResponseEstablishment"
-import { TreeNode } from "primeng/api"
-
-import { DtoResponseModuleGroup } from "./app/domain/dtos/module-group/DtoResponseModuleGroup"
-import { DtoResponseTreeRoleHasPermissionList } from "./app/domain/dtos/permission/DtoResponseTreeRoleHasPermissionList"
 import { NgFuncError, TypeErrorMessages, ValidatorNames } from "./constans"
-
 
 export function getErrorByKey(controlName: string,control : AbstractControl |null): string {
   const errorMessages: TypeErrorMessages & {exists : string}  = {
@@ -29,7 +21,14 @@ export function getErrorByKey(controlName: string,control : AbstractControl |nul
     if(keyReasonError === 'maxlength'){
       keyReasonError = 'maxLength'
     }
+
+
     const errorMessage : NgFuncError = errorMessages[keyReasonError as ValidatorNames] as NgFuncError
+    // console.log({
+    //   keyReasonError,
+    //   keyReasonErrorOriginal,
+    //   errorMessage
+    // })
     return typeof errorMessage === 'function' ? errorMessage(control.errors[keyReasonErrorOriginal]) : errorMessage
   }
   return ''
@@ -112,6 +111,12 @@ export function createFileEmptyFromUrl(url : string, fileName : string) {
   return file;
 }
 
+export function emptyFile(full_path : string){
+  const file = createFileEmptyFromUrl(full_path,`Archivo`) as any
+  file.global_url = full_path
+  // file.path = path
+  return file
+}
 
 // export function hasAccess(canAccess : AccessKey , roleHasPermissions : DtoResponseTreeRoleHasPermissionList){
 //   if(roleHasPermissions && roleHasPermissions.length > 0){
@@ -136,31 +141,31 @@ export function createFileEmptyFromUrl(url : string, fileName : string) {
 //  }
 
 
-export function transformData(establishments: DtoResponseEstablishment[]): TreeNode[] {
-  return establishments.map(est => mapToTreeNode(est));
-}
+// export function transformData(establishments: DtoResponseEstablishment[]): TreeNode[] {
+//   return establishments.map(est => mapToTreeNode(est));
+// }
 
-export function transformDataOne(entity: DtoResponseEstablishment): TreeNode[] {
-const node = mapToTreeNode(entity);
-return [node];
-}
+// export function transformDataOne(entity: DtoResponseEstablishment): TreeNode[] {
+// const node = mapToTreeNode(entity);
+// return [node];
+// }
 
-function mapToTreeNode(establishment: DtoResponseEstablishment): TreeNode {
-const node: TreeNode = {
-  expanded: true,
-  type: 'area',
-  data: {
-    name: establishment.name,
-    code: establishment.code
-  },
-  children: establishment.children_recursive && establishment.children_recursive.length > 0
-    ? establishment.children_recursive.map(child => mapToTreeNode(child))
-    : []
-};
-node.children = node.children?.filter(child => !!child);
+// function mapToTreeNode(establishment: DtoResponseEstablishment): TreeNode {
+// const node: TreeNode = {
+//   expanded: true,
+//   type: 'area',
+//   data: {
+//     name: establishment.name,
+//     code: establishment.code
+//   },
+//   children: establishment.children_recursive && establishment.children_recursive.length > 0
+//     ? establishment.children_recursive.map(child => mapToTreeNode(child))
+//     : []
+// };
+// node.children = node.children?.filter(child => !!child);
 
-return node;
-}
+// return node;
+// }
 
 
 export function loadScript(src: string ,renderer : any, callback : any): void {

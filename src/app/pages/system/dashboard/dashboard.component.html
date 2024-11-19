@@ -1,0 +1,49 @@
+
+<div class="w-full p-3">
+  <div class="grid">
+    <div class="col-12 md:col-6 lg:col-3">
+        <div class="p-3 text-white h-6rem border-round m-0 bg-center bg-cover bg-no-repeat bg-cyan-400" style="background-image: url('assets/dashboard/effect-1.svg');">
+            <div class="font-bold w-full mb-3">
+                <span>Datos personales</span>
+            </div>
+            <div class="text-white text-2xl font-bold w-full flex align-items-center py-1">{{ vehicles() }}<i class="pi pi-arrow-up ml-2 font-bold"></i></div>
+        </div>
+    </div>
+    <div class="col-12 md:col-6 lg:col-3">
+        <div class="p-3 text-white h-6rem border-round m-0 bg-center bg-cover bg-no-repeat bg-orange-400" style="background-image: url('assets/dashboard/effect-2.svg');">
+            <div class="font-bold w-full mb-3">
+                <span>Requerimientos de personal</span>
+            </div>
+            <div class="text-white text-2xl font-bold w-full flex align-items-center py-1">{{ service_patrols() }} <i class="pi pi-arrow-up ml-2 font-bold"></i></div>
+        </div>
+    </div>
+    <div class="col-12 md:col-6 lg:col-3">
+        <div class="p-3 text-white h-6rem border-round m-0 bg-center bg-cover bg-no-repeat bg-purple-400" style="background-image: url('assets/dashboard/effect-3.svg');">
+            <div class="font-bold w-full mb-3">
+                <span>Cargos</span>
+            </div>
+            <div class="text-white text-2xl font-bold w-full flex align-items-center py-1">{{ programations() }} <i class="pi pi-arrow-up ml-2 font-bold"></i></div>
+        </div>
+    </div>
+    <div class="col-12 md:col-6 lg:col-3">
+        <div class="p-3 text-white h-6rem border-round m-0 bg-center bg-cover bg-no-repeat bg-bluegray-200" style="background-image: url('assets/dashboard/effect-4.svg');">
+            <div class="font-bold w-full mb-3">
+                <span>Admitidos por RRHH</span>
+            </div>
+            <div class="text-white text-2xl font-bold w-full flex align-items-center py-1">{{  fuelConsumption() }} <i class="pi pi-arrow-up ml-2 font-bold"></i></div>
+        </div>
+    </div>
+
+    <div class="col-12 md:col-6">
+      <div class="card p-2 md:p-4">
+        <p-chart type="bar" [data]="dataIncidents" [options]="optionsIncidents"  #chart_incidents/>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-6">
+      <div class="card p-2 md:p-4">
+          <p-chart type="bar" [data]="dataTopProductsMovements" [options]="optionsTopProductsMovements" #chart_top_products />
+    </div>
+
+</div>
+</div>

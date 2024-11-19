@@ -57,27 +57,60 @@
     [paginator]="true"
     currentPageReportTemplate="Visualizar {first} a {last} de {totalRecords} registros"
     [globalFilterFields]="['id', 'document_number','name','job_title.name','establishment.code','establishment.name']"
-    styleClass="p-datatable-gridlines">
+    styleClass="p-datatable-gridlines p-datatable-sm">
 
     <ng-template pTemplate="header">
         <tr>
             <th>
                 N°
             </th>
-            <th pSortableColumn="document_number">
+            <th pSortableColumn="document_number" style="min-width: 120px;">
                 Documento <p-sortIcon field="document_number" />
             </th>
-            <th pSortableColumn="name">
+            <th pSortableColumn="name" style="min-width: 280px;">
                 Nombre <p-sortIcon field="name" />
             </th>
-            <th pSortableColumn="job_title.name'">
-                Cargo <p-sortIcon field="job_title.name'" />
+            <th pSortableColumn="sex" style="min-width: 100px;">
+                Sexo <p-sortIcon field="sex" />
             </th>
-            <th pSortableColumn="establishment.name">
-                Area <p-sortIcon field="establishment.name" />
+            <th pSortableColumn="marital_status" style="min-width: 120px;">
+              Estado civil <p-sortIcon field="marital_status" />
+            </th>
+            <th pSortableColumn="date_of_birth" style="min-width: 140px;">
+                Fec. Nacimiento <p-sortIcon field="date_of_birth" />
+            </th>
+            <th pSortableColumn="phone_number" style="min-width: 100px;">
+                Telefono <p-sortIcon field="phone_number" />
+            </th>
+            <th pSortableColumn="email" style="min-width: 100px;">
+                Correo <p-sortIcon field="email" />
+            </th>
+            <th pSortableColumn="birth_city.name" style="min-width: 170px;">
+                Lugar de Nacimiento <p-sortIcon field="birth_city.name" />
+            </th>
+            <th pSortableColumn="address_city.name" style="min-width: 120px;">
+                Dirección <p-sortIcon field="address_city.name" />
+            </th>
+            <th pSortableColumn="bank" style="min-width: 100px;">
+                Banco <p-sortIcon field="bank" />
+            </th>
+            <th pSortableColumn="account_number" style="min-width: 140px;">
+                Nro. Cuenta <p-sortIcon field="account_number" />
+            </th>
+            <th pSortableColumn="cci" style="min-width: 120px;">
+                CCI <p-sortIcon field="cci" />
+            </th>
+            <th pSortableColumn="account_type" style="min-width: 140px;">
+                Tipo de cuenta <p-sortIcon field="account_type" />
             </th>
             <th>
-                Opciones
+                Experiencia
+            </th>
+            <th>
+              Formacion Academica
+            </th>
+            <th class="text-center" pFrozenColumn>
+                Acciones
             </th>
         </tr>
     </ng-template>
@@ -91,25 +124,82 @@
                 <b>{{ employee.document_type }}</b> : {{ employee.document_number }}
             </td>
             <td>
-                {{ employee.name }}
+                {{ employee.name }} {{ employee.father_last_name }} {{ employee.mother_last_name }}
             </td>
             <td>
-                {{ employee.job_title.name }}
+                {{ employee.sex }}
             </td>
             <td>
-                <b>{{ employee.establishment.code }}</b> :  {{ employee.establishment.name }}
+                {{ employee.marital_status }}
             </td>
-            <td class="py-1 flex  justify-content-center">
-                <p-menu #menu [model]="options()" appendTo="body" [popup]="true" />
-                <p-button (click)="onClickEmployeeControl(employee)" severity="warning" [rounded]="true" [text]="false" label="CONTROL" icon="pi pi-address-book" styleClass="mr-2"/>
-                <p-button (click)="onOpenMenuOptionsRowTable($event,menu,employee)" [rounded]="true" outlined="true" [text]="true" icon="pi pi-ellipsis-v" styleClass="border-1"/>
+            <td>
+                {{ employee.date_of_birth }}
             </td>
+            <td>
+                {{ employee.phone_number }}
+            </td>
+            <td>
+                {{ employee.email }}
+            </td>
+            <td>
+                {{ employee.birth_city.name }}
+            </td>
+            <td>
+                {{ employee.address_city.name }}
+            </td>
+            <td>
+                {{ employee.bank }}
+            </td>
+            <td>
+                {{ employee.account_number }}
+            </td>
+            <td>
+                {{ employee.cci }}
+            </td>
+            <td>
+                {{ employee.account_type }}
+            </td>
+            <td class="text-center">
+              <p-button pTooltip="Experiencia"
+              tooltipPosition="top"
+              (click)="goToExperience(employee)"
+              severity="info" [rounded]="true" [text]="true"
+              icon="pi pi-briefcase" styleClass="mr-1"/>
+            </td>
+            <td class="text-center">
+              <p-button pTooltip="Formacion Academica"
+              tooltipPosition="top"
+              (click)="null"
+               [rounded]="true" [text]="true"
+              icon="pi pi-book" styleClass="mr-1"/>
+            </td>
+            <td class="" pFrozenColumn>
+                <div class="inline-flex">
+                  <p-button pTooltip="Editar"
+                    tooltipPosition="top"
+                    (click)="employeeStore.openModalEdit(employee)"
+                    severity="info" [rounded]="true" [text]="true"
+                    icon="pi pi-pencil" styleClass="mr-1"/>
+                  <p-button pTooltip="Eliminar"
+                    tooltipPosition="top"
+
+                    (click)="onDelete(employee)"
+                    severity="danger" [rounded]="true" [text]="true"
+                    icon="pi pi-trash" styleClass="mr-1"/>
+                  <p-button pTooltip="Imprimir"
+                    tooltipPosition="top"
+                    (click)="null"
+                    severity="success" [rounded]="true" [text]="true"
+                    icon="pi pi-print" styleClass="mr-1"/>
+                </div>
+            </td>
+
         </tr>
     </ng-template>
 
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td colspan="6">No se encontraron registros.</td>
+            <td colspan="15" class="text-center py-3 bg-yellow-100 font-semibold">No se encontraron registros.</td>
         </tr>
     </ng-template>
     </p-table>

@@ -1,0 +1,214 @@
+<p-dialog
+header="CREAR REQUERIMIENTO DE PERSONAL"
+[modal]="true"
+[breakpoints]="{'960px': '100vw'}"
+[style]="{ width: '960px',maxHeight: '100%'}"
+[draggable]="false"
+[resizable]="false"
+[visible]="projectStore.isOpenCreate()"
+(visibleChange)="onCloseModalCreate($event)">
+    <form class="grid pt-2" [formGroup]="frmCreate">
+        <div class="col-6 flex-column">
+            <p-floatLabel>
+                <input pInputText id="code" formControlName="code"  class="w-full"/>
+                <label for="code">Secuencia funcional *</label>
+            </p-floatLabel>
+            <small class="text-sm text-pink-600" style="height: 1em;">
+              {{ getErrorMessageOnCreate('code') }}
+            </small>
+        </div>
+
+        <div class="col-6 flex-column">
+            <p-floatLabel>
+                <input pInputText id="code" formControlName="code"  class="w-full"/>
+                <label for="code">Especifica de gasto *</label>
+            </p-floatLabel>
+            <small class="text-sm text-pink-600" style="height: 1em;">
+              {{ getErrorMessageOnCreate('code') }}
+            </small>
+        </div>
+
+
+        <!-- datos de proyecto -->
+        <p-fieldset legend="Datos de proyecto/plan" class="w-full">
+          <div class="grid">
+            <div class="col-6 flex-column">
+              <p-floatLabel>
+                <input pInputText id="name" formControlName="name"  class="w-full"/>
+                <label for="name">Secuencia funcional *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('name') }}
+              </small>
+            </div>
+
+            <div class="col-6 flex-column">
+              <p-floatLabel>
+                <input pInputText id="name" formControlName="name"  class="w-full"/>
+                <label for="name">Especifica de gasto *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('name') }}
+              </small>
+            </div>
+
+            <div class="col-12 flex-column">
+              <p-floatLabel>
+                <input pInputText id="name" formControlName="name"  class="w-full"/>
+                <label for="name">Nombre del proyecto *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('name') }}
+              </small>
+            </div>
+
+            <div class="col-12 flex-column">
+              <p-floatLabel>
+                <input pInputText id="name" formControlName="name"  class="w-full"/>
+                <label for="name">Monto segun especifica *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('name') }}
+              </small>
+            </div>
+          </div>
+
+
+        </p-fieldset>
+
+
+        <!-- DATOS DEL RESPONSABLE -->
+
+        <p-fieldset legend="Datos del responsable" class="w-full">
+          <div class="grid">
+
+            <div class="col-5 flex-column">
+              <p-floatLabel>
+                <input pInputText id="name" formControlName="name"  class="w-full"/>
+                <label for="name">Documento de identidad nacional *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('name') }}
+              </small>
+            </div>
+
+            <div class="col-7 flex-column">
+              <p-floatLabel>
+                <input pInputText id="name" formControlName="name"  class="w-full"/>
+                <label for="name">Nombres y apellidos *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('name') }}
+              </small>
+            </div>
+
+            <div class="col-5">
+                <p-dropdown
+                formControlName="document_type"
+                styleClass="w-full"
+                appendTo="body"
+                [options]="documentTypes()"
+                optionLabel="label"
+                optionValue="label"
+                [showClear]="true"
+                placeholder="Seleccione un tipo de documento *">
+                </p-dropdown>
+                <small class="text-xs text-pink-600" style="height: 1em;">
+                  {{ getErrorMessageOnCreate('document_type') }}
+                </small>
+            </div>
+
+            <div class="col-5 flex-column">
+              <p-floatLabel>
+                <input pInputText id="name" formControlName="name"  class="w-full"/>
+                <label for="name">Nro del documento *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('name') }}
+              </small>
+            </div>
+
+            <p-fileUpload
+            class="m-auto"
+            mode="basic"
+            chooseLabel="SUBIR ARCHIVO"
+            chooseIcon="pi pi-upload"
+            name="demo[]"
+            accept="image/*"
+            maxFileSize="1000000"
+            (onUpload)="null" />
+
+
+
+          </div>
+        </p-fieldset>
+
+<!--
+        <p-table
+  #dt1
+  [value]="projectStore.entities()"
+  selectionMode="single"
+  dataKey="id"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [rows]="5"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[5, 10, 25, 50]"
+  [paginator]="true"
+  currentPageReportTemplate="Visualizar {first} a {last} de {totalRecords} registros"
+  [globalFilterFields]="['id','name']"
+  styleClass="p-datatable-gridlines">
+
+  <ng-template pTemplate="header">
+      <tr>
+          <th>
+              N°
+          </th>
+          <th pSortableColumn="name" style="width:25%">
+              SECUENCIA FUNCIONAL <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="name" style="width:25%">
+              PROYECTO <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="name" style="width:25%">
+              RESPONSABLE <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="name" style="width:25%">
+              ESPECIF. GASTO <p-sortIcon field="name" />
+          </th>
+          <th>ACCIONES</th>
+      </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-jobtitle let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="jobtitle">
+          <td>
+              {{rowIndex + 1}}
+          </td>
+          <td>
+              {{ jobtitle.code }}
+          </td>
+          <td>
+              {{ jobtitle.name }}
+          </td>
+          <td>
+              {{ jobtitle.status }}
+          </td>
+          <td class="py-1 text-center">
+              <p-menu #menu [model]="options()" appendTo="body" [popup]="true" />
+              <p-button (click)="onOpenMenuOptionsRowTable($event,menu,jobtitle)" [rounded]="true" [text]="true" icon="pi pi-ellipsis-v"/>
+          </td>
+      </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+      <tr>
+          <td colspan="7" class="text-center">No se encontraron registros.</td>
+      </tr>
+  </ng-template> -->
+
+        <div class="col-12 flex justify-content-end">
+            <p-button label="GUARDAR" iconPos="left" icon="pi pi-save" [outlined]="true" (onClick)="handleSubmit()"/>
+        </div>
+    </form>
+
+</p-dialog>

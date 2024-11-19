@@ -26,7 +26,7 @@ export class JobTitleService {
   update(values : DtoJobTitleEdit){
       return this.http.post<{message : string , created : DtoResponseJobTitle}>(`${environment.apiUrl}/job-titles/update`, values)
   }
-  
+
   delete(job_title_id : number){
     return this.http.post<{message : string}>(`${environment.apiUrl}/job-titles/delete/`, { job_title_id })
   }

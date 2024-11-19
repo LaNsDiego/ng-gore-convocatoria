@@ -1,111 +1,442 @@
 <p-dialog
-header="EDITAR PERSONAL"
+closeOnEscape="false"
+header="Nuevo empleado"
 [modal]="true"
-[breakpoints]="{'575px': '100vw'}"
-[style]="{ width: '500px',maxHeight: '100%'}"
+[breakpoints]="{'960px': '100vw'}"
+[style]="{ width: '960px',maxHeight: '100%'}"
 [draggable]="false"
 [resizable]="false"
-[visible]="employeeStore.isOpenEdit()"
-(visibleChange)="onCloseModal()">
-    <form class="grid pt-2" [formGroup]="frmEdit">
+[visible]="employeeStore.entityEdit() != null"
+(visibleChange)="employeeStore.closeModalEdit();frmEdit.reset()"
+[formGroup]="frmEdit">
+    <p-fieldset legend="Datos personales">
+      <form class="grid">
         <div class="col-12">
             <p-dropdown
+            formControlName="document_type"
             styleClass="w-full"
             appendTo="body"
-            formControlName="document_type"
             [options]="document_types"
             optionLabel="name"
             optionValue="abbreviation"
             [showClear]="true"
             placeholder="Seleccione un tipo de documento *">
-            <ng-template let-document_type pTemplate="item">
-                <b>{{ document_type.abbreviation }}</b>: {{ document_type.name }}
-            </ng-template>
+              <ng-template let-document_type pTemplate="selectedItem">
+                  <b>{{ document_type.abbreviation }}</b>: {{ document_type.name }}
+              </ng-template>
+              <ng-template let-document_type pTemplate="item">
+                  <b>{{ document_type.abbreviation }}</b>: {{ document_type.name }}
+              </ng-template>
             </p-dropdown>
             <small class="text-xs text-pink-600" style="height: 1em;">
               {{ getErrorMessage('document_type') }}
             </small>
-        </div> 
-        
+        </div>
+
         <div class="col-12">
             <p-floatLabel>
                 <input pInputText id="document_number" formControlName="document_number"  class="w-full"/>
                 <label for="document_number">N° Documento *</label>
             </p-floatLabel>
-            
+
             <small class="text-xs text-pink-600" style="height: 1em;">
               {{ getErrorMessage('document_number') }}
             </small>
         </div>
-        <div class="col-12">
+        <div class="col-4">
             <p-floatLabel>
                 <input pInputText id="name" formControlName="name"  class="w-full"/>
-                <label for="name">Nombre *</label>
+                <label for="name">Nombres *</label>
             </p-floatLabel>
             <small class="text-xs text-pink-600" style="height: 1em;">
               {{ getErrorMessage('name') }}
             </small>
         </div>
-        <div class="col-12">
+        <div class="col-4">
+            <p-floatLabel>
+                <input pInputText id="father_last_name" formControlName="father_last_name"  class="w-full"/>
+                <label for="father_last_name">Apellido Paterno *</label>
+            </p-floatLabel>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('name') }}
+            </small>
+        </div>
+        <div class="col-4">
+            <p-floatLabel>
+                <input pInputText id="mother_last_name" formControlName="mother_last_name"  class="w-full"/>
+                <label for="mother_last_name">Apellido Materno *</label>
+            </p-floatLabel>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('mother_last_name') }}
+            </small>
+        </div>
+        <div class="col-6">
             <p-dropdown
+            formControlName="sex"
             styleClass="w-full"
             appendTo="body"
-            formControlName="job_title_id"
-            [options]="job_titles()"
-            optionLabel="name"
-            optionValue="id"
-            [filter]="true"
-            filterBy="name"
+            [options]="sexs()"
+            optionLabel="label"
+            optionValue="label"
             [showClear]="true"
-            placeholder="Seleccione un cargo *">
+            placeholder="Seleccione un sexo *">
+            </p-dropdown>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('sex') }}
+            </small>
+        </div>
+        <div class="col-6">
+            <p-dropdown
+            formControlName="marital_status"
+            styleClass="w-full"
+            appendTo="body"
+            [options]="maritalStatus()"
+            optionLabel="label"
+            optionValue="label"
+            [showClear]="true"
+            placeholder="Seleccione un estado civil *">
             </p-dropdown>
             <small class="text-xs text-pink-600" style="height: 1em;">
               {{ getErrorMessage('job_title_id') }}
             </small>
         </div>
-        <div class="col-12">
-            <p-dropdown
-            styleClass="w-full"
-            appendTo="body"
-            formControlName="establishment_id"
-            [options]="establishments()"
-            optionLabel="name"
-            optionValue="id"
-            [filter]="true"
-            filterBy="code,name"
-            [showClear]="true"
-            placeholder="Seleccione un establecimiento *">
-                <ng-template let-establishment pTemplate="item">
-                    {{ establishment.code }} - {{ establishment.name }}
-                </ng-template>
-            </p-dropdown>
-            <small class="text-xs text-pink-600" style="height: 1em;">
-                {{ getErrorMessage('establishment_id') }}
-            </small>
-        </div>
-        <div class="col-12">
-            <p-floatLabel>
-                <input pInputText id="email" formControlName="email"  class="w-full"/>
-                <label for="email">Email</label>
-            </p-floatLabel>
-            <small class="text-xs text-pink-600" style="height: 1em;">
-              {{ getErrorMessage('email') }}
-            </small>
-        </div>
-        <div class="col-12">
-            <p-floatLabel>
-                <input pInputText id="phone_number" formControlName="phone_number"  class="w-full"/>
-                <label for="phone_number">Numero celular</label>
-            </p-floatLabel>
-            <small class="text-xs text-pink-600" style="height: 1em;">
-              {{ getErrorMessage('phone_number') }}
-            </small>
-        </div>
 
+        <div class="col-6">
+          <p-floatLabel>
+              <p-calendar
+                  formControlName="date_of_birth"
+                  [styleClass]="'w-full'"
+                  appendTo="body"
+                  [iconDisplay]="'input'"
+                  dataType="string"
+                  [showButtonBar]="true"
+                  inputId="date_of_birth"/>
+              <label for="date_of_birth">Fecha de nacimiento</label>
+          </p-floatLabel>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('date_of_birth') }}
+          </small>
+      </div>
 
-        <div class="col-12 flex justify-content-end">
-        <p-button label="GUARDAR" iconPos="left" icon="pi pi-save" [outlined]="true" (onClick)="handleSubmit()"/>
+      <div class="col-6">
+        <p-floatLabel>
+          <input pInputText id="phone_number" formControlName="phone_number"  class="w-full"/>
+          <label for="phone_number">Numero celular</label>
+        </p-floatLabel>
+        <small class="text-xs text-pink-600" style="height: 1em;">
+          {{ getErrorMessage('phone_number') }}
+        </small>
+      </div>
+      <div class="col-6">
+          <p-floatLabel>
+              <input pInputText id="email" formControlName="email"  class="w-full"/>
+              <label for="email">Email</label>
+          </p-floatLabel>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('email') }}
+          </small>
+      </div>
+
+      <div class="col-6 flex justify-content-end px-0">
+        <div class="w-full flex justify-content-end align-items-center">
+          <p-fileUpload
+            mode="basic"
+            chooseLabel="SUBIR ARCHIVO"
+            chooseIcon="pi pi-upload"
+            (onSelect)="onSelectFileDataEmployee($event)"
+            accept="image/*"
+            maxFileSize="1000000" />
+            <button
+              (click)="onClickPreviewImage(frmEdit.controls.file_data_employee.value)"
+              class="my-auto p-ripple p-element p-button p-component p-button-icon-only p-button-info" type="button" style="border-radius: 0 4px 4px 0px;">
+              <span class="p-button-icon pi pi-eye ng-star-inserted"></span>
+            </button>
         </div>
+      </div>
+
     </form>
+    </p-fieldset>
+
+
+    <!-- DATOS DE LUGAR DE NACIMIENTO -->
+    <p-fieldset legend="Datos lugar de nacimiento">
+
+      <div class="grid">
+        <div class="col-6 lg:col-3">
+          <p-dropdown
+          formControlName="birth_country_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="birthCountries()"
+          optionLabel="name"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="Seleccione un pais *">
+          </p-dropdown>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('birth_country_id') }}
+          </small>
+        </div>
+        <div class="col-6 lg:col-3">
+          <p-dropdown
+          formControlName="birth_department_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="birthDepartments()"
+          optionLabel="name"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="Seleccione un departamento *">
+          </p-dropdown>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('birth_department_id') }}
+          </small>
+        </div>
+        <div class="col-6 lg:col-3">
+          <p-dropdown
+          formControlName="birth_province_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="birthProvincies()"
+          optionLabel="name"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="Seleccione una provincia *">
+          </p-dropdown>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('birth_province_id') }}
+          </small>
+        </div>
+        <div class="col-6 lg:col-3">
+          <p-dropdown
+          formControlName="birth_city_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="birthCities()"
+          optionLabel="name"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="Seleccione un departamento *">
+          </p-dropdown>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('birth_city_id') }}
+          </small>
+        </div>
+
+        <div class="col-12 flex justify-content-end px-0">
+          <div class="w-full flex justify-content-end align-items-center">
+            <p-fileUpload
+              mode="basic"
+              chooseLabel="SUBIR ARCHIVO"
+              chooseIcon="pi pi-upload"
+              accept="image/*"
+              maxFileSize="1000000"
+              (onSelect)="onSelectFilePlaceBirth($event)"
+              (onUpload)="null" />
+              <button
+                (click)="onClickPreviewImage(frmEdit.controls.file_place_of_birth.value)"
+                class="my-auto p-ripple p-element p-button p-component p-button-icon-only p-button-info" type="button" style="border-radius: 0 4px 4px 0px;">
+                <span class="p-button-icon pi pi-eye ng-star-inserted"></span>
+              </button>
+          </div>
+        </div>
+
+
+
+      </div>
+
+    </p-fieldset>
+
+    <p-fieldset legend="Datos de dirección">
+      <div class="grid">
+        <div class="col-6 lg:col-3">
+          <p-dropdown
+          formControlName="address_country_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="addressCountries()"
+          optionLabel="name"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="Seleccione un pais *">
+          </p-dropdown>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('country_id') }}
+          </small>
+        </div>
+        <div class="col-6 lg:col-3">
+          <p-dropdown
+          formControlName="address_department_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="addressDepartments()"
+          optionLabel="name"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="Seleccione un departamento *">
+          </p-dropdown>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('department_id') }}
+          </small>
+        </div>
+        <div class="col-6 lg:col-3">
+          <p-dropdown
+          formControlName="address_province_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="addressProvincies()"
+          optionLabel="name"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="Seleccione una provincia *">
+          </p-dropdown>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('address_province_id') }}
+          </small>
+        </div>
+        <div class="col-6 lg:col-3">
+          <p-dropdown
+          formControlName="address_city_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="addressCities()"
+          optionLabel="name"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="Seleccione un departamento *">
+          </p-dropdown>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('address_city_id') }}
+          </small>
+        </div>
+
+        <div class="col-8">
+          <p-floatLabel>
+              <input pInputText id="address" formControlName="address"  class="w-full"/>
+              <label for="address">Dirección *</label>
+          </p-floatLabel>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('address') }}
+          </small>
+        </div>
+
+        <div class="col-4 flex justify-content-end align-items-center">
+          <p-fileUpload
+            mode="basic"
+            chooseLabel="SUBIR ARCHIVO"
+            chooseIcon="pi pi-upload"
+            accept="image/*"
+            maxFileSize="1000000"
+            (onSelect)="onSelectFileAddress($event)"
+            (onUpload)="null" />
+            <button
+              (click)="onClickPreviewImage(frmEdit.controls.file_address.value)"
+              class="my-auto p-ripple p-element p-button p-component p-button-icon-only p-button-info" type="button" style="border-radius: 0 4px 4px 0px;">
+              <span class="p-button-icon pi pi-eye ng-star-inserted"></span>
+            </button>
+        </div>
+
+
+
+      </div>
+    </p-fieldset>
+
+    <p-fieldset legend="Datos de la cuenta">
+      <div class="grid">
+        <div class="col-6 lg:col-4">
+          <p-dropdown
+          formControlName="bank"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="banks()"
+          optionLabel="label"
+          optionValue="label"
+          [filter]="true"
+          filterBy="label"
+          [showClear]="true"
+          placeholder="Seleccione un banco *">
+          </p-dropdown>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('bank') }}
+          </small>
+      </div>
+
+      <div class="col-6 lg:col-4">
+          <p-dropdown
+          formControlName="account_type"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="accountTypes()"
+          optionLabel="label"
+          optionValue="label"
+          [filter]="true"
+          filterBy="label"
+          [showClear]="true"
+          placeholder="Seleccione un tipo de cuenta *">
+          </p-dropdown>
+          <small class="text-xs text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('account_type') }}
+          </small>
+      </div>
+
+      <div class="col-6 lg:col-4">
+        <p-floatLabel>
+            <input pInputText id="account_number" formControlName="account_number"  class="w-full"/>
+            <label for="account_number">Número de cuenta *</label>
+        </p-floatLabel>
+        <small class="text-xs text-pink-600" style="height: 1em;">
+          {{ getErrorMessage('account_number') }}
+        </small>
+      </div>
+
+      <div class="col-6 lg:col-4">
+        <p-floatLabel>
+            <input pInputText id="cci" formControlName="cci"  class="w-full"/>
+            <label for="cci">CCI *</label>
+        </p-floatLabel>
+        <small class="text-xs text-pink-600" style="height: 1em;">
+          {{ getErrorMessage('cci') }}
+        </small>
+      </div>
+
+        <div class="col-6 lg:col-8 flex justify-content-end align-items-center">
+
+            <p-fileUpload
+
+              mode="basic"
+              chooseLabel="SUBIR ARCHIVO"
+              chooseIcon="pi pi-upload"
+              accept="image/*"
+              (onSelect)="onSelectFileBankAccount($event)"
+              maxFileSize="1000000"
+              (onUpload)="null" />
+              <button
+                (click)="onClickPreviewImage(frmEdit.controls.file_bank_account.value)"
+                class="my-auto p-ripple p-element p-button p-component p-button-icon-only p-button-info" type="button" style="border-radius: 0 4px 4px 0px;">
+                <span class="p-button-icon pi pi-eye ng-star-inserted"></span>
+              </button>
+
+        </div>
+
+      </div>
+    </p-fieldset>
+
+    <div class="col-12 flex justify-content-end px-0">
+      <p-button label="GUARDAR" iconPos="left" icon="pi pi-save" [outlined]="true" (onClick)="handleSubmit()"/>
+    </div>
+</p-dialog>
+
+<p-dialog
+  header="Vista previa"
+  [style]="{ width: '400px',maxHeight: '100%'}"
+  modal="true"
+  [draggable]="false"
+  [resizable]="false"
+  [visible]="imageRoute() != ''"
+  (visibleChange)="imageRoute.set('')"
+>
+  <div class="w-full flex justify-content-center">
+    <img [src]="imageRoute()" height="360" style="max-width: 380px;"/>
+  </div>
 
 </p-dialog>

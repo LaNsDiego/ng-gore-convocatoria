@@ -147,3 +147,7 @@ a:-webkit-any-link:focus-visible {
   opacity: 0.8;
   text-transform: none;
 }
+
+.p-fieldset-content{
+  padding: 0;
+}
