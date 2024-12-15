@@ -11,8 +11,8 @@ export class WorkExperienceService {
   http = inject(HttpClient)
   constructor() { }
 
-  list(){
-    return this.http.get<DtoResponseWorkExperience[]>(`${environment.apiUrl}/work-experiences/list`)
+  list(employee_id:number){
+    return this.http.get<DtoResponseWorkExperience[]>(`${environment.apiUrl}/work-experiences/list/${employee_id}`)
   }
 
   store(values : any){
@@ -23,6 +23,10 @@ export class WorkExperienceService {
       }
     }
 
-    return this.http.post(`${environment.apiUrl}/work-experiences/list`,formData)
+    return this.http.post<{message : string}>(`${environment.apiUrl}/work-experiences/store`,formData)
+  }
+
+  delete(id : number){
+    return this.http.get<{message : string}>(`${environment.apiUrl}/work-experiences/delete/${id}`)
   }
 }

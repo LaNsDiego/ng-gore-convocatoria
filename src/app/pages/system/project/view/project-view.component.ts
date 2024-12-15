@@ -1,0 +1,235 @@
+import { PersonService } from '@/app/services/person.service';
+import { ProjectService } from '@/app/services/project.service';
+import { HelperStore } from '@/app/stores/HelpersStore';
+import { ProjectStore } from '@/app/stores/ProjectStore';
+import { getErrorByKey, getErrosOnControls, hasAccess } from '@/helpers';
+import { Component, effect, inject, signal } from '@angular/core';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { FieldsetModule } from 'primeng/fieldset';
+import { FileUploadModule } from 'primeng/fileupload';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { KeyFilterModule } from 'primeng/keyfilter';
+import { TableModule } from 'primeng/table';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { ProjectDetailService } from '@/app/services/project-detail.service';
+import { TooltipModule } from 'primeng/tooltip';
+import { JobProfileAssignedStore } from '@/app/stores/JobProfileAssignedStore';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ProjectDetailRrhhComponent } from './project-detail-rrhh/project-detail-rrhh.component';
+import { AccessKey } from '@/constans';
+import { DtoResponseTreeRoleHasPermissionList } from '@/app/domain/dtos/permission/DtoResponseTreeRoleHasPermissionList';
+import { AuthStore } from '@/app/stores/AuthStore';
+
+@Component({
+  selector: 'app-project-view',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    DialogModule,
+    FloatLabelModule,
+    ButtonModule,
+    InputTextModule,
+    DropdownModule,
+    InputTextareaModule,
+    FieldsetModule,
+    FileUploadModule,
+    KeyFilterModule,
+    TableModule,
+    InputGroupModule,
+    InputNumberModule,
+    InputGroupAddonModule,
+    TooltipModule,
+    CheckboxModule,
+    ProjectDetailRrhhComponent
+  ],
+  templateUrl: './project-view.component.html',
+  styleUrl: './project-view.component.css'
+})
+export class ProjectViewComponent {
+  projectStore = inject(ProjectStore)
+  projectService = inject(ProjectService)
+  helperStore = inject(HelperStore)
+  authStore = inject(AuthStore)
+  formBuilder = inject(FormBuilder)
+  personService = inject(PersonService)
+  projectDetailService = inject(ProjectDetailService)
+  jobProfileAssignedStore = inject(JobProfileAssignedStore)
+
+  frmCreate = this.formBuilder.group({
+    id : new FormControl<number>(0,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true }),
+    created_at : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    functional_sequence : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    specific_expenditure : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    project_name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    amount_as_specified : new FormControl<number>(0,{ validators : [Validators.required] , nonNullable : true }),
+    balance_amount_as_specified : new FormControl<number>(0,{ validators : [] , nonNullable : true }),
+    dni_responsible : new FormControl<string>('',{ validators : [Validators.required,Validators.maxLength(8),Validators.minLength(8)] , nonNullable : true }),
+    full_name_responsible : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    document_type : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    document_number : new FormControl<string>('',{ validators : [] , nonNullable : true }),
+    employeeRequirements : new FormControl<any[]>([],{ validators : [Validators.required,Validators.minLength(1)] , nonNullable : true }),
+  })
+
+  frmEmployeeRequirement = this.formBuilder.group({
+    dni : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    first_name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    father_last_name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    mother_last_name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    amount_required : new FormControl<number>(0,{ validators : [Validators.required] , nonNullable : true }),
+  })
+
+  documentTypes = signal<any[]>([
+    { label : 'INFORME'},
+    { label : 'OTROS'},
+  ])
+
+  employeeRequirements = signal<any[]>([])
+  userRRHHisEditing = signal<boolean>(false)
+
+  constructor(){
+    effect(()=> {
+      const entityToView = this.projectStore.entityToView()
+      if(entityToView){
+        this.frmCreate.patchValue(entityToView)
+        this.projectStore.doListByProjectRequirement(entityToView.id)
+
+        this.realSaldoFromProject({
+          functional_sequence : entityToView.functional_sequence,
+          specific_expenditure : entityToView.specific_expenditure
+        })
+
+        this.frmEmployeeRequirement.controls.dni.valueChanges.subscribe((value) => {
+          if(value.length === 8){
+            this.personService.find(value).subscribe({
+              next : (response) => {
+                console.log("REQ PERSON",response)
+                if(response.person){
+                  this.frmEmployeeRequirement.controls.first_name.setValue(response.person.first_name)
+                  this.frmEmployeeRequirement.controls.father_last_name.setValue(response.person.father_lastname)
+                  this.frmEmployeeRequirement.controls.mother_last_name.setValue(response.person.mother_lastname)
+
+                }
+              },
+              error : (error) => {
+                console.error(error)
+                this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
+              }
+            })
+          }else{
+            this.frmCreate.controls.full_name_responsible.enable()
+          }
+        })
+
+      }
+    },{
+      allowSignalWrites : true
+    })
+
+  }
+
+  onCloseModalCreate(a : boolean){
+    this.projectStore.closeModalView()
+    this.frmCreate.reset()
+  }
+
+  handleSubmit(){
+    this.frmCreate.markAllAsTouched()
+    if(this.frmCreate.status === 'VALID'){
+      const values = this.frmCreate.getRawValue()
+      this.projectService.update(values)
+      .subscribe({
+        next : (response) => {
+          console.log(response)
+          this.projectStore.closeModalView()
+          this.frmCreate.reset()
+          this.helperStore.showToast({severity : 'success', summary : 'Success', detail : response.message})
+          this.projectStore.doList()
+        },
+        error : (error) => {
+          console.error(error)
+          this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
+        }
+
+      })
+    }else{
+      console.warn(getErrosOnControls(this.frmCreate))
+    }
+
+  }
+
+  addEmployeeRequirement(){
+    this.frmEmployeeRequirement.markAllAsTouched()
+    if(this.frmEmployeeRequirement.status === 'VALID'){
+      const values = this.frmEmployeeRequirement.getRawValue()
+      console.log("required dni",values);
+
+
+      if(this.projectStore.requirementDetails().find(er => er.dni === values.dni)){
+        this.helperStore.showToast({severity : 'warn', summary : 'Advertencia', detail : 'El trabajador ya fue agregado'})
+        return
+      }
+
+      const diferrenceResult = Number(this.frmCreate.controls.balance_amount_as_specified.value) - Number(values.amount_required)
+      if(diferrenceResult < 0){
+        this.helperStore.showToast({severity : 'error', summary : 'Error', detail : 'El monto requerido excede el presupuesto'})
+        return
+      }
+      this.frmCreate.controls.balance_amount_as_specified.setValue(diferrenceResult)
+      // this.employeeRequirements.update((prev) => [...prev,values])
+      this.projectStore.requirementDetails().push(values)
+      this.projectStore.setEmployeeRequirements(this.projectStore.requirementDetails())
+      this.frmEmployeeRequirement.reset()
+      // console.log("requerimientos",this.employeeRequirements());
+      this.frmCreate.controls.employeeRequirements.setValue(this.projectStore.requirementDetails())
+
+    }else{
+      console.warn(getErrosOnControls(this.frmEmployeeRequirement))
+    }
+  }
+
+  onClickJobTitle(row : any){
+    this.jobProfileAssignedStore.openModalCreate(row)
+  }
+
+
+  realSaldoFromProject(val :any){
+    console.log("buscando saldo");
+
+    this.projectService.realSaldo(val).subscribe({
+      next : (response) => {
+
+        console.log("SALDO",response);
+
+        if(response != null || response.hasOwnProperty('amount_as_specified')){
+          // this.frmCreate.controls.amount_as_specified.setValue(response.amount_as_specified)
+          this.frmCreate.controls.balance_amount_as_specified.setValue(response.amount_as_specified)
+        }
+      },
+      error : (error) => {
+        console.error(error)
+        this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
+      }
+    })
+  }
+
+  // FUNCTIONS VALIDATION
+  getErrorMessageOnCreate(controlName: string): string {
+    const control = this.frmCreate.get(controlName as string)
+    return getErrorByKey(controlName,control)
+  }
+  getErrorOnFrmRequirement(controlName: string): string {
+    const control = this.frmEmployeeRequirement.get(controlName as string)
+    return getErrorByKey(controlName,control)
+  }
+
+  hasAccessKey(key : AccessKey,hasPermissions : DtoResponseTreeRoleHasPermissionList){
+    return hasAccess(key,hasPermissions)
+  }
+}

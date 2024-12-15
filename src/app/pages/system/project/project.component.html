@@ -54,56 +54,103 @@
   [paginator]="true"
   currentPageReportTemplate="Visualizar {first} a {last} de {totalRecords} registros"
   [globalFilterFields]="['id','name']"
-  styleClass="p-datatable-gridlines">
+  styleClass="p-datatable-gridlines p-datatable-sm">
 
   <ng-template pTemplate="header">
       <tr>
-          <th>
+          <th class="text-sm font-semibold">
               N°
           </th>
-          <th pSortableColumn="name" style="width:25%">
-              SECUENCIA FUNCIONAL <p-sortIcon field="name" />
+          <th class="text-sm font-semibold" pSortableColumn="name" style="width:120px">
+              SEC. FUNC. <p-sortIcon field="name" />
           </th>
-          <th pSortableColumn="name" style="width:25%">
+          <th class="text-sm font-semibold" pSortableColumn="name" style="width:350px">
               PROYECTO <p-sortIcon field="name" />
           </th>
-          <th pSortableColumn="name" style="width:25%">
+          <th class="text-sm font-semibold" pSortableColumn="name" style="width:260px">
               RESPONSABLE <p-sortIcon field="name" />
           </th>
-          <th pSortableColumn="name" style="width:25%">
+          <th class="text-sm font-semibold" pSortableColumn="name" style="width:160px">
               ESPECIF. GASTO <p-sortIcon field="name" />
           </th>
-          <th>ACCIONES</th>
+          <th class="text-sm font-semibold" pSortableColumn="name" style="width:180px">
+              MONTO ASIGNADO <p-sortIcon field="name" />
+          </th>
+          <th class="text-sm font-semibold" pSortableColumn="name" style="width:180px">
+              N° DE DOCUMENTO <p-sortIcon field="name" />
+          </th>
+          <th class="text-center text-sm font-semibold">ACCIONES</th>
       </tr>
   </ng-template>
 
-  <ng-template pTemplate="body" let-jobtitle let-rowIndex="rowIndex">
-      <tr [pSelectableRow]="jobtitle">
+  <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="row">
           <td>
               {{rowIndex + 1}}
           </td>
           <td>
-              {{ jobtitle.code }}
+              {{ row.functional_sequence }}
+          </td>
+          <td class="text-sm">
+            {{ row.project_name }}
+          </td>
+
+          <td class="">
+            <div class="flex flex-column ">
+
+              <span class="font-semibold text-sm">{{ row.full_name_responsible }}</span>
+              <span class="text-gray-600 text-sm">{{ row.dni_responsible }}</span>
+            </div>
+
+          </td>
+          <td class="text-sm">
+            {{ row.specific_expenditure }}
+          </td>
+          <td class="text-sm">
+              {{ row.amount_as_specified }}
           </td>
           <td>
-              {{ jobtitle.name }}
+            <div class="flex flex-column">
+
+              <span class="font-semibold text-sm">{{ row.document_number }}</span>
+              <span class="text-gray-600 text-sm">{{ row.document_type }}</span>
+            </div>
           </td>
-          <td>
-              {{ jobtitle.status }}
-          </td>
-          <td class="py-1 text-center">
-              <p-menu #menu [model]="options()" appendTo="body" [popup]="true" />
-              <p-button (click)="onOpenMenuOptionsRowTable($event,menu,jobtitle)" [rounded]="true" [text]="true" icon="pi pi-ellipsis-v"/>
-          </td>
+          <td class="">
+            <div class="inline-flex column-gap-1">
+              <p-button pTooltip="Editar"
+                tooltipPosition="top"
+                (click)="projectStore.openModalEdit(row)"
+                severity="info" [rounded]="true" [text]="true"
+                icon="pi pi-pencil" styleClass="mr-1"/>
+              <p-button pTooltip="Eliminar"
+                tooltipPosition="top"
+                (click)="onDelete(row)"
+                severity="danger" [rounded]="true" [text]="true"
+                icon="pi pi-trash" styleClass="mr-1"/>
+              <p-button pTooltip="Requerimientos"
+                tooltipPosition="top"
+                (click)="projectStore.openModalView(row)"
+                severity="warning" [rounded]="true" [text]="true"
+                icon="pi pi-list-check" styleClass="mr-1"/>
+              <p-button pTooltip="Imprimir"
+                tooltipPosition="top"
+                (click)="null"
+                severity="success" [rounded]="true" [text]="true"
+                icon="pi pi-print" styleClass="mr-1"/>
+            </div>
+        </td>
       </tr>
   </ng-template>
 
   <ng-template pTemplate="emptymessage">
       <tr>
-          <td colspan="7" class="text-center">No se encontraron registros.</td>
+          <td colspan="8" class="text-center">No se encontraron registros.</td>
       </tr>
   </ng-template>
   </p-table>
 </p-card>
 
 <app-project-create/>
+<app-project-view/>
+<app-job-profile-assigned/>

@@ -4,7 +4,7 @@ import { HelperStore } from '@/app/stores/HelpersStore';
 import { JobTitleStore } from '@/app/stores/JobTitleStore';
 import { getErrorByKey } from '@/helpers';
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -46,6 +46,24 @@ export class JobTitleCreateComponent {
     status : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     observation : new FormControl<string>('',{ validators : [] , nonNullable : true }),
   })
+
+  constructor(){
+    effect(() => {
+      const isOpen = this.jobTitleStore.isOpenCreate()
+      if(isOpen){
+        this.jobTitleService.nextCode().subscribe({
+          next : (generatedCode) => {
+            this.frmCreate.controls.code.setValue(generatedCode)
+          },
+          error : (err) => {
+            console.error(err)
+          }
+        })
+      }
+    },{
+      allowSignalWrites : true
+    })
+  }
 
   onCloseModalCreate(a : boolean){
     this.jobTitleStore.closeModalCreate()

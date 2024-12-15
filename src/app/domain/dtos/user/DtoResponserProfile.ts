@@ -4,6 +4,4 @@ import { JobTitleEntity } from "../../entities/JobTitleEntity";
 import { RoleEntity } from "../../entities/RoleEntity";
 import { UserEntity } from "../../entities/UserEntity";
 
-export type DtoResponseProfile = (UserEntity & { role : RoleEntity, 
-    employees : (EmployeeEntity & { job_title: JobTitleEntity, establishment: EstablishmentEntity})[],  
-})
+export type DtoResponseProfile = (UserEntity & { role : RoleEntity})

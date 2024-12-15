@@ -11,6 +11,10 @@ import { PanelModule } from 'primeng/panel';
 import { ToolbarStore } from '@/app/stores/ToolbarStore';
 import { HelperStore } from '@/app/stores/HelpersStore';
 import { AuthStore } from '@/app/stores/AuthStore';
+import { ExecutingUnitService } from '@/app/services/executing-unit.service';
+import { getErrorByKey, getErrosOnControls } from '@/helpers';
+import { DropdownModule } from 'primeng/dropdown';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -21,36 +25,51 @@ import { AuthStore } from '@/app/stores/AuthStore';
     FloatLabelModule,
     InputTextModule,
     PasswordModule,
-    PanelModule
+    PanelModule,
+    DropdownModule,
+    FloatLabelModule,
+    CommonModule,
+    InputTextModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   frmLogin: FormGroup;
   username!: string;
   password!: string;
   authService  = inject(AuthService)
+  executingUnitService  = inject(ExecutingUnitService)
   toolbarStore  = inject(ToolbarStore)
   helpers  = inject(HelperStore)
   authStore = inject(AuthStore)
   router = inject(Router)
+  executingUnits = signal<any[]>([])
   isSubmitting = signal<boolean>(false)
 
   constructor(
     private fb: FormBuilder,
   ) {
     this.frmLogin = this.fb.group({
-      email : new FormControl('00455556',[Validators.required]),
+      executing_unit : new FormControl<string|null>(null,[Validators.required]),
+      dni : new FormControl('00000000',[Validators.required]),
       password : new FormControl('12345678',[Validators.required]),
     })
     // this.toolbarStore.restoreStorageIsDark()
+    this.executingUnitService.list().subscribe({
+      next: (response) => {
+        console.log(response);
+        this.executingUnits.set(response)
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
 
   }
 
-  ngOnInit(): void {
-  }
+
 
   onSubmit(): void {
     this.frmLogin.markAllAsTouched()
@@ -60,15 +79,23 @@ export class LoginComponent implements OnInit {
         .subscribe({
           next: (response) => {
             this.isSubmitting.set(false)
-            console.log("RESPONSE",response);
+            console.log("LOGIN",response);
 
             this.authStore.saveJWT(response.access_token)
-            localStorage.setItem('permissions',JSON.stringify(response))
+            // localStorage.setItem('permissions',JSON.stringify(response))
+            localStorage.setItem('permissions',JSON.stringify(response.role))
             // const decodedJWT = this.authStore.decodeJWT(response.access_token)
             // this.authStore.setUserAuthenticated(decodedJWT.user)
 
             this.router.navigate(['/system/panel'])
 
+
+
+            // this.isSubmitting.set(false)
+            // this.authStore.saveJWT(response.access_token)
+            // this.router.navigate(['/system/dashboard'])
+            // const decodedJWT = this.authStore.decodeJWT(response.access_token)
+            // this.authStore.setUserAuthenticated(decodedJWT.user)
 
           },
           error: (error) => {
@@ -82,11 +109,12 @@ export class LoginComponent implements OnInit {
 
     }else{
       this.helpers.showToast({severity:'error',summary:'Error',detail:'Formulario invalido'})
-      console.log("Formulario invalido",this.frmLogin)
-      console.log(
-        Object.keys(this.frmLogin.controls)
-      .map((field ) => ({field,errors : this.frmLogin.controls[field].errors , status : this.frmLogin.controls[field].status}))
-      )
+      console.warn(getErrosOnControls(this.frmLogin));
+
     }
+  }
+
+  getErrorMessage(controlName: string): string {
+    return getErrorByKey(controlName,this.frmLogin)
   }
 }

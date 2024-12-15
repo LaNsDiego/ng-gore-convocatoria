@@ -1,0 +1,103 @@
+
+
+<p-breadcrumb  styleClass="border-0 py-2" [style]="{background:'transparent', padding:'0px'}" [model]="items">
+    <ng-template pTemplate="item" let-item class="pt-3">
+        <ng-container *ngIf="item.route; else elseBlock">
+            <a [routerLink]="item.route" class="p-menuitem-link bg-transparent pb-0">
+                <span [ngClass]="[item.icon ? item.icon : '', 'text-color']"></span>
+                <span class="text-primary font-semibold">{{ item.label }}</span>
+            </a>
+        </ng-container>
+        <ng-template #elseBlock>
+            <a [href]="item.url">
+                <span class="text-color">{{ item.label }}</span>
+            </a>
+        </ng-template>
+    </ng-template>
+</p-breadcrumb>
+
+<h1 class="text-2xl pt-3">USUARIOS</h1>
+<h3 class="text-xl mt-2">Usuarios del sistema y su asignación de empleado</h3>
+<div class="flex justify-content-end p-3">
+    <p-button label="NUEVO" icon="pi pi-save" size="large" (click)="onOpenModalCreateUserService()"/>
+</div>
+
+<p-table
+#dt1
+[value]="userStore.entities()"
+[globalFilterFields]="['id', 'name','email']"
+selectionMode="single"
+dataKey="id"
+[tableStyle]="{ 'min-width': '50rem' }"
+[rows]="10"
+[paginator]="true"
+stateKey="users-table"
+styleClass="p-datatable-gridlines">
+<!-- <ng-template pTemplate="caption">
+    <p-iconField iconPosition="left">
+        <p-inputIcon>
+            <i class="pi pi-search"></i>
+        </p-inputIcon>
+        <input
+            pInputText
+            type="text"
+            (input)="dt1.filterGlobal($event.target.values, 'contains')"
+            placeholder="Global Search" />
+    </p-iconField>
+</ng-template>  -->
+<ng-template pTemplate="header">
+    <tr>
+        <th>
+            N°
+        </th>
+        <th pSortableColumn="dni">
+            DNI <p-sortIcon field="dni" />
+        </th>
+        <th pSortableColumn="name">
+            Nombre <p-sortIcon field="name" />
+        </th>
+        <th pSortableColumn="email">
+            Email <p-sortIcon field="email" />
+        </th>
+        <th pSortableColumn="role">
+            Rol <p-sortIcon field="role" />
+        </th>
+        <th>
+            Opciones
+        </th>
+    </tr>
+</ng-template>
+
+<ng-template pTemplate="body" let-user let-rowIndex="rowIndex">
+    <tr [pSelectableRow]="user">
+        <td>
+            {{rowIndex + 1}}
+        </td>
+        <td>
+            {{ user.dni }}
+        </td>
+        <td>
+            {{ user.name }}
+        </td>
+        <td>
+            {{ user.email }}
+        </td>
+        <td>
+            {{ user.role.name }}
+        </td>
+        <td class="py-1 text-center">
+            <p-menu #menu [model]="options()" appendTo="body" [popup]="true" />
+            <p-button (click)="onOpenMenuOptionsRowTable($event,menu,user)" [rounded]="true" [text]="true" icon="pi pi-ellipsis-v"/>
+        </td>
+    </tr>
+</ng-template>
+
+<ng-template pTemplate="emptymessage">
+    <tr>
+        <td colspan="6">No customers found.</td>
+    </tr>
+</ng-template>
+</p-table>
+
+<app-user-create />
+<app-user-edit />

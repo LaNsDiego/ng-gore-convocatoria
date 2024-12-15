@@ -1,0 +1,168 @@
+<p-card
+
+>
+
+
+  <p-carousel
+
+    [value]="carouselItems"
+    [numVisible]="1"
+    [numScroll]="1"
+    [showNavigators]="false"
+    [showIndicators]="false"
+    styleClass="border-noround"
+    >
+        <ng-template pTemplate="header">
+            <p class="text-xl">Roles y permisos</p>
+            <!-- <p-button severity="primary" label="ATRAS"  (onClick)="carousel1.navBackward($event)"/> -->
+            <!-- <p-button severity="primary" label="SIGUIENTE"  (onClick)="carousel1.navForward($event)"/> -->
+        </ng-template>
+        <ng-template let-item pTemplate="item" >
+          <div class="grid p-0 m-0 w-full">
+
+            <!-- CAROUSEL 1 -->
+            @if (item.id == 1) {
+              <div class="col-12 flex">
+                <p-breadcrumb  styleClass="max-w-full pt-2 pl-2" [style]="{background:'transparent', padding:'0px'}" [model]="breadcrumbs">
+                  <ng-template pTemplate="item" let-item>
+                    @if(item.route){
+                      <ng-container>
+                        <a [routerLink]="item.route" class="p-menuitem-link bg-transparent p-0">
+                            <span class="text-primary">{{ item.label }}</span>
+                        </a>
+                      </ng-container>
+                    } @else if(item.handler){
+                      <ng-container>
+                        <div class="p-menuitem-link bg-transparent p-0 cursor-pointer hover:underline" (click)="item.handler()">
+                            <span class="text-blue-600">{{ item.label }}</span>
+                        </div>
+                      </ng-container>
+                    }
+                    @else {
+                      <ng-container>
+                        <div class="bg-transparent p-0">
+                          <span class="font-bold">{{ item.label }}</span>
+                      </div>
+                      </ng-container>
+                    }
+
+
+                  </ng-template>
+                </p-breadcrumb>
+              </div>
+              <!-- COL 1 -->
+              <div class="col-12 sm:col-4 md:col-5 m-0 p-0 m-0 border-left-1 border-right-1 border-gray-300">
+                <app-role-list/>
+              </div>
+              <!-- COL 2 -->
+              <div class="col-12 sm:col-8 md:col-7 m-0 p-0 border-right-1 border-top-1 border-gray-300">
+                <div class="w-full border-bottom-1 border-gray-300 flex justify-content-end px-3 py-2">
+                  <button class="p-button p-button-text p-button-outlined p-button-primary p-button-sm" (click)="handleSubmit()" [disabled]="roleStore.isSubmitting()" >
+                    <span class="pi pi-save mr-2 px-1"></span> {{ !roleStore.isSubmitting() ?  'GUARDAR PERMISOS' : 'ENVIANDO...' }}
+                  </button>
+                </div>
+                <p-tabView styleClass="w-full">
+                  @if (groups().length === 0) {
+                    <p-tabPanel header="Ningun rol seleccionado">
+                      <div style="min-height: 400px;" class="flex justify-content-center align-items-center h-full border-left-1 border-right-1 border-top-1 border-gray-300 flex justify-content-end px-3 py-2">
+                        <span>Ningun modulo del sistema que mostrar.</span>
+                      </div>
+                    </p-tabPanel>
+                  }
+                  @for(group  of groups() ; track group)
+                  {
+
+                    <p-tabPanel [header]="group.name">
+                      <div class="w-full py-3 border-left-1 border-right-1 border-top-1 border-gray-300 flex justify-content-end px-3 py-2">
+                        Modulos de {{ group.name }}
+                      </div>
+                    <!--
+                      <p-treeTable
+                      #treeTable
+                      [value]="group.trees"
+                      [columns]="cols()"
+                      selectionMode="checkbox"
+                      [(selectionKeys)]="selectionKeys"
+                      (selectionKeysChange)="onSelectionKeysChange($event)"
+                      dataKey="key"
+                      [scrollable]="true"
+                      [tableStyle]="{ 'min-width': '50rem' }"
+
+                      >
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th *ngFor="let col of cols()">
+                            {{ col.header }}
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+                        <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode">
+                          @for (item of columns;track $index) {
+                                <td>
+
+                                  @if($index === 0){
+                                  <p-treeTableToggler [rowNode]="rowNode"/>
+                                  }
+
+                                  @if($index === 0) {
+                                    <p-treeTableCheckbox [value]="rowNode" />
+                                  }
+
+                                  {{ rowData.name ? rowData.name : rowData.action }}
+
+                                </td>
+                              }
+                        </tr>
+                      </ng-template>
+                      </p-treeTable>
+
+                    -->
+                    @for (system_module of group.system_modules; track $index) {
+                      <p-accordion class="w-full"  expandIcon="pi pi-plus" collapseIcon="pi pi-minus">
+                        <p-accordionTab>
+                          <ng-template pTemplate="header">
+                              <span class="flex align-items-center gap-2 w-full">
+                                  <!-- <p-checkbox binary="true" [value]="false"/> -->
+                                  <span class="font-bold white-space-nowrap uppercase">
+                                      {{ system_module.name }}
+                                  </span>
+                                  <p-badge [value]="system_module.module_permissions.length" class="ml-auto mr-2" />
+                              </span>
+                          </ng-template>
+                          <div class="m-0">
+                            <ul class="pl-0 flex flex-column column-gap-4 w-full">
+                              @for (permission of system_module.module_permissions; track $index) {
+                                <li class="flex align-items-center gap-2 py-2 w-full uppercase" (click)="onClickAction(permission)">
+                                  <p-checkbox binary="true" [ngModel]="isPermissionChecked(permission.id) || permission.has_access"/>
+                                  <span class="font-bold">{{ permission.action.split('-').pop() }}</span>
+                                  <!-- <p-button icon="pi pi-plus" class="p-button-rounded p-button-text" (click)="null"/> -->
+                                </li>
+                              }
+                            </ul>
+                          </div>
+                        </p-accordionTab>
+                      </p-accordion>
+                    }
+
+                    </p-tabPanel>
+                  }
+                </p-tabView>
+
+
+
+              </div>
+
+
+            }
+          </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <!-- <p>Footer content</p> -->
+        </ng-template>
+      </p-carousel>
+
+    </p-card>
+    <app-role-create/>
+
+

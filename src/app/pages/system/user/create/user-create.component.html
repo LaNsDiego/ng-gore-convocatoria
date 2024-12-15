@@ -1,0 +1,79 @@
+<p-dialog
+header="CREAR USUARIO"
+[modal]="true"
+[breakpoints]="{'575px': '100vw'}"
+[style]="{ width: '500px',maxHeight: '100%'}"
+[draggable]="false"
+[resizable]="false"
+[visible]="userStore.isOpenCreate()"
+(visibleChange)="onCloseModalCreate($event)">
+    <form class="grid pt-2" [formGroup]="frmCreate">
+
+      <div class="col-12">
+        <p-dropdown
+        formControlName="dni"
+        styleClass="w-full"
+        appendTo="body"
+        [options]="sirUsers()"
+        optionLabel="pers_cod"
+        optionValue="pers_cod"
+        [filter]="true"
+        filterBy="pers_cod,pers_apepat,pers_apemat,pers_nombre"
+        [showClear]="true"
+        [virtualScroll]="sirUsers().length > 50 ? true : false"
+          [virtualScrollItemSize]="sirUsers().length > 50 ? 38 : 6"
+        placeholder="Seleccione un Empleado de SIR">
+        <ng-template let-employee pTemplate="item">
+            <b>{{ employee.pers_cod }}</b> : {{ employee.pers_nombre }} {{ employee.pers_apepat  }} {{ employee.pers_apemat  }}
+        </ng-template>
+        <ng-template let-employee pTemplate="selectedItem">
+          <b>{{ employee.pers_cod }}</b> : {{ employee.pers_nombre }} {{ employee.pers_apepat  }} {{ employee.pers_apemat  }}
+        </ng-template>
+        </p-dropdown>
+        <small class="text-xs text-pink-600" style="height: 1em;">
+          {{ getErrorMessageOnCreate('dni') }}
+        </small>
+      </div>
+
+        <div class="col-12">
+            <p-floatLabel>
+                <input pInputText id="name" formControlName="name"  class="w-full"/>
+                <label for="name">Nombre completo</label>
+            </p-floatLabel>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessageOnCreate('name') }}
+            </small>
+        </div>
+        <div class="col-12">
+            <p-floatLabel>
+                <input pInputText id="email" formControlName="email"  class="w-full"/>
+                <label for="email">Correo</label>
+            </p-floatLabel>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessageOnCreate('email') }}
+            </small>
+        </div>
+        <div class="col-12">
+            <p-dropdown
+            formControlName="role_id"
+            styleClass="w-full"
+            appendTo="body"
+            [options]="roles()"
+            optionLabel="name"
+            optionValue="id"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            placeholder="Seleccione un rol">
+            </p-dropdown>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessageOnCreate('role_id') }}
+            </small>
+        </div>
+
+        <div class="col-12 flex justify-content-end">
+        <p-button label="GUARDAR" iconPos="left" icon="pi pi-save" [outlined]="true" (onClick)="handleSubmit()"/>
+        </div>
+    </form>
+
+</p-dialog>

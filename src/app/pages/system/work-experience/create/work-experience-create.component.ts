@@ -1,6 +1,7 @@
+import { WorkExperienceService } from '@/app/services/work-experience.service';
 import { HelperStore } from '@/app/stores/HelpersStore';
 import { WorkExperienceStore } from '@/app/stores/WorkExperienceStore';
-import { getErrorByKey, getErrosOnControls } from '@/helpers';
+import { calcularExperienciaTotal, getErrorByKey, getErrosOnControls } from '@/helpers';
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -39,45 +40,23 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 })
 export class WorkExperienceCreateComponent {
   workExperienceStore = inject(WorkExperienceStore)
-  // employeeService = inject(EmployeeService)
+  workExperienceService = inject(WorkExperienceService)
   // jobTitleService = inject(JobTitleService)
   // personService = inject(PersonService)
   // countryService = inject(CountryService)
   helperStore = inject(HelperStore)
   formBuilder = inject(FormBuilder)
   frmCreate = this.formBuilder.group({
-    document_type : new FormControl<string|null>(null,{ validators : [Validators.required,Validators.minLength(1)] , nonNullable : true}),
-    document_number : new FormControl<string>( { value: '', disabled: true },{ nonNullable : true}),
-    name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    father_last_name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    mother_last_name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    sex : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    marital_status : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    date_of_birth : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    email : new FormControl<string>('',{ validators : [Validators.email] , nonNullable : false}),
-    phone_number : new FormControl<string>('',{ validators: [Validators.pattern('^[0-9]*$')] , nonNullable : false }),
-    file_data_employee : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
-
-    birth_country_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    birth_department_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    birth_province_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    birth_city_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    file_place_of_birth : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
-
-    address_country_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    address_department_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    address_province_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    address_city_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    address : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    file_address : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
-
-    bank : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    account_type : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    account_number : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    cci : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    file_bank_account : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
-
-
+    employee_id : new FormControl<number>(0,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true }),
+    sector : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    experience_type : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    entity : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    job_title : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    functions_performed : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    start_date : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
+    end_date : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
+    document_name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
+    file : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
   })
 
 
@@ -94,69 +73,78 @@ export class WorkExperienceCreateComponent {
 
   constructor() {
     effect(() => {
+      const employee = this.workExperienceStore.employeeToCreate()
+      const isOpen = this.workExperienceStore.isOpenCreate()
+      if(employee && isOpen){
+        // console.log("EMPLOYE TO CREATE EXPERIENCE",employee);
 
+        this.frmCreate.controls.employee_id.setValue(employee.id)
+      }else{
+        this.frmCreate.reset()
+      }
     },{
       allowSignalWrites : true
     })
   }
 
-  setDocumentNumberValidators(documentType: string|null) {
-    const documentNumberControl = this.frmCreate.controls.document_number;
-
-    if (documentType === 'DNI') {
-      documentNumberControl?.enable();
-      documentNumberControl?.setValidators([Validators.required,Validators.pattern('^[0-9]*$'), Validators.minLength(8), Validators.maxLength(8)]);
-    } else if (documentType === 'RUC') {
-      documentNumberControl?.enable();
-      documentNumberControl?.setValidators([Validators.required,Validators.pattern('^[0-9]*$'), Validators.minLength(11), Validators.maxLength(11)]);
-    } else {
-      documentNumberControl?.disable();
-      documentNumberControl?.clearValidators();
-    }
-
-    documentNumberControl?.updateValueAndValidity();
-  }
-
-  document_types = [
-    {  abbreviation: 'DNI',name : 'DOCUMENTO NACIONAL DE IDENTIDAD'},
-    {  abbreviation: 'RUC',name : 'REGISTRO UNICO DE CONTRIBUYENTES'},
-  ]
-
-
-  onCloseModalCreate(a : boolean){
+  onCloseModalCreate(){
     this.frmCreate.reset()
     this.workExperienceStore.closeModalCreate()
+
   }
 
   handleSubmit(){
-    // this.frmCreate.markAllAsTouched()
-    // if(this.frmCreate.status === 'VALID'){
-    //   console.log(this.frmCreate.value)
-    //   const values = this.frmCreate.getRawValue()
-    //   this.employeeService.store(values as any)
-    //   .subscribe({
-    //     next : (response) => {
-    //       console.log({ response})
-    //       this.employeeStore.closeModalCreate()
-    //       this.frmCreate.reset()
-    //       this.helperStore.showToast({severity : 'success', summary : 'Success', detail : response.message})
-    //       this.employeeStore.doList()
-    //     },
-    //     error : (error) => {
-    //       this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
-    //       console.error(error)
-    //     }
+    this.frmCreate.markAllAsTouched()
+    if(this.frmCreate.status === 'VALID'){
+      console.log(this.frmCreate.value)
+      const values = this.frmCreate.getRawValue()
+      this.workExperienceService.store(values as any)
+      .subscribe({
+        next : (response) => {
+          this.workExperienceStore.doListByEmployee({
+            employee_id : this.frmCreate.controls.employee_id.value,
+            callback : (r) => this.workExperienceStore.setCalculatedExperience(this.calcularExperiencia(r))
+          })
+          this.workExperienceStore.closeModalCreate()
+          this.frmCreate.reset()
+          this.helperStore.showToast({severity : 'success', summary : 'Exito', detail : response.message})
+          console.log(response)
+        },
+        error : (error) => {
+          this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
+          console.error(error)
+        }
 
-    //   })
-    // }else{
-    //   console.warn(getErrosOnControls(this.frmCreate))
-    // }
+      })
+    }else{
+      console.warn(getErrosOnControls(this.frmCreate))
+    }
 
+  }
+
+  onSelectFile(event : any){
+    const [selectedFile] = event.currentFiles
+    this.frmCreate.controls.file.setValue(selectedFile)
   }
 
   // FUNCTIONS VALIDATION
   getErrorMessage(controlName: string): string {
     const control = this.frmCreate.get(controlName as string)
     return getErrorByKey(controlName,control)
+  }
+
+
+  calcularExperiencia(experiencias: any[]) {
+
+    // Calcular experiencias por filtro
+    const experienciaPublica = calcularExperienciaTotal(experiencias, exp => exp.sector === 'publico');
+    const experienciaEspecifica = calcularExperienciaTotal(experiencias, exp => exp.experience_type === 'ESPECIFICA');
+    const experienciaGeneral = calcularExperienciaTotal(experiencias, exp => exp.experience_type === 'GENERAL');
+
+    return {
+      experienciaEspecifica,
+      experienciaPublica,
+      experienciaGeneral
+    }
   }
 }

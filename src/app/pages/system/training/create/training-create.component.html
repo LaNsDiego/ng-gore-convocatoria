@@ -1,0 +1,285 @@
+<p-dialog
+  header="Nueva formación académica y títulos"
+  [modal]="true"
+  [breakpoints]="{'960px': '100vw'}"
+  [style]="{ width: '960px', maxHeight: '100%' }"
+  [draggable]="false"
+  [resizable]="false"
+  [visible]="trainingStore.employeeToCreate() != null"
+  (visibleChange)="onCloseModalCreate()"
+  [formGroup]="frmCreate">
+
+  <p-fieldset legend="Datos de capacitación">
+    <form class="grid">
+      <div class="col-6 flex flex-column">
+        <p-dropdown
+          formControlName="study_type"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="studyTypes()"
+          optionLabel="label"
+          optionValue="label"
+          placeholder="Tipo de estudio *">
+        </p-dropdown>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('study_type') }}</small>
+      </div>
+
+      <div class="col-6 flex flex-column">
+        <p-floatLabel>
+          <input pInputText id="topic" formControlName="topic" class="w-full" />
+          <label for="topic">Tema *</label>
+        </p-floatLabel>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('topic') }}</small>
+      </div>
+
+      <div class="col-2 flex flex-column">
+        <p-calendar
+          formControlName="start_date"
+          styleClass="w-full"
+          appendTo="body"
+          dataType="string"
+          placeholder="Fecha inicio">
+        </p-calendar>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('start_date') }}</small>
+      </div>
+
+      <div class="col-2 flex flex-column">
+        <p-calendar
+          formControlName="end_date"
+          styleClass="w-full"
+          appendTo="body"
+          dataType="string"
+          placeholder="Fecha fin">
+        </p-calendar>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('end_date') }}</small>
+      </div>
+
+      <div class="col-8 flex flex-column">
+        <p-dropdown
+          formControlName="participation_type"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="participationTypes()"
+          optionLabel="label"
+          optionValue="label"
+          placeholder="Tipo de participación">
+        </p-dropdown>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('participation_type') }}</small>
+      </div>
+
+      <div class="col-12 flex flex-column">
+        <p-floatLabel>
+          <input pInputText id="institution" formControlName="institution" class="w-full" />
+          <label for="institution">Institución *</label>
+        </p-floatLabel>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('institution') }}</small>
+      </div>
+
+      <div class="col-3 flex flex-column">
+        <p-dropdown
+          formControlName="country_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="countries()"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="País">
+        </p-dropdown>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('country_id') }}</small>
+      </div>
+      <div class="col-3 flex flex-column">
+        <p-dropdown
+          formControlName="department_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="departments()"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Departamento">
+        </p-dropdown>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('department_id') }}</small>
+      </div>
+      <div class="col-3 flex flex-column">
+        <p-dropdown
+          formControlName="provincie_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="provincies()"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Provincia">
+        </p-dropdown>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('provincie_id') }}</small>
+      </div>
+
+      <div class="col-3 flex flex-column">
+        <p-dropdown
+          formControlName="city_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="cities()"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Ciudad">
+        </p-dropdown>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('city_id') }}</small>
+      </div>
+
+      <div class="col-4 flex flex-column">
+        <p-dropdown
+          formControlName="semester"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="semesters()"
+          optionLabel="label"
+          optionValue="label"
+          placeholder="Semestre">
+        </p-dropdown>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('semester') }}</small>
+      </div>
+
+      <div class="col-4 flex flex-column">
+        <p-floatLabel>
+          <input pInputText id="hours" formControlName="hours" class="w-full" />
+          <label for="hours">Duración en horas</label>
+        </p-floatLabel>
+      </div>
+
+      <div class="col-4 flex flex-column">
+        <p-floatLabel>
+          <input pInputText id="credits" formControlName="credits" class="w-full" />
+          <label for="credits">Créditos</label>
+        </p-floatLabel>
+      </div>
+
+      <div class="col-6 flex flex-column">
+        <p-dropdown
+          formControlName="constancy_type"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="constancyTypes()"
+          optionLabel="label"
+          optionValue="label"
+          placeholder="Tipo de constancia">
+        </p-dropdown>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('constancy_type') }}</small>
+      </div>
+      <div class="col-6 flex flex-column">
+        <p-dropdown
+          formControlName="mode"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="modes()"
+          optionLabel="label"
+          optionValue="label"
+          placeholder="Modalidad">
+        </p-dropdown>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('mode') }}</small>
+      </div>
+
+      <div class="col-12 flex-column">
+        <p-fileUpload
+          mode="basic"
+          chooseLabel="SUBIR ARCHIVO"
+          chooseIcon="pi pi-upload"
+          maxFileSize="1000000"
+          (onSelect)="onSelectFile($event)"
+          (onUpload)="null">
+        </p-fileUpload>
+      </div>
+    </form>
+  </p-fieldset>
+
+  <p-fieldset legend="Datos del registro">
+
+    <form class="grid">
+    <div class="col-4 flex flex-column">
+      <p-calendar
+        formControlName="date_expedition"
+        styleClass="w-full"
+        appendTo="body"
+        dataType="string"
+        placeholder="Fecha de expedición">
+      </p-calendar>
+      <small class="text-sm text-pink-600">{{ getErrorMessage('date_expedition') }}</small>
+    </div>
+
+    <div class="col-8 flex column-gap-4 m-auto">
+      <label for="">Tipo de control de registro del titulo</label>
+      <label>
+        <input type="radio" formControlName="qualification_entity_control" name="qualification_entity_control" value="DRE" /> DRE
+      </label>
+      <label>
+        <input type="radio" formControlName="qualification_entity_control" name="qualification_entity_control" value="UGEL" /> UGEL
+      </label>
+      <label>
+        <input type="radio" formControlName="qualification_entity_control" name="qualification_entity_control" value="MINEDU" /> MINEDU
+      </label>
+    </div>
+
+
+
+      <div class="col-4 flex flex-column">
+        <p-calendar
+          formControlName="issue_date"
+          styleClass="w-full"
+          appendTo="body"
+          dataType="string"
+          placeholder="Fecha de emisión">
+        </p-calendar>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('issue_date') }}</small>
+      </div>
+
+      <div class="col-4 flex flex-column">
+        <p-floatLabel>
+          <input pInputText id="registry_number" formControlName="registry_number" class="w-full" />
+          <label for="registry_number">Número de registro</label>
+        </p-floatLabel>
+      </div>
+
+      <div class="col-4 flex flex-column">
+        <p-floatLabel>
+          <input pInputText id="registry_center" formControlName="registry_center" class="w-full" />
+          <label for="registry_center">Centro de registro</label>
+        </p-floatLabel>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('registry_center') }}</small>
+      </div>
+
+      <div class="col-4 flex flex-column">
+        <p-calendar
+          formControlName="date_resolution"
+          styleClass="w-full"
+          appendTo="body"
+          dataType="string"
+          placeholder="Fecha de resolución">
+        </p-calendar>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('date_resolution') }}</small>
+      </div>
+
+      <div class="col-4 flex flex-column">
+        <p-floatLabel>
+          <input pInputText id="number_resolution" formControlName="number_resolution" class="w-full" />
+          <label for="number_resolution">Numero de rosolución</label>
+        </p-floatLabel>
+        <small class="text-sm text-pink-600">{{ getErrorMessage('number_resolution') }}</small>
+      </div>
+
+      <div class="col-12 flex-column">
+        <p-fileUpload
+          mode="basic"
+          chooseLabel="SUBIR ARCHIVO"
+          chooseIcon="pi pi-upload"
+          maxFileSize="1000000"
+          (onSelect)="onSelectFileRegister($event)"
+          (onUpload)="null">
+        </p-fileUpload>
+      </div>
+
+    </form>
+  </p-fieldset>
+
+  <div class="col-12 flex justify-content-end px-0">
+    <p-button label="Guardar" icon="pi pi-save" class="mr-2" (onClick)="handleSubmit()"></p-button>
+    <p-button label="Cancelar" icon="pi pi-times" class="p-button-secondary" (onClick)="onCloseModalCreate()"></p-button>
+  </div>
+</p-dialog>

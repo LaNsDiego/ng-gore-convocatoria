@@ -14,6 +14,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { TableModule } from 'primeng/table';
 import { ProjectCreateComponent } from './create/project-create.component';
+import { ProjectViewComponent } from './view/project-view.component';
+import { JobProfileAssignedComponent } from './job-profile-assigned/job-profile-assigned.component';
 
 @Component({
   selector: 'app-project',
@@ -29,6 +31,8 @@ import { ProjectCreateComponent } from './create/project-create.component';
     InputIconModule,
     CardModule,
     ProjectCreateComponent,
+    ProjectViewComponent,
+    JobProfileAssignedComponent
   ],
   templateUrl: './project.component.html',
   styleUrl: './project.component.css'

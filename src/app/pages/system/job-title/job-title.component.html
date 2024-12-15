@@ -74,24 +74,39 @@
         </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-jobtitle let-rowIndex="rowIndex">
-        <tr [pSelectableRow]="jobtitle">
+    <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="row">
             <td>
                 {{rowIndex + 1}}
             </td>
             <td>
-                {{ jobtitle.code }}
+                {{ row.code }}
             </td>
             <td>
-                {{ jobtitle.name }}
+                {{ row.name }}
             </td>
             <td>
-                {{ jobtitle.status }}
+                {{ row.status }}
             </td>
-            <td class="py-1 text-center">
+            <!-- <td class="py-1 text-center">
                 <p-menu #menu [model]="options()" appendTo="body" [popup]="true" />
-                <p-button (click)="onOpenMenuOptionsRowTable($event,menu,jobtitle)" [rounded]="true" [text]="true" icon="pi pi-ellipsis-v"/>
-            </td>
+                <p-button (click)="onOpenMenuOptionsRowTable($event,menu,row)" [rounded]="true" [text]="true" icon="pi pi-ellipsis-v"/>
+            </td> -->
+
+            <td class="text-center">
+              <div class="inline-flex column-gap-1">
+                <p-button pTooltip="Editar"
+                  tooltipPosition="top"
+                  (click)="onEdit(row)"
+                  severity="info" [rounded]="true" [text]="true"
+                  icon="pi pi-pencil" styleClass="mr-1"/>
+                <p-button pTooltip="Eliminar"
+                  tooltipPosition="top"
+                  (click)="onDelete(row)"
+                  severity="danger" [rounded]="true" [text]="true"
+                  icon="pi pi-trash" styleClass="mr-1"/>
+              </div>
+          </td>
         </tr>
     </ng-template>
 

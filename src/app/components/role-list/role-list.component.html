@@ -1,0 +1,28 @@
+<div class="w-full" style="min-height: 400px;">
+  <div class="w-full px-4 py-3 border-y-1 border-gray-300">
+    <h4> <i class="pi pi-server mr-2"></i> Roles</h4>
+  </div>
+  <div class="w-full border-bottom-1 border-gray-300">
+     <button type="button"(click)="roleStore.openModalCreate()" class="w-full p-button p-button-text p-ripple pl-4">
+      <span class="p-button-icon pi pi-plus mr-2"></span>
+      <span class="ml-1">Nuevo Rol</span>
+     </button>
+  </div>
+  <p-listbox
+        [options]="roleStore.entities()"
+        [filter]="true"
+        optionLabel="name"
+        (onChange)="onSelectRole($event.value)"
+        styleClass="py-2 m-0 border-noround border-0"
+        [listStyle]="{'max-height': '500px'}" >
+
+        <ng-template let-row pTemplate="item" >
+          <div class="flex justify-content-between align-items-center gap-2 w-full" style="height: 1.25em;">
+              <div class="">{{ row.name }}</div>
+              <p-button severity="primary" text="true"  (onClick)="null" icon="pi pi-pencil"/>
+          </div>
+        </ng-template>
+
+  </p-listbox>
+
+</div>

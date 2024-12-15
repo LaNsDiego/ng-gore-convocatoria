@@ -15,6 +15,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { TableModule } from 'primeng/table';
 import { WorkExperienceCreateComponent } from './create/work-experience-create.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DtoResponseEmployee } from '@/app/domain/dtos/employee/DtoResponseEmployee';
+import { EmployeeService } from '@/app/services/employee.service';
+import { calcularExperienciaTotal } from '@/helpers';
 
 @Component({
   selector: 'app-work-experience',
@@ -30,7 +34,7 @@ import { WorkExperienceCreateComponent } from './create/work-experience-create.c
     IconFieldModule,
     InputIconModule,
     InputTextModule,
-    WorkExperienceCreateComponent
+    WorkExperienceCreateComponent,
   ],
   templateUrl: './work-experience.component.html',
   styleUrl: './work-experience.component.css'
@@ -39,9 +43,11 @@ export class WorkExperienceComponent {
   items: MenuItem[] | undefined;
   home: MenuItem | undefined;
 
+  activedRoute = inject(ActivatedRoute)
   helperStore = inject(HelperStore)
   workExperienceStore = inject(WorkExperienceStore)
   workExperienceService = inject(WorkExperienceService)
+  employeeService = inject(EmployeeService)
   confirmationService = inject(ConfirmationService)
 
   selectedRow  = signal<DtoResponseWorkExperience|null>(null)
@@ -66,21 +72,43 @@ export class WorkExperienceComponent {
     }
   ])
 
+  calculatedExperience = signal<any|null>(null)
+
+  employee = signal<DtoResponseEmployee|null>(null)
   constructor(){
-    this.loadTableEmployees()
+    this.activedRoute.paramMap.subscribe(params => {
+      const employeeId = Number(params.get('employee_id'))
+      console.log("employeeId",employeeId)
+
+      if(!isNaN(employeeId) && employeeId > 0){
+        this.workExperienceStore.doListByEmployee({
+          employee_id :employeeId ,
+          callback : (r) => this.workExperienceStore.setCalculatedExperience(this.calcularExperiencia(r))
+        })
+        this.employeeService.getOneById(employeeId).subscribe({
+          next: (employee) => {
+            this.employee.update(() => employee)
+          },
+          error: (error) => {
+            console.error(error)
+            this.helperStore.showToast({severity:'error', summary:'Error', detail:'No se ha podido obtener el empleado'})
+          }
+        })
+      }else{
+        this.helperStore.showToast({severity:'error', summary:'Error', detail:'No se ha podido cargar la experiencia del empleado'})
+      }
+    })
+
     this.items = [{ label: 'Inicio', route: '/system/dashboard' }, { label: 'Experiencia laboral' }];
   }
-  onSuccessCreate(){
-    console.log("onSuccessCreate");
-    this.loadTableEmployees()
-  }
 
-  loadTableEmployees(){
-    this.workExperienceStore.doList()
-  }
 
-  onOpenModalCreateEmployee(){
-    this.workExperienceStore.openModalCreate()
+
+  onOpenCreate(){
+    const employee = this.employee()
+    if(employee){
+      this.workExperienceStore.openModalCreate(employee)
+    }
   }
 
   onEdit(entity : DtoResponseWorkExperience|null){
@@ -104,16 +132,22 @@ export class WorkExperienceComponent {
         rejectIcon:"none",
         rejectButtonStyleClass:"p-button-text",
         accept: () => {
-            // this.workExperienceService.delete(entity.id).subscribe({
-            //   next: (response) => {
-            //     this.workExperienceStore.doList()
-            //     this.helperStore.showToast({severity: 'success', summary: 'Eliminado', detail: response.message })
-            //   },
-            //   error: (error) => {
-            //     console.error(error)
-            //     this.helperStore.showToast({severity: 'error', summary: 'Error', detail: 'No se pudo eliminar' })
-            //   }
-            // })
+            this.workExperienceService.delete(entity.id).subscribe({
+              next: (response) => {
+                const empleado = this.employee()
+                if(empleado){
+                  this.workExperienceStore.doListByEmployee({
+                    employee_id : empleado.id,
+                    callback : (r) => this.workExperienceStore.setCalculatedExperience(this.calcularExperiencia(r))
+                  })
+                  this.helperStore.showToast({severity: 'success', summary: 'Eliminado', detail: response.message })
+                }
+              },
+              error: (error) => {
+                console.error(error)
+                this.helperStore.showToast({severity: 'error', summary: 'Error', detail: 'No se pudo eliminar' })
+              }
+            })
         },
         reject: () => {
           this.helperStore.showToast({severity: 'warn', summary: 'Cancelado', detail: 'Ha cancelado la eliminación' })
@@ -137,4 +171,24 @@ export class WorkExperienceComponent {
     menu.toggle(event)
 
   }
+
+
+
+
+  calcularExperiencia(experiencias: any[]) {
+
+    // Calcular experiencias por filtro
+    const experienciaPublica = calcularExperienciaTotal(experiencias, exp => exp.sector === 'publico');
+    const experienciaEspecifica = calcularExperienciaTotal(experiencias, exp => exp.experience_type === 'ESPECIFICA');
+    const experienciaGeneral = calcularExperienciaTotal(experiencias, exp => exp.experience_type === 'GENERAL');
+
+    return {
+      experienciaEspecifica,
+      experienciaPublica,
+      experienciaGeneral
+    }
+  }
+
+
+
 }

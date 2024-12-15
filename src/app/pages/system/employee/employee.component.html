@@ -109,6 +109,9 @@
             <th>
               Formacion Academica
             </th>
+            <th>
+              Capacitaciones
+            </th>
             <th class="text-center" pFrozenColumn>
                 Acciones
             </th>
@@ -169,7 +172,14 @@
             <td class="text-center">
               <p-button pTooltip="Formacion Academica"
               tooltipPosition="top"
-              (click)="null"
+              (click)="goToAcademicTraining(employee)"
+               [rounded]="true" [text]="true"
+              icon="pi pi-book" styleClass="mr-1"/>
+            </td>
+            <td class="text-center">
+              <p-button pTooltip="Capacitaciones"
+              tooltipPosition="top"
+              (click)="goToTraining(employee)"
                [rounded]="true" [text]="true"
               icon="pi pi-book" styleClass="mr-1"/>
             </td>

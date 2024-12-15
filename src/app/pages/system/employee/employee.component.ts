@@ -139,6 +139,21 @@ export class EmployeeComponent   {
     }
   }
 
+  goToAcademicTraining(entity : EmployeeEntity|null){
+    if(entity){
+      this.router.navigate(['/system/formacion-academica',entity.id])
+    }else{
+      console.warn("El personal para controlar no esta seleccionado")
+    }
+  }
+  goToTraining(entity : EmployeeEntity|null){
+    if(entity){
+      this.router.navigate(['/system/capacitaciones',entity.id])
+    }else{
+      console.warn("El personal para controlar no esta seleccionado")
+    }
+  }
+
 
   onOpenMenuOptionsRowTable(event : MouseEvent, menu : any, row : any){
     this.selectedRow.update(() => row)

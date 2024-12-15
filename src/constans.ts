@@ -8,25 +8,27 @@ export type TypeErrorMessages = {
 export type NgFuncError = string | ( (params : any) => string )
 
 
-export type AccessKey = "Reporte estadistico-ver"|
-"Roles y permisos-ver"|
-"Usuarios-ver"|
-"Cargo profesional-ver"|
-"Actividades laborales-ver"|
-"Zonas por sector-ver"|
-"Caminos-ver"|
-"Mapa de recorrido-ver"|
-"Ubicaciones-ver"|
-"Centro de costo-ver"|
-"Personal-ver"|
-"Proveedores-ver"|
-"Tipo de productos-ver"|
-"Productos-ver"|
-"Vehiculos-ver"|
-"Kardex-ver"|
-"Programacion por turnos-ver"|
-"Consumo combustible-ver"|
-"Intervenciones y ocurrencias-ver"|
-"Reporte de Actividades-ver"|
-"Reporte de Intervenciones y ocurrencias-ver"|
-"Reporte de Consumo de combustible-ver"
+export type AccessKey = "roles-y-permisos-crear" |
+"roles-y-permisos-leer" |
+"roles-y-permisos-editar" |
+"roles-y-permisos-eliminar" |
+"usuarios-crear" |
+"usuarios-leer" |
+"usuarios-editar" |
+"usuarios-eliminar" |
+"cargo-profesional-crear" |
+"cargo-profesional-leer" |
+"cargo-profesional-editar" |
+"cargo-profesional-eliminar" |
+"perfiles-convocatoria-crear" |
+"perfiles-convocatoria-leer" |
+"perfiles-convocatoria-editar" |
+"perfiles-convocatoria-eliminar" |
+"requerimiento-personal-crear" |
+"requerimiento-personal-leer" |
+"requerimiento-personal-editar" |
+"requerimiento-personal-eliminar" |
+"datos-personales-crear" |
+"datos-personales-leer" |
+"datos-personales-editar" |
+"datos-personales-eliminar"

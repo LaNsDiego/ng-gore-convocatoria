@@ -1,0 +1,53 @@
+<p-dialog
+    header="Editar requerimiento"
+    [modal]="true"
+    [breakpoints]="{'575px': '100vw'}"
+    [style]="{ width: '500px', maxHeight: '100%'}"
+    [draggable]="false"
+    [resizable]="false"
+    [visible]="projectStore.projectDetailToEditRRHH() != null"
+    (visibleChange)="projectStore.setProjectDetailToEditRRHH(null);frmCreate.reset()">
+    <form class="grid pt-2" [formGroup]="frmCreate">
+        <div class="col-12">
+            <p-floatLabel>
+                <input pInputText id="amount_rrhh" formControlName="amount_rrhh" class="w-full"/>
+                <label for="amount_rrhh">Monto RRHH *</label>
+            </p-floatLabel>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+                {{ getErrorMessage('amount_rrhh') }}
+            </small>
+        </div>
+        <div class="col-12 flex-column">
+          <p-floatLabel>
+            <textarea
+            formControlName="observation"
+            id="observation"
+            rows="5" cols="10"
+            pInputTextarea>
+          </textarea>
+          <label for="observation">Observaciones</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('observation') }}
+          </small>
+        </div>
+        <div class="col-12 flex justify-content-end">
+            <button
+                type="submit"
+                class="p-button p-button-outlined-primary p-button-lg"
+                (click)="handleSubmit()"
+                [disabled]="isSubmitting()">
+                <span class="w-full text-center">
+                    <ng-container *ngIf="isSubmitting(); else saveIcon">
+                        <i class="pi pi-spinner pi-spin mr-2"></i>
+                        PROCESANDO...
+                    </ng-container>
+                    <ng-template #saveIcon>
+                        <i class="pi pi-save"></i>
+                        GUARDAR
+                    </ng-template>
+                </span>
+            </button>
+        </div>
+    </form>
+</p-dialog>

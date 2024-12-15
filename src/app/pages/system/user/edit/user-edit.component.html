@@ -1,0 +1,72 @@
+<p-dialog
+header="EDITAR USUARIO"
+[modal]="true"
+[breakpoints]="{'575px': '100vw'}"
+[style]="{ width: '500px',maxHeight: '100%'}"
+[draggable]="false"
+[resizable]="false"
+[visible]="userStore.isOpenEdit()"
+(visibleChange)="onCloseModal($event)">
+    <form class="grid pt-2" [formGroup]="frmEdit">
+        <div class="col-12">
+            <p-floatLabel>
+                <input pInputText id="name" formControlName="name"  class="w-full"/>
+                <label for="name">Nombre</label>
+            </p-floatLabel>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('name') }}
+            </small>
+        </div>
+        <div class="col-12">
+            <p-floatLabel>
+                <input pInputText id="email" formControlName="email"  class="w-full"/>
+                <label for="email">Correo</label>
+            </p-floatLabel>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('email') }}
+            </small>
+        </div>
+        <div class="col-12">
+            <p-dropdown
+            formControlName="role_id"
+            styleClass="w-full"
+            appendTo="body"
+            [options]="roles()"
+            optionLabel="name"
+            optionValue="id"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            placeholder="Seleccione un rol">
+            </p-dropdown>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('role_id') }}
+            </small>
+        </div>
+        <div class="col-12">
+            <p-dropdown
+            styleClass="w-full"
+            appendTo="body"
+            formControlName="employee_id"
+            [options]="employees()"
+            optionLabel="name"
+            optionValue="id"
+            [filter]="true"
+            filterBy="name,document_number"
+            [showClear]="true"
+            placeholder="Seleccione un Empleado">
+            <ng-template let-employee pTemplate="item">
+                <b>{{ employee.document_type }}</b>: {{ employee.document_number }} - {{ employee.name }}
+            </ng-template>
+            </p-dropdown>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('employee_id') }}
+            </small>
+        </div>
+        <div class="col-12 flex justify-content-end">
+        <p-button label="GUARDAR" iconPos="left" icon="pi pi-save" [outlined]="true" (onClick)="handleSubmit()"/>
+        </div>
+    </form>
+
+</p-dialog>
+

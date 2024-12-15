@@ -13,19 +13,29 @@ export class ProjectService {
 
 
   list(){
-    return this.http.get<DtoResponseProject[]>(`${environment.apiUrl}/employees/list`)
+    return this.http.get<DtoResponseProject[]>(`${environment.apiUrl}/project-requirements/list`)
   }
 
   store(values : any){
-    return this.http.post<{message : string , created : DtoResponseProject}>(`${environment.apiUrl}/employees/store`, values)
+    return this.http.post<{message : string , created : DtoResponseProject}>(`${environment.apiUrl}/project-requirements/store`, values)
   }
 
   update(values : any){
-    return this.http.post<{message : string}>(`${environment.apiUrl}/employees/update`, values)
+    return this.http.post<{message : string}>(`${environment.apiUrl}/project-requirements/update`, values)
   }
 
   delete(employee_id : number){
-    return this.http.post<{message : string}>(`${environment.apiUrl}/employees/delete`, { employee_id })
+    return this.http.post<{message : string}>(`${environment.apiUrl}/project-requirements/delete`, { employee_id })
   }
 
+  realSaldo(val :any){
+    return this.http.post<any>(`${environment.apiUrl}/project-requirements/real-saldo`, val)
+  }
+
+
+  findVFP(values : {functional_sequence : string , specific_expenditure : string}){
+    // http://localhost:9000/servicio/test.php?sec=0770&clasif=6.8.1.4.1
+    return this.http.get<any>(`http://localhost:9000/servicio/test.php?sec=${values.functional_sequence}&clasif=${values.specific_expenditure}`)
+    // return this.http.post<any>(`${environment.apiUrl}/foxpro/find-by-expendspecific-secfunc`,values)
+  }
 }

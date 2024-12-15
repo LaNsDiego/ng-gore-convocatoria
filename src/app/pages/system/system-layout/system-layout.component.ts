@@ -20,6 +20,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ChipModule } from 'primeng/chip';
 import { AuthStore } from '@/app/stores/AuthStore';
 import { ToolbarStore } from '@/app/stores/ToolbarStore';
+import { RoleEntity } from '@/app/domain/entities/RoleEntity';
 @Component({
   selector: 'app-system-layout',
   standalone: true,
@@ -54,7 +55,7 @@ export class SystemLayoutComponent implements OnInit{
   authStore = inject(AuthStore)
   toolbarStore = inject(ToolbarStore)
   authService = inject(AuthService)
-  user = signal<UserEntity>({
+  user = signal<UserEntity & {role : RoleEntity}>({
     id : 0,
     name : '',
     email : '',
@@ -65,6 +66,10 @@ export class SystemLayoutComponent implements OnInit{
     created_at : '',
     updated_at : '',
     role_id : 0,
+    role :{
+      id : 0,
+      name : '',
+    }
   })
 
   permissions = signal<any[]>([])
@@ -74,6 +79,7 @@ export class SystemLayoutComponent implements OnInit{
     const decoded = this.authStore.decodeJWT(this.authStore.getJWT() || '')
     let valuePermissions = JSON.parse(localStorage.getItem('permissions') ?? '{}').permissions
     this.permissions.update(() =>  valuePermissions)
+    this.authStore.setPermissions(valuePermissions)
     this.user.update(() => decoded.user)
     this.visibleSidebar = localStorage.getItem('visibleSidebar') === 'true';
     // effect(() => {
@@ -94,6 +100,15 @@ export class SystemLayoutComponent implements OnInit{
   ngOnInit() {
 
     this.items = [
+      {
+        label: 'Configuración',
+        icon: 'pi pi-fw pi-home',
+        group:true,
+        items: [
+          { label: 'Roles y permisos', icon: 'pi pi-fw pi-shield', route: ['/system/permisos'], badge : 'NUEVO', visible : true },
+          { label: 'Usuarios', icon: 'pi pi-fw pi-users', route: ['/system/usuarios'] , visible : true },
+        ]
+      },
       {
         label: 'Mantenimiento',
         icon: 'pi pi-fw pi-desktop',

@@ -1,5 +1,8 @@
 import { AbstractControl, FormGroup, ValidatorFn } from "@angular/forms"
-import { NgFuncError, TypeErrorMessages, ValidatorNames } from "./constans"
+import { AccessKey, NgFuncError, TypeErrorMessages, ValidatorNames } from "./constans"
+import { DtoResponseModuleGroup } from "./app/domain/dtos/module-group/DtoResponseModuleGroup"
+import { differenceInYears, differenceInMonths, differenceInDays, addYears, addMonths , addDays} from 'date-fns';
+import { DtoResponseTreeRoleHasPermissionList } from "./app/domain/dtos/permission/DtoResponseTreeRoleHasPermissionList";
 
 export function getErrorByKey(controlName: string,control : AbstractControl |null): string {
   const errorMessages: TypeErrorMessages & {exists : string}  = {
@@ -118,27 +121,33 @@ export function emptyFile(full_path : string){
   return file
 }
 
-// export function hasAccess(canAccess : AccessKey , roleHasPermissions : DtoResponseTreeRoleHasPermissionList){
-//   if(roleHasPermissions && roleHasPermissions.length > 0){
-//     let textAvailablePermissions = roleHasPermissions.map((rhp) =>
-//       rhp.has_access ?
-//         `${rhp.permission.action}`.toLocaleLowerCase() :
-//         ''
-//     )
+export function hasAccess(canAccess : AccessKey , roleHasPermissions : DtoResponseTreeRoleHasPermissionList){
+  // console.log(roleHasPermissions);
 
-//     let hasAccess = textAvailablePermissions.some(p => {
-//       // console.log(`${p} === ${canAccess.toLocaleLowerCase()}` );
-//       return p.toLocaleLowerCase() == canAccess.toLocaleLowerCase()
+  if(roleHasPermissions && roleHasPermissions.length > 0){
+    let textAvailablePermissions = roleHasPermissions.map((rhp) =>
+      rhp.has_access ?
+        `${rhp.permission.action}`.toLocaleLowerCase() :
+        ''
+    )
 
-//     })
+    let hasAccess = textAvailablePermissions.some(p => {
+      // console.log(`${p} === ${canAccess.toLocaleLowerCase()}` );
+      if(p.toLocaleLowerCase() == canAccess.toLocaleLowerCase()){
+        // console.warn(`${p} === ${canAccess.toLocaleLowerCase()}` );
 
-//     return hasAccess
-//   }
+      }
+      return p.toLocaleLowerCase() == canAccess.toLocaleLowerCase()
+
+    })
+
+    return hasAccess
+  }
 
 
-//   return false
+  return false
 
-//  }
+ }
 
 
 // export function transformData(establishments: DtoResponseEstablishment[]): TreeNode[] {
@@ -166,6 +175,27 @@ export function emptyFile(full_path : string){
 
 // return node;
 // }
+
+
+export function tranformArrayToTreeNode(moduleGroup : DtoResponseModuleGroup){
+  return {
+    ...moduleGroup,
+    trees : moduleGroup.system_modules.map((module) => ({
+      key: module.name,
+      label: module.description,
+      icon: 'pi pi-fw pi-inbox',
+      data : module,
+      children : module.module_permissions.map((permission) => ({
+        key: permission.id.toString(),
+        label: permission.action,
+        icon: 'pi pi-fw pi-inbox',
+        data : permission,
+        children : []
+      }))
+    }))
+  }
+}
+
 
 
 export function loadScript(src: string ,renderer : any, callback : any): void {
@@ -228,5 +258,73 @@ export function strictEmailValidator(): ValidatorFn {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const valid = emailRegex.test(control.value);
     return valid ? null : { email: true };
+  };
+}
+
+export function isEmptyObject(obj:any){
+  return JSON.stringify(obj) === '{}'
+}
+
+
+// Función para convertir días en desglose de años, meses y días
+function convertirDiasADesglose(fechaInicio: Date, fechaFin: Date): { anios: number; meses: number; dias: number } {
+  const anios = differenceInYears(fechaFin, fechaInicio);
+  const fechaSinAnios = addYears(fechaInicio, anios);
+
+  const meses = differenceInMonths(fechaFin, fechaSinAnios);
+  const fechaSinMeses = addMonths(fechaSinAnios, meses);
+
+  const dias = differenceInDays(fechaFin, fechaSinMeses);
+
+  return { anios, meses, dias };
+}
+
+// Función para calcular la experiencia total según un filtro
+export function calcularExperienciaTotal(
+  experiencias: any[],
+  filtro: (exp: any) => boolean
+): { anios: number; meses: number; dias: number } {
+  const experienciaFiltrada = experiencias.filter(filtro);
+  let totalDias = 0;
+
+  experienciaFiltrada.forEach(exp => {
+    const fechaInicio = new Date(exp.start_date);
+    const fechaFin = new Date(exp.end_date);
+    const dias = differenceInDays(fechaFin, fechaInicio);
+    totalDias += dias;
+  });
+
+  const fechaInicioBase = new Date(0); // Fecha base: Epoch
+  const fechaFinBase = addDays(fechaInicioBase, totalDias);
+
+  return convertirDiasADesglose(fechaInicioBase, fechaFinBase);
+}
+
+
+export function pointsAndNumericValidator(): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const value = control.value;
+
+    // Verificar si el valor es nulo o undefined
+    if (!value) {
+      return null;
+    }
+
+    // Contar el número de puntos
+    const pointCount = (value.match(/\./g) || []).length;
+
+    // Verificar que haya exactamente 5 puntos
+    if (pointCount !== 5) {
+      return { invalidPointCount: true };
+    }
+
+    // Verificar que todos los caracteres que no son puntos sean numéricos
+    const numericPart = value.replace(/\./g, '');
+    if (!/^\d+$/.test(numericPart)) {
+      return { nonNumericChars: true };
+    }
+
+    // Si todas las validaciones pasan, retorna null (válido)
+    return null;
   };
 }

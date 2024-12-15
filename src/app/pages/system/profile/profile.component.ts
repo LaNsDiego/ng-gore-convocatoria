@@ -1,9 +1,10 @@
 import { DtoResponseProfile } from '@/app/domain/dtos/user/DtoResponserProfile';
 import { DtoUserEditPassword } from '@/app/domain/dtos/user/DtoUserEditPassword';
+import { UserService } from '@/app/services/user.service';
 // import { UserService } from '@/app/services/user.service';
 import { AuthStore } from '@/app/stores/AuthStore';
 import { HelperStore } from '@/app/stores/HelpersStore';
-import { getErrorByKey } from '@/helpers';
+import { getErrorByKey, getErrosOnControls } from '@/helpers';
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -31,7 +32,7 @@ export class ProfileComponent {
   helperStore = inject(HelperStore)
   formBuilder = inject(FormBuilder)
   authStore = inject(AuthStore)
-  // userService = inject(UserService)
+  userService = inject(UserService)
 
   frmEdit = this.formBuilder.group({
     user_id : new FormControl<number>(0, { nonNullable: true }),
@@ -41,12 +42,18 @@ export class ProfileComponent {
     validators: this.passwordMatchValidator.bind(this)
   });
 
-  user = signal<DtoResponseProfile>({} as DtoResponseProfile)
+  user = signal<DtoResponseProfile|null>(null)
   loading = true;
 
   constructor() {
     this.items = [{ label: 'Inicio', route: '/system/perfil' }, { label: 'Perfil' }];
     const decoded = this.authStore.decodeJWT(this.authStore.getJWT() || '')
+    console.log("decoded", decoded);
+
+    if(decoded.user){
+      this.user.set(decoded.user)
+      this.loading = false;
+    }
     // this.userService.searchByUserId(decoded.user.id).subscribe({
     //   next : (user) => {
     //     this.user.update(() => user)
@@ -80,26 +87,24 @@ export class ProfileComponent {
 
   handleSubmit(){
     this.frmEdit.markAllAsTouched();
-    if(this.frmEdit.status === 'VALID'){
-      this.frmEdit.get('user_id')?.setValue(this.user().id)
+    const user = this.user()
+    if(this.frmEdit.status === 'VALID' && user ){
+      this.frmEdit.get('user_id')?.setValue(user.id)
       const values = this.frmEdit.getRawValue()
-      // this.userService.updatePassword(values as DtoUserEditPassword)
-      // .subscribe({
-      //   next : (response) => {
-      //     console.log({ response})
-      //     this.helperStore.showToast({severity : 'success', summary : 'Actualizado', detail : response.message})
-      //     this.frmEdit.reset()
-      //   },
-      //   error : (error) => {
-      //     console.log({error})
-      //   }
+      this.userService.updatePassword(values as DtoUserEditPassword)
+      .subscribe({
+        next : (response) => {
+          console.log({ response})
+          this.helperStore.showToast({severity : 'success', summary : 'Actualizado', detail : response.message})
+          this.frmEdit.reset()
+        },
+        error : (error) => {
+          console.log({error})
+        }
 
-      // })
+      })
     }else{
-      console.log(
-        Object.keys(this.frmEdit.controls)
-      .map((field ) => ({field,errors : this.frmEdit.get(field)?.errors , status : this.frmEdit.get(field)?.status}))
-      )
+      console.warn(getErrosOnControls(this.frmEdit))
     }
   }
 

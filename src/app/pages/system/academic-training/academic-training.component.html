@@ -1,0 +1,216 @@
+<div class="w-100 py-3 flex justify-content-between">
+  <div>
+      <p-breadcrumb  styleClass="max-w-full pt-2" [style]="{background:'transparent', padding:'0px'}" [model]="items">
+          <ng-template pTemplate="item" let-item>
+              <ng-container *ngIf="item.route; else elseBlock">
+                  <a [routerLink]="item.route" class="p-menuitem-link bg-transparent p-0">
+                      <span class="text-primary">{{ item.label }}</span>
+                  </a>
+              </ng-container>
+              <ng-template #elseBlock>
+                  <a [href]="item.url "class="p-menuitem-link bg-transparent">
+                      <span class="text-color">{{ item.label }}</span>
+                  </a>
+              </ng-template>
+          </ng-template>
+      </p-breadcrumb>
+      <div class="flex flex-column">
+        <h1 class="text-2xl pt-3">Formación académica</h1>
+        <h3 class="text-xl text-gray-700 mt-2">Registro de la formación académica de un empleado</h3>
+      </div>
+  </div>
+  <div>
+      <div class="flex justify-content-end py-3">
+          <p-button label="NUEVA FORMACION ACADEMICA" icon="pi pi-plus" severity="success" size="large" (click)="onOpenCreate()"/>
+        </div>
+  </div>
+</div>
+
+<p-card>
+  <ng-template pTemplate="header">
+      <div class="grid px-3 pt-3">
+          <div class="col-12 text-right">
+              <p-iconField iconPosition="left">
+                  <p-inputIcon>
+                      <i class="pi pi-search"></i>
+                  </p-inputIcon>
+                  <input
+                      pInputText
+                      class="w-auto"
+                      type="text"
+                      (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
+                      placeholder="Buscador" />
+              </p-iconField>
+          </div>
+      </div>
+  </ng-template>
+
+  <p-table
+  #dt1
+  [value]="academicTrainingStore.entities()"
+  selectionMode="single"
+  dataKey="id"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [rows]="5"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[5, 10, 25, 50]"
+  [paginator]="true"
+  currentPageReportTemplate="Visualizar {first} a {last} de {totalRecords} registros"
+  [globalFilterFields]="['id', 'document_number','name','job_title.name','establishment.code','establishment.name']"
+  styleClass="p-datatable-gridlines p-datatable-sm">
+
+  <ng-template pTemplate="header">
+      <tr>
+          <th>
+              N°
+          </th>
+          <th pSortableColumn="document_number" style="min-width: 280px;">
+              Empleado <p-sortIcon field="document_number" />
+          </th>
+          <th pSortableColumn="name" style="min-width: 140px;">
+              Nivel educativo <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="sex" style="min-width: 160px;">
+              Centro de estudios <p-sortIcon field="sex" />
+          </th>
+          <th pSortableColumn="marital_status" style="min-width: 120px;">
+            Situacion academica <p-sortIcon field="marital_status" />
+          </th>
+          <th pSortableColumn="date_of_birth" style="min-width: 140px;">
+              Grado alcanzado <p-sortIcon field="date_of_birth" />
+          </th>
+          <th pSortableColumn="phone_number" style="min-width: 200px;">
+              Año inicio <p-sortIcon field="phone_number" />
+          </th>
+          <th pSortableColumn="email" style="min-width: 100px;">
+              Año fin <p-sortIcon field="email" />
+          </th>
+          <th pSortableColumn="birth_city.name" style="min-width: 170px;">
+              Grado Academico <p-sortIcon field="birth_city.name" />
+          </th>
+          <th pSortableColumn="address_city.name" style="min-width: 200px;">
+              Especialidad del grado <p-sortIcon field="address_city.name" />
+          </th>
+          <th pSortableColumn="bank" style="min-width: 100px;">
+              Titulo <p-sortIcon field="bank" />
+          </th>
+          <th pSortableColumn="bank" style="min-width: 240px;">
+              Datos de colegiatura y habilitacion <p-sortIcon field="bank" />
+          </th>
+          <th pSortableColumn="bank" style="min-width: 140px;">
+              Archivo Nivel educativo <p-sortIcon field="bank" />
+          </th>
+          <th pSortableColumn="bank" style="min-width: 140px;">
+            Archivo Colegiatura <p-sortIcon field="bank" />
+          </th>
+          <th pSortableColumn="bank" style="min-width: 140px;">
+              Archivo Habilitacion <p-sortIcon field="bank" />
+          </th>
+          <th class="text-center" pFrozenColumn>
+              Acciones
+          </th>
+      </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="row">
+          <td>
+              {{rowIndex + 1}}
+          </td>
+          <td>
+              <p>{{ row.employee.first_name }} {{ row.employee.father_last_name }} {{ row.employee.mother_last_name }}</p>
+              <b>{{ row.employee.document_type }}</b> : {{ row.employee.document_number }}
+          </td>
+          <td>
+              {{ row.educational_level }}
+          </td>
+          <td>
+              {{ row.education_study_center }}
+          </td>
+          <td>
+              {{ row.academic_situation }}
+          </td>
+          <td>
+              {{ row.academic_degree }}
+          </td>
+          <td>
+              {{ row.academic_situation_start_year }}
+          </td>
+          <td>
+              {{ row.academic_situation_end_year }}
+          </td>
+          <td>
+              {{ row.academic_degree }}
+          </td>
+          <td>
+              {{ row.qualification_title }}
+          </td>
+          <td>
+              {{ row.academic_degree_specialty }}
+          </td>
+          <td>
+            {{ row.tuition_school }}-
+            {{ row.tuition_number }}-
+            {{ row.tuition_date }}
+        </td>
+        <td class="text-center">
+          <a [href]="row.full_path_file"
+          pTooltip="Ver archivo"
+          tooltipPosition="top"
+          target="_blank" class="p-button p-component p-button-text p-button-rounded p-button-icon-only p-button-success">
+            <i class="pi pi-file"></i>
+          </a>
+      </td>
+      <td class="text-center">
+        <a [href]="row.full_path_file"
+        pTooltip="Ver archivo"
+        tooltipPosition="top"
+        target="_blank" class="p-button p-component p-button-text p-button-rounded p-button-icon-only p-button-success">
+          <i class="pi pi-file"></i>
+        </a>
+    </td>
+    <td class="text-center">
+      <a [href]="row.full_path_file"
+      pTooltip="Ver archivo"
+      tooltipPosition="top"
+      target="_blank" class="p-button p-component p-button-text p-button-rounded p-button-icon-only p-button-success">
+        <i class="pi pi-file"></i>
+      </a>
+  </td>
+
+
+
+          <td class="" pFrozenColumn>
+              <div class="inline-flex">
+                <p-button pTooltip="Editar"
+                  tooltipPosition="top"
+                  (click)="academicTrainingStore.openModalEdit(row)"
+                  severity="info" [rounded]="true" [text]="true"
+                  icon="pi pi-pencil" styleClass="mr-1"/>
+                <p-button pTooltip="Eliminar"
+                  tooltipPosition="top"
+
+                  (click)="onDelete(row)"
+                  severity="danger" [rounded]="true" [text]="true"
+                  icon="pi pi-trash" styleClass="mr-1"/>
+                <p-button pTooltip="Imprimir"
+                  tooltipPosition="top"
+                  (click)="null"
+                  severity="success" [rounded]="true" [text]="true"
+                  icon="pi pi-print" styleClass="mr-1"/>
+              </div>
+          </td>
+
+      </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+      <tr>
+          <td colspan="12" class="text-center py-3 bg-yellow-100 font-semibold">No se encontraron registros.</td>
+      </tr>
+  </ng-template>
+  </p-table>
+</p-card>
+
+<app-academic-training-create />
+

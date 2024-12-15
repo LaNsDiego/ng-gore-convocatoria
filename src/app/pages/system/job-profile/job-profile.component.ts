@@ -15,6 +15,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { TableModule } from 'primeng/table';
 import { JobProfileCreateComponent } from './create/job-profile-create.component';
+import { JobProfileEditComponent } from './edit/job-profile-edit.component';
 
 @Component({
   selector: 'app-job-profile',
@@ -29,7 +30,8 @@ import { JobProfileCreateComponent } from './create/job-profile-create.component
     IconFieldModule,
     InputIconModule,
     CardModule,
-    JobProfileCreateComponent
+    JobProfileCreateComponent,
+    JobProfileEditComponent,
   ],
   templateUrl: './job-profile.component.html',
   styleUrl: './job-profile.component.css'
@@ -76,7 +78,6 @@ export class JobProfileComponent {
   }
 
   onEdit(entity : DtoResponseJobProfile|null){
-    console.log(entity)
     if(entity){
       this.jobProfileStore.openModalEdit(entity)
     }else{

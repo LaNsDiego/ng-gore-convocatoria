@@ -37,6 +37,9 @@ export const JobProfileStore = signalStore(
             addEntity(entity : DtoResponseJobProfile){
                 patchState(state,{ entities : [...state.entities(),entity]})
             },
+            setEntityToEdit(entity : DtoResponseJobProfile|null){
+                patchState(state,{ entityEdit : entity })
+            },
             doList(){
                 jobProfileService.list().subscribe({
                     next : (entities) => {

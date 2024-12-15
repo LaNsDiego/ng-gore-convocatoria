@@ -1,4 +1,5 @@
 import { EmployeeEntity } from "../entities/EmployeeEntity"
+import { RoleEntity } from "../entities/RoleEntity"
 import { UserEntity } from "../entities/UserEntity"
 
 export type DtoDecodedJWT = {
@@ -9,5 +10,5 @@ export type DtoDecodedJWT = {
     jti: string
     sub: string
     prv: string
-    user: UserEntity & { employees: EmployeeEntity[] }
+    user: UserEntity & { role: RoleEntity }
 }

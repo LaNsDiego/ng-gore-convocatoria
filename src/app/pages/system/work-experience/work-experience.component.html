@@ -21,7 +21,7 @@
   </div>
   <div>
       <div class="flex justify-content-end py-3">
-          <p-button label="NUEVA EXPERIENCIA LABORAL" icon="pi pi-plus" severity="success" size="large" (click)="onOpenModalCreateEmployee()"/>
+          <p-button label="NUEVA EXPERIENCIA LABORAL" icon="pi pi-plus" severity="success" size="large" (click)="onOpenCreate()"/>
         </div>
   </div>
 </div>
@@ -64,13 +64,13 @@
           <th>
               N°
           </th>
-          <th pSortableColumn="document_number" style="min-width: 120px;">
+          <th pSortableColumn="document_number" style="min-width: 280px;">
               Empleado <p-sortIcon field="document_number" />
           </th>
-          <th pSortableColumn="name" style="min-width: 280px;">
+          <th pSortableColumn="name" style="min-width: 100px;">
               Sector <p-sortIcon field="name" />
           </th>
-          <th pSortableColumn="sex" style="min-width: 100px;">
+          <th pSortableColumn="sex" style="min-width: 160px;">
               Tipo de experiancia <p-sortIcon field="sex" />
           </th>
           <th pSortableColumn="marital_status" style="min-width: 120px;">
@@ -79,7 +79,7 @@
           <th pSortableColumn="date_of_birth" style="min-width: 140px;">
               Cargo <p-sortIcon field="date_of_birth" />
           </th>
-          <th pSortableColumn="phone_number" style="min-width: 100px;">
+          <th pSortableColumn="phone_number" style="min-width: 200px;">
               Funciones desempeñadas <p-sortIcon field="phone_number" />
           </th>
           <th pSortableColumn="email" style="min-width: 100px;">
@@ -100,41 +100,46 @@
       </tr>
   </ng-template>
 
-  <ng-template pTemplate="body" let-employee let-rowIndex="rowIndex">
-      <tr [pSelectableRow]="employee">
+  <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="row">
           <td>
               {{rowIndex + 1}}
           </td>
           <td>
-              <p>{{ employee.name }} {{ employee.father_last_name }} {{ employee.mother_last_name }}</p>
-              <b>{{ employee.document_type }}</b> : {{ employee.document_number }}
+              <p>{{ row.employee.first_name }} {{ row.employee.father_last_name }} {{ row.employee.mother_last_name }}</p>
+              <b>{{ row.employee.document_type }}</b> : {{ row.employee.document_number }}
           </td>
           <td>
-              {{ employee.marital_status }}
+              {{ row.sector }}
           </td>
           <td>
-              {{ employee.date_of_birth }}
+              {{ row.experience_type }}
           </td>
           <td>
-              {{ employee.phone_number }}
+              {{ row.entity }}
           </td>
           <td>
-              {{ employee.phone_number }}
+              {{ row.job_title }}
           </td>
           <td>
-              {{ employee.phone_number }}
+              {{ row.functions_performed }}
           </td>
           <td>
-              {{ employee.phone_number }}
+              {{ row.start_date |date:'dd/MM/yyyy'  }}
           </td>
           <td>
-              {{ employee.phone_number }}
+              {{ row.end_date |date:'dd/MM/yyyy'  }}
           </td>
           <td>
-              {{ employee.phone_number }}
+              {{ row.document_name }}
           </td>
-          <td>
-              {{ employee.phone_number }}
+          <td class="text-center">
+              <a [href]="row.full_path_file"
+              pTooltip="Ver archivo"
+              tooltipPosition="top"
+              target="_blank" class="p-button p-component p-button-text p-button-rounded p-button-icon-only p-button-success">
+                <i class="pi pi-file"></i>
+              </a>
           </td>
 
 
@@ -142,13 +147,13 @@
               <div class="inline-flex">
                 <p-button pTooltip="Editar"
                   tooltipPosition="top"
-                  (click)="workExperienceStore.openModalEdit(employee)"
+                  (click)="workExperienceStore.openModalEdit(row)"
                   severity="info" [rounded]="true" [text]="true"
                   icon="pi pi-pencil" styleClass="mr-1"/>
                 <p-button pTooltip="Eliminar"
                   tooltipPosition="top"
 
-                  (click)="onDelete(employee)"
+                  (click)="onDelete(row)"
                   severity="danger" [rounded]="true" [text]="true"
                   icon="pi pi-trash" styleClass="mr-1"/>
                 <p-button pTooltip="Imprimir"
@@ -167,6 +172,38 @@
           <td colspan="12" class="text-center py-3 bg-yellow-100 font-semibold">No se encontraron registros.</td>
       </tr>
   </ng-template>
+
+  <ng-template pTemplate="footer">
+
+    <tr>
+        <td colspan="3" class="text-right">EXPERIENCIA ESPECIFICA</td>
+        <td>
+          Años {{workExperienceStore.calculatedExperience()?.experienciaEspecifica.anios}} ,
+          meses {{workExperienceStore.calculatedExperience()?.experienciaEspecifica.meses}},
+          dias {{workExperienceStore.calculatedExperience()?.experienciaEspecifica.dias}}
+        </td>
+        <td colspan="8"></td>
+    </tr>
+    <tr>
+        <td colspan="3" class="text-right">EXPERIENCIA GENERAL</td>
+        <td>
+          Años {{workExperienceStore.calculatedExperience()?.experienciaGeneral.anios}} ,
+          meses {{workExperienceStore.calculatedExperience()?.experienciaGeneral.meses}},
+          dias {{workExperienceStore.calculatedExperience()?.experienciaGeneral.dias}}
+        </td>
+        <td colspan="8"></td>
+    </tr>
+    <tr>
+        <td colspan="3" class="text-right">EXPERIENCIA PUBLICA</td>
+        <td>
+
+          Años {{workExperienceStore.calculatedExperience()?.experienciaPublica.anios}} ,
+          meses {{workExperienceStore.calculatedExperience()?.experienciaPublica.meses}},
+          dias {{workExperienceStore.calculatedExperience()?.experienciaPublica.dias}}
+        </td>
+        <td colspan="8"></td>
+    </tr>
+</ng-template>
   </p-table>
 </p-card>
 

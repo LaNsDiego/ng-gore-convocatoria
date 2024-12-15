@@ -40,20 +40,9 @@ export class EmployeeService {
     return this.http.post<{message : string}>(`${environment.apiUrl}/employees/delete`, { employee_id })
   }
 
-  listManagers(){
-    return this.http.get<EmployeeEntity[]>(`${environment.apiUrl}/employees/managers/list`)
-  }
-
-  employeesByStablishmentExceptOutput(establishment_id : number){
-    return this.http.get<EmployeeEntity[]>(`${environment.apiUrl}/employees/list/establishment-except-output/${establishment_id}`)
+  getOneById(employee_id : number){
+    return this.http.get<DtoResponseEmployee>(`${environment.apiUrl}/employees/getone/${employee_id}`)
   }
 
 
-  employeesByStablishment(stablishment_id : number){
-    return this.http.get<EmployeeEntity[]>(`${environment.apiUrl}/employees/list/by-stablishment/${stablishment_id}`)
-  }
-
-  employeesByStablishmentTarget(){
-    return this.http.get<EmployeeEntity[]>(`${environment.apiUrl}/employees/list/stablishment-target`)
-  }
 }

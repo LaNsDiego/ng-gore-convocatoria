@@ -149,5 +149,11 @@ a:-webkit-any-link:focus-visible {
 }
 
 .p-fieldset-content{
-  padding: 0;
+  padding: 0.5em 0;
+}
+
+
+.p-fieldset .p-fieldset-legend {
+  padding: 6px !important;
+  margin-left: 1em !important;
 }

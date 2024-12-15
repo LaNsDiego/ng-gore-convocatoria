@@ -1,0 +1,354 @@
+<p-dialog
+header="REQUERIMIENTO DE PERSONAL"
+[modal]="true"
+[breakpoints]="{'960px': '100vw'}"
+[style]="{ width: '960px'}"
+[draggable]="false"
+[resizable]="false"
+[visible]="projectStore.entityToView() != null"
+(visibleChange)="onCloseModalCreate($event)">
+
+    <form class="grid row-gap-2" [formGroup]="frmCreate">
+
+
+        <!-- datos de proyecto -->
+        <p-fieldset legend="DATOS DE PROYECTO / PLAN" class="w-full" readonly>
+          <div class="grid">
+            <div class="col-4 flex-column">
+              <p-floatLabel>
+                <input pInputText id="functional_sequence" formControlName="functional_sequence"  class="w-full" readonly/>
+                <label for="functional_sequence">Secuencia funcional *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('functional_sequence') }}
+              </small>
+            </div>
+
+            <div class="col-4 flex-column">
+              <p-floatLabel>
+                <input pInputText id="specific_expenditure" formControlName="specific_expenditure"  class="w-full" readonly/>
+                <label for="specific_expenditure">Especifica de gasto *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('specific_expenditure') }}
+              </small>
+            </div>
+
+            <div class="col-4 flex-column">
+              <p-floatLabel>
+                <input pInputText id="created_at" formControlName="created_at"  class="w-full" readonly/>
+                <label for="created_at">Fecha de creación *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('created_at') }}
+              </small>
+            </div>
+
+            <div class="col-12 flex-column">
+              <p-floatLabel>
+                <input pInputText id="project_name" formControlName="project_name"  class="w-full" readonly/>
+                <label for="project_name">Nombre del proyecto *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('project_name') }}
+              </small>
+            </div>
+
+            <div class="col-6 flex-column">
+              <p-floatLabel>
+                <input pInputText id="amount_as_specified" formControlName="amount_as_specified"  class="w-full" readonly />
+                <label for="amount_as_specified">Monto segun específica *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('amount_as_specified') }}
+              </small>
+            </div>
+
+            <div class="col-6 flex-column">
+              <p-floatLabel>
+                <input pInputText id="balance_amount_as_specified" formControlName="balance_amount_as_specified"  class="w-full"/>
+                <label for="balance_amount_as_specified">Saldo monto segun específica *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('balance_amount_as_specified') }}
+              </small>
+            </div>
+
+          </div>
+
+
+        </p-fieldset>
+
+
+        <!-- DATOS DEL RESPONSABLE -->
+
+        <p-fieldset legend="DATOS DEL RESPONSABLE" class="w-full">
+          <div class="grid">
+
+            <div class="col-5 flex-column">
+              <p-floatLabel>
+                <input pInputText id="dni_responsible" formControlName="dni_responsible"  class="w-full"
+                maxlength="8" pKeyFilter="int" readonly/>
+                <label for="dni_responsible">Documento de identidad nacional *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('dni_responsible') }}
+              </small>
+            </div>
+
+            <div class="col-7 flex-column">
+              <p-floatLabel>
+                <input pInputText id="full_name_responsible" formControlName="full_name_responsible"  class="w-full" readonly/>
+                <label for="full_name_responsible">Nombres y apellidos *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('full_name_responsible') }}
+              </small>
+            </div>
+
+            <div class="col-5">
+                <p-dropdown
+                readonly
+                formControlName="document_type"
+                styleClass="w-full"
+                appendTo="body"
+                [options]="documentTypes()"
+                optionLabel="label"
+                optionValue="label"
+                [showClear]="true"
+                placeholder="Seleccione un tipo de documento *">
+                </p-dropdown>
+                <small class="text-xs text-pink-600" style="height: 1em;">
+                  {{ getErrorMessageOnCreate('document_type') }}
+                </small>
+            </div>
+
+            <div class="col-5 flex-column">
+              <p-floatLabel>
+                <input pInputText id="document_number" formControlName="document_number"  class="w-full" readonly/>
+                <label for="document_number">Nro del documento *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('document_number') }}
+              </small>
+            </div>
+
+            <p-fileUpload
+              styleClass="p-button-secondary"
+              class="m-auto"
+              mode="basic"
+              chooseLabel="SUBIR ARCHIVO"
+              chooseIcon="pi pi-upload"
+              name="demo[]"
+              accept="image/*"
+              maxFileSize="1000000"
+              (onUpload)="null" />
+
+
+
+          </div>
+        </p-fieldset>
+
+        <p-fieldset legend="DATOS DEL REQUERIMIENTO" class="w-full" [formGroup]="frmEmployeeRequirement">
+          <div class="grid">
+            <!-- form control -->
+            <div class="col-5 flex-column">
+              <p-floatLabel>
+                <input pInputText id="dni" formControlName="dni"  class="w-full"
+                maxlength="8" pKeyFilter="int"/>
+                <label for="dni">Nro Documento(DNI) *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorOnFrmRequirement('dni') }}
+              </small>
+            </div>
+
+            <!-- form control -->
+            <div class="col-7 flex-column">
+              <p-floatLabel>
+                <input pInputText id="first_name" formControlName="first_name"  class="w-full"/>
+                <label for="first_name">Nombres*</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorOnFrmRequirement('first_name') }}
+              </small>
+            </div>
+            <!-- form control -->
+            <div class="col-5 flex-column">
+              <p-floatLabel>
+                <input pInputText id="father_last_name" formControlName="father_last_name"  class="w-full"/>
+                <label for="father_last_name">Apellido paterno*</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorOnFrmRequirement('father_last_name') }}
+              </small>
+            </div>
+            <!-- form control -->
+            <div class="col-5 flex-column">
+              <p-floatLabel>
+                <input pInputText id="mother_last_name" formControlName="mother_last_name"  class="w-full"/>
+                <label for="mother_last_name">Apellido materno*</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+                {{ getErrorOnFrmRequirement('mother_last_name') }}
+              </small>
+            </div>
+
+
+            <div class="col-2 lg:col-2 flex-column">
+              <p-inputGroup class="border-radius-none">
+                  <p-floatLabel class="w-full">
+                      <p-inputNumber
+                      mode="decimal"
+                      [useGrouping]="true"
+                      inputId="amount_required"
+                      formControlName="amount_required"
+                      inputId="minmax-buttons"
+                      [min]="0"
+                      [max]="10000000"
+                      [minFractionDigits]="0"
+                      [maxFractionDigits]="0"/>
+                      <label for="amount_required">Monto requerido</label>
+                  </p-floatLabel>
+                </p-inputGroup>
+                <small class="text-xs text-pink-600" style="height: 1em;">
+                    {{ getErrorOnFrmRequirement('amount_required') }}
+                </small>
+            </div>
+
+            <div class="col-12  flex justify-content-end">
+
+              <p-button label="AGREGAR REQUERIMIENTO" severity="secondary" outlined="true" icon="pi pi-plus" (onClick)="addEmployeeRequirement()"></p-button>
+            </div>
+
+            <div class="col-12 px-0">
+
+
+              <p-table
+                #dt1
+                [value]="projectStore.requirementDetails()"
+                selectionMode="single"
+                dataKey="id"
+                [tableStyle]="{ 'min-width': '50rem' }"
+                [rows]="15"
+
+                currentPageReportTemplate="Visualizar {first} a {last} de {totalRecords} registros"
+                [globalFilterFields]="['id','name']"
+                styleClass="p-datatable-gridlines p-datatable-sm">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 35px;">
+                            N°
+                        </th>
+                        <th pSortableColumn="name" style="width: 85px;">
+                            DNI
+                        </th>
+                        <th pSortableColumn="name" style="width: 240px;">
+                            APELLIDOS Y NOMBRES
+                        </th>
+                        <th pSortableColumn="name" style="width:160px">
+                            MONTO REQUERIDO
+                        </th>
+                        <th pSortableColumn="name" style="width:140px">
+                            MONTO RRHH
+                        </th>
+                        <th pSortableColumn="name" style="width:240px">
+                            OBSERVACIÓN
+                        </th>
+                        <th style="width: 60px;">REMOVER</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                    <tr>
+                        <td class="text-sm">
+                            {{rowIndex + 1}}
+                        </td>
+                        <td class="text-sm">
+                            {{ row.dni }}
+                        </td>
+                        <td class="text-sm">
+                            {{ row.father_last_name }} {{ row.mother_last_name }}, {{ row.first_name }}
+                        </td>
+                        <td class="text-sm">
+                          <span>S/. {{ row.amount_required }}</span>
+                        </td>
+                        <td >
+                          <div class="flex justify-content-between align-items-center text-sm">
+                            <span>S/. {{ row.amount_rrhh }}</span>
+                          @if(hasAccessKey('requerimiento-personal-editar',authStore.permissions())){
+                            <p-button pTooltip="Editar"
+                            size="small"
+                            tooltipPosition="top"
+                            (click)="projectStore.setProjectDetailToEditRRHH(row)"
+                            severity="info" [rounded]="true" [text]="true"
+                            icon="pi pi-pencil"/>
+                          }
+                          </div>
+                        </td>
+
+                        <td>
+                          <div class="flex justify-content-between align-items-center">
+
+                            <span>{{ row.observation?.length > 0 ? row.observation : ' --'   }}</span>
+                            @if(hasAccessKey('requerimiento-personal-editar',authStore.permissions())){
+                              <p-button pTooltip="Editar MONTO"
+                              size="small"
+                              tooltipPosition="top"
+                              (click)="projectStore.setProjectDetailToEditRRHH(row)"
+                              severity="info" [rounded]="true" [text]="true"
+                              icon="pi pi-pencil"/>
+                            }
+                          </div>
+                        </td>
+                        <td class="" pFrozenColumn>
+                          <div class="inline-flex">
+
+
+                            <p-button pTooltip="Editar"
+                            tooltipPosition="top"
+                            (click)="null"
+                            severity="contrast" [rounded]="true" [text]="true"
+                            icon="pi pi-pencil" styleClass="mr-1"/>
+
+                            <p-button pTooltip="Cargo"
+                            tooltipPosition="top"
+                            (click)="onClickJobTitle(row)"
+                            severity="info" [rounded]="true" [text]="true"
+                            icon="pi pi-user" styleClass="mr-1"/>
+
+                            <p-button pTooltip="Eliminar"
+                              tooltipPosition="top"
+                              (click)="null"
+                              severity="danger" [rounded]="true" [text]="true"
+                              icon="pi pi-trash" styleClass="mr-1"/>
+                          </div>
+                      </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7" class="text-center bg-yellow-100">No hay requerimientos de personal.</td>
+                    </tr>
+                </ng-template>
+
+              </p-table>
+
+            </div>
+
+          </div>
+        </p-fieldset>
+
+
+
+        <div class="col-12 flex justify-content-end">
+            <p-button label="GUARDAR REQUIRIMIENTOS" severity="success" iconPos="left" icon="pi pi-save" (onClick)="handleSubmit()"/>
+        </div>
+    </form>
+
+</p-dialog>
+
+
+<app-project-detail-rrhh/>

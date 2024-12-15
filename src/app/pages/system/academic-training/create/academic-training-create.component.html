@@ -1,0 +1,616 @@
+<p-dialog
+header="Nuevo formación académica"
+[modal]="true"
+[breakpoints]="{'960px': '100vw'}"
+[style]="{ width: '960px',maxHeight: '100%'}"
+[draggable]="false"
+[resizable]="false"
+[visible]="academicTrainingStore.isOpenCreate()"
+(visibleChange)="onCloseModalCreate()"
+[formGroup]="frmCreate">
+    <p-fieldset legend="Datos de formación académica">
+      <div class="grid">
+
+        <div class="col-4 flex flex-column">
+          <p-dropdown
+          formControlName="educational_level"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="educationalLevels()"
+          optionLabel="label"
+          optionValue="label"
+          [showClear]="true"
+          placeholder="Nivel de estudios *">
+          </p-dropdown>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('educational_level') }}
+          </small>
+        </div>
+        <div class="col-4 flex flex-column">
+          <p-dropdown
+          formControlName="education_country_id"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="countries()"
+          optionLabel="name"
+          optionValue="id"
+          [showClear]="true"
+          placeholder="Pais de estudios *">
+          </p-dropdown>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('education_country_id') }}
+          </small>
+        </div>
+        <div class="col-4 flex flex-column">
+          <p-dropdown
+          formControlName="education_study_center"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="studyCenters()"
+          optionLabel="label"
+          optionValue="label"
+          [showClear]="true"
+          placeholder="Centro de estudios *">
+          </p-dropdown>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('education_study_center') }}
+          </small>
+        </div>
+
+      </div>
+    </p-fieldset>
+
+    <!-- DATOS DE ESTUDIO -->
+    <p-fieldset legend="Datos de estudio">
+      <div class="grid">
+        <div class="col-6 flex flex-column">
+          <p-dropdown
+          formControlName="academic_situation"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="academicSituations()"
+          optionLabel="label"
+          optionValue="label"
+          [showClear]="true"
+          placeholder=" situación academica *">
+          </p-dropdown>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('academic_situation') }}
+          </small>
+        </div>
+
+      <div class="col-3 flex flex-column">
+        <p-floatLabel>
+          <p-calendar
+          formControlName="academic_situation_start_year"
+          [styleClass]="'w-full'"
+          appendTo="body"
+          [iconDisplay]="'input'"
+          dataType="string"
+          [showButtonBar]="true"
+          inputId="academic_situation_start_year"/>
+          <label for="academic_situation_start_year">Año inicio</label>
+        </p-floatLabel>
+        <small class="text-sm text-pink-600" style="height: 1em;">
+          {{ getErrorMessage('academic_situation_start_year') }}
+        </small>
+      </div>
+      <div class="col-3 flex flex-column">
+        <p-floatLabel>
+          <p-calendar
+          formControlName="academic_situation_end_year"
+          [styleClass]="'w-full'"
+          appendTo="body"
+          [iconDisplay]="'input'"
+          dataType="string"
+          [showButtonBar]="true"
+          inputId="academic_situation_end_year"/>
+          <label for="academic_situation_end_year">Año fin</label>
+        </p-floatLabel>
+        <small class="text-sm text-pink-600" style="height: 1em;">
+          {{ getErrorMessage('academic_situation_end_year') }}
+        </small>
+      </div>
+
+      <div class="col-6 lg:col-3">
+        <p-dropdown
+        formControlName="academic_situation_country_id"
+        styleClass="w-full"
+        appendTo="body"
+        [options]="countries()"
+        optionLabel="name"
+        optionValue="id"
+        [showClear]="true"
+        placeholder="pais *">
+        </p-dropdown>
+        <small class="text-sm text-pink-600" style="height: 1em;">
+          {{ getErrorMessage('academic_situation_country_id') }}
+        </small>
+      </div>
+      <div class="col-6 lg:col-3">
+        <p-dropdown
+        formControlName="academic_situation_department_id"
+        styleClass="w-full"
+        appendTo="body"
+        [options]="departments()"
+        optionLabel="name"
+        optionValue="id"
+        [showClear]="true"
+        placeholder="Departamento *">
+        </p-dropdown>
+        <small class="text-sm text-pink-600" style="height: 1em;">
+          {{ getErrorMessage('academic_situation_department_id') }}
+        </small>
+      </div>
+      <div class="col-6 lg:col-3">
+        <p-dropdown
+        formControlName="academic_situation_province_id"
+        styleClass="w-full"
+        appendTo="body"
+        [options]="provincies()"
+        optionLabel="name"
+        optionValue="id"
+        [showClear]="true"
+        placeholder="Provincia *">
+        </p-dropdown>
+        <small class="text-sm text-pink-600" style="height: 1em;">
+          {{ getErrorMessage('academic_situation_province_id') }}
+        </small>
+      </div>
+      <div class="col-6 lg:col-3">
+        <p-dropdown
+        formControlName="academic_situation_city_id"
+        styleClass="w-full"
+        appendTo="body"
+        [options]="cities()"
+        optionLabel="name"
+        optionValue="id"
+        [showClear]="true"
+        placeholder="Distrito *">
+        </p-dropdown>
+        <small class="text-sm text-pink-600" style="height: 1em;">
+          {{ getErrorMessage('academic_situation_city_id') }}
+        </small>
+      </div>
+
+      </div>
+    </p-fieldset>
+
+<!-- DATOS DE DEFINICION DE CARRERA -->
+    <p-fieldset legend="Datos de definicion de carrera">
+      <div class="grid">
+
+        <div class="col-6 lg:col-4">
+          <p-dropdown
+          formControlName="academic_degree"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="academicDegrees()"
+          optionLabel="label"
+          optionValue="label"
+          [showClear]="true"
+          placeholder="Grado de carrera *">
+          </p-dropdown>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('academic_degree') }}
+          </small>
+        </div>
+        <div class="col-6 lg:col-4">
+          <p-dropdown
+          formControlName="academic_degree_level"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="academicDegreeLevels()"
+          optionLabel="label"
+          optionValue="label"
+          [showClear]="true"
+          placeholder="Nivel *">
+          </p-dropdown>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('academic_degree_level') }}
+          </small>
+        </div>
+        <div class="col-6 lg:col-4">
+          <p-dropdown
+          formControlName="academic_degree_specialty"
+          styleClass="w-full"
+          appendTo="body"
+          [options]="academicDegreeSpecialties()"
+          optionLabel="label"
+          optionValue="label"
+          [showClear]="true"
+          placeholder="Especialidad *">
+          </p-dropdown>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('academic_degree_specialty') }}
+          </small>
+        </div>
+
+      <!-- <div class="col-12 flex-column">
+        <p-floatLabel>
+          <textarea
+          formControlName="functions_performed"
+          id="functions_performed"
+          rows="5" cols="10"
+          pInputTextarea>
+        </textarea>
+        <label for="functions_performed">Funciones principales desempeñadas</label>
+        </p-floatLabel>
+        <small class="text-sm text-pink-600" style="height: 1em;">
+          {{ getErrorMessage('functions_performed') }}
+        </small>
+      </div>
+
+      <div class="col-6 flex flex-column">
+          <p-floatLabel>
+              <input pInputText id="document_name" formControlName="document_name"  class="w-full"/>
+              <label for="document_name">Documento *</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('document_name') }}
+          </small>
+      </div> -->
+
+      <!-- <div class="col-6 flex justify-content-end">
+        <div class="w-full flex justify-content-end">
+          <p-fileUpload
+          mode="basic"
+          chooseLabel="SUBIR ARCHIVO"
+          chooseIcon="pi pi-upload"
+          maxFileSize="1000000"
+          (onSelect)="onSelectFile($event)"
+          (onUpload)="null" />
+        </div>
+      </div> -->
+
+      </div>
+    </p-fieldset>
+
+    <p-fieldset legend="Datos del titulo y registro">
+      <div class="grid">
+
+        <div class="col-4 flex flex-column">
+          <p-floatLabel>
+              <input pInputText id="qualification_title" formControlName="qualification_title"  class="w-full"/>
+              <label for="qualification_title">Titulo *</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('qualification_title') }}
+          </small>
+        </div>
+        <div class="col-4 flex flex-column">
+          <p-floatLabel>
+              <input pInputText id="qualification_specialty" formControlName="qualification_specialty"  class="w-full"/>
+              <label for="qualification_specialty">Especialidad *</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('qualification_specialty') }}
+          </small>
+        </div>
+
+        <div class="col-4 flex flex-column">
+          <p-floatLabel>
+            <p-calendar
+            formControlName="qualification_expedition_date"
+            [styleClass]="'w-full'"
+            appendTo="body"
+            [iconDisplay]="'input'"
+            dataType="string"
+            [showButtonBar]="true"
+            inputId="qualification_expedition_date"/>
+            <label for="qualification_expedition_date">Fecha expedicion</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('qualification_expedition_date') }}
+          </small>
+        </div>
+
+        <div class="col-12 flex column-gap-4">
+          <label for="">Tipo de control de registro del titulo</label>
+          <label>
+            <input type="radio" formControlName="qualification_entity_control" name="qualification_entity_control" value="DRE" /> DRE
+          </label>
+          <label>
+            <input type="radio" formControlName="qualification_entity_control" name="qualification_entity_control" value="UGEL" /> UGEL
+          </label>
+          <label>
+            <input type="radio" formControlName="qualification_entity_control" name="qualification_entity_control" value="MINEDU" /> MINEDU
+          </label>
+          <label>
+            <input type="radio" formControlName="qualification_entity_control" name="qualification_entity_control" value="SUNEDU" /> SUNEDU
+          </label>
+        </div>
+
+
+        <div class="col-6 flex flex-column">
+          <p-floatLabel>
+              <input pInputText id="qualification_registration_center" formControlName="qualification_registration_center"  class="w-full"/>
+              <label for="qualification_registration_center">Centro de registro *</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('qualification_registration_center') }}
+          </small>
+        </div>
+        <div class="col-4 flex flex-column">
+          <p-floatLabel>
+              <input pInputText id="qualification_registration_number" formControlName="qualification_registration_number"  class="w-full"/>
+              <label for="qualification_registration_number">Número de registro *</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('qualification_registration_number') }}
+          </small>
+        </div>
+
+        <div class="col-2 flex flex-column">
+          <p-floatLabel>
+            <p-calendar
+            formControlName="qualification_registration_date"
+            [styleClass]="'w-full'"
+            appendTo="body"
+            [iconDisplay]="'input'"
+            dataType="string"
+            [showButtonBar]="true"
+            inputId="qualification_registration_date"/>
+            <label for="qualification_registration_date">Fecha de registro</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('qualification_registration_date') }}
+          </small>
+        </div>
+
+        <div class="col-2 flex flex-column">
+          <p-floatLabel>
+            <p-calendar
+            formControlName="qualification_resolution_date"
+            [styleClass]="'w-full'"
+            appendTo="body"
+            [iconDisplay]="'input'"
+            dataType="string"
+            [showButtonBar]="true"
+            inputId="qualification_resolution_date"/>
+            <label for="qualification_resolution_date">Fecha de resolución</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('qualification_resolution_date') }}
+          </small>
+        </div>
+
+        <div class="col-4 flex flex-column">
+          <p-floatLabel>
+              <input pInputText id="qualification_resolution_number" formControlName="qualification_resolution_number"  class="w-full"/>
+              <label for="qualification_resolution_number">Número de resolucion *</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('qualification_resolution_number') }}
+          </small>
+        </div>
+
+        <div class="col-6 flex justify-content-end">
+          <div class="w-full flex justify-content-end">
+            <p-fileUpload
+            mode="basic"
+            chooseLabel="SUBIR ARCHIVO"
+            chooseIcon="pi pi-upload"
+            maxFileSize="1000000"
+            (onSelect)="onSelectQualificationFile($event)"
+            (onUpload)="null" />
+          </div>
+        </div>
+
+      </div>
+    </p-fieldset>
+
+    <p-fieldset legend="Datos de colegiatura">
+      <div class="grid">
+
+        <div class="col-6 flex flex-column">
+          <p-floatLabel>
+              <input pInputText id="tuition_school" formControlName="tuition_school"  class="w-full"/>
+              <label for="tuition_school">Colegio *</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('tuition_school') }}
+          </small>
+        </div>
+
+        <div class="col-6 flex flex-column">
+          <p-floatLabel>
+              <input pInputText id="tuition_number" formControlName="tuition_number"  class="w-full"/>
+              <label for="tuition_number">Número de colegiatura *</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('tuition_number') }}
+          </small>
+        </div>
+
+
+        <div class="col-6 flex flex-column">
+          <p-floatLabel>
+            <p-calendar
+            formControlName="tuition_date"
+            [styleClass]="'w-full'"
+            appendTo="body"
+            [iconDisplay]="'input'"
+            dataType="string"
+            [showButtonBar]="true"
+            inputId="tuition_date"/>
+            <label for="tuition_date">Fecha de colegiatura</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('tuition_date') }}
+          </small>
+        </div>
+
+        <div class="col-6 flex justify-content-end">
+          <div class="w-full flex justify-content-end">
+            <p-fileUpload
+            mode="basic"
+            chooseLabel="SUBIR ARCHIVO"
+            chooseIcon="pi pi-upload"
+            maxFileSize="1000000"
+            (onSelect)="onSelectTuitionFile($event)"
+            (onUpload)="null" />
+          </div>
+        </div>
+
+
+      </div>
+    </p-fieldset>
+
+    <p-fieldset legend="Datos de habilitación" [formGroup]="frmAuthorizationCertificate">
+      <div class="grid">
+
+        <div class="col-6 flex flex-column">
+          <p-floatLabel>
+              <input pInputText id="authorization_certificate" formControlName="authorization_certificate"  class="w-full"/>
+              <label for="authorization_certificate">Número de certificado de habilitacion *</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('authorization_certificate') }}
+          </small>
+        </div>
+
+        <div class="col-6 flex flex-column">
+          <p-floatLabel>
+            <p-calendar
+            formControlName="authorization_start_date"
+            [styleClass]="'w-full'"
+            appendTo="body"
+            [iconDisplay]="'input'"
+            dataType="string"
+            [showButtonBar]="true"
+            inputId="authorization_start_date"/>
+            <label for="authorization_start_date">Fecha de inicio</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('authorization_start_date') }}
+          </small>
+        </div>
+
+        <div class="col-6 flex flex-column">
+          <p-floatLabel>
+            <p-calendar
+            formControlName="authorization_end_date"
+            [styleClass]="'w-full'"
+            appendTo="body"
+            [iconDisplay]="'input'"
+            dataType="string"
+            [showButtonBar]="true"
+            inputId="authorization_end_date"/>
+            <label for="authorization_end_date">Fecha fin</label>
+          </p-floatLabel>
+          <small class="text-sm text-pink-600" style="height: 1em;">
+            {{ getErrorMessage('authorization_end_date') }}
+          </small>
+        </div>
+
+        <div class="col-6 flex justify-content-end">
+          <div class="w-full flex justify-content-end">
+            <p-fileUpload
+            #fileAuthorization
+            mode="basic"
+            chooseLabel="SUBIR ARCHIVO"
+            chooseIcon="pi pi-upload"
+            maxFileSize="1000000"
+            (onSelect)="onSelectAuthorizationFile($event)"
+            (onUpload)="null" />
+          </div>
+        </div>
+
+        <div class="col-12 flex justify-content-end">
+          <p-button label="AGREGAR HABILITACIÓN"
+            severity="info" iconPos="left"
+            icon="pi pi-plus" [outlined]="true"
+            (onClick)="onAddAuthorizationCertificate();fileAuthorization.clear();"
+          />
+        </div>
+
+        <!-- TABLE START -->
+  <div class="col-12">
+
+
+  <p-table
+    #dt1
+    [value]="authorizationCertificates()"
+    selectionMode="single"
+    dataKey="id"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [rows]="5"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[5, 10, 25, 50]"
+    [paginator]="true"
+    currentPageReportTemplate="Visualizar {first} a {last} de {totalRecords} registros"
+    [globalFilterFields]="['id', 'document_number','name','job_title.name','establishment.code','establishment.name']"
+    styleClass="p-datatable-gridlines p-datatable-sm">
+
+  <ng-template pTemplate="header">
+      <tr>
+          <th>
+              N°
+          </th>
+          <th pSortableColumn="document_number" style="min-width: 280px;">
+              Nro de certificado <p-sortIcon field="document_number" />
+          </th>
+          <th pSortableColumn="name" style="min-width: 100px;">
+              Fecha de inicio <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="sex" style="min-width: 160px;">
+              Fecha fin <p-sortIcon field="sex" />
+          </th>
+          <th pSortableColumn="marital_status" style="min-width: 120px;">
+            Archivo <p-sortIcon field="marital_status" />
+          </th>
+          <th class="text-center" pFrozenColumn>
+              Acciones
+          </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="row">
+          <td>
+              {{rowIndex + 1}}
+          </td>
+          <td>
+              {{ row.authorization_certificate }}
+          </td>
+          <td>
+              {{ row.authorization_start_date }}
+          </td>
+          <td>
+              {{ row.authorization_end_date }}
+          </td>
+          <td class="text-center">
+            <i class="pi pi-file-pdf" style="font-size: 1.5rem"></i>
+            {{ row.authorization_file.name }}
+          </td>
+          <td class="" pFrozenColumn>
+              <div class="inline-flex">
+                <p-button pTooltip="Eliminar"
+                  tooltipPosition="top"
+
+                  (click)="null"
+                  severity="danger" [rounded]="true" [text]="true"
+                  icon="pi pi-trash" styleClass="mr-1"/>
+              </div>
+          </td>
+
+      </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+          <tr>
+              <td colspan="12" class="text-center py-3 bg-yellow-100 font-semibold">No se agregaron habilitaciones.</td>
+          </tr>
+      </ng-template>
+      </p-table>
+        <!-- TABLE END -->
+      </div>
+
+      </div>
+    </p-fieldset>
+
+    <div class="col-12 flex justify-content-end px-0">
+      <p-button label="GUARDAR REGISTRO" severity="success" iconPos="left" icon="pi pi-save" (onClick)="handleSubmit()"/>
+    </div>
+</p-dialog>

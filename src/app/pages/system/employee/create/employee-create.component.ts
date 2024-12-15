@@ -61,26 +61,26 @@ export class EmployeeCreateComponent {
     date_of_birth : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     email : new FormControl<string>('',{ validators : [Validators.email] , nonNullable : false}),
     phone_number : new FormControl<string>('',{ validators: [Validators.pattern('^[0-9]*$')] , nonNullable : false }),
-    file_data_employee : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
+    file_data_employee : new FormControl<File|null>(null,{ validators : [] , nonNullable : true }),
 
     birth_country_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
     birth_department_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
     birth_province_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
     birth_city_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    file_place_of_birth : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
+    file_place_of_birth : new FormControl<File|null>(null,{ validators : [] , nonNullable : true }),
 
     address_country_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
     address_department_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
     address_province_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
     address_city_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
     address : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    file_address : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
+    file_address : new FormControl<File|null>(null,{ validators : [] , nonNullable : true }),
 
     bank : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     account_type : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     account_number : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     cci : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    file_bank_account : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
+    file_bank_account : new FormControl<File|null>(null,{ validators : [] , nonNullable : true }),
 
 
   })
@@ -140,7 +140,6 @@ export class EmployeeCreateComponent {
           this.personService.find(value).subscribe({
             next : (response) => {
               this.isFindingPerson.set(false)
-              console.log(response);
               this.helperStore.showToast({severity : 'success', summary : 'Exitoso', detail : response.message})
               this.frmCreate.controls.name.setValue(response.person.first_name)
               this.frmCreate.controls.father_last_name.setValue(response.person.father_lastname)
@@ -148,6 +147,9 @@ export class EmployeeCreateComponent {
               if(response.person.sex != ''){
                 this.frmCreate.controls.sex.setValue(response.person.sex == 'F' ? 'FEMENINO' : 'MASCULINO')
               }
+
+              console.log("found person",response);
+
 
               if(response.exists){
                 this.frmCreate.controls.document_number.setErrors({ exists : true})

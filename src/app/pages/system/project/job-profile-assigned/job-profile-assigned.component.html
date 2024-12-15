@@ -1,0 +1,70 @@
+<p-dialog
+    header="VERIFICAR PERFIL DE PUESTO"
+    [modal]="true"
+    [breakpoints]="{'575px': '100vw'}"
+    [style]="{ width: '500px', maxHeight: '100%'}"
+    [draggable]="false"
+    [resizable]="false"
+    [visible]="jobProfileAssignedStore.projectReqDetailToCreate() != null"
+    (visibleChange)="jobProfileAssignedStore.closeModalCreate();frmCreate.reset()">
+    <form class="grid pt-2" [formGroup]="frmCreate">
+        <div class="col-12">
+            <p-dropdown
+            formControlName="jobtitle_id"
+            styleClass="w-full"
+            appendTo="body"
+            [options]="jobtitles()"
+            optionLabel="name"
+            optionValue="id"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            placeholder="Seleccione un cargo *">
+                <ng-template let-row pTemplate="item">
+                    {{ row.name }}
+                </ng-template>
+                <ng-template let-row pTemplate="selectedItem">
+                  {{ row.name }}
+              </ng-template>
+            </p-dropdown>
+            <small class="text-xs text-pink-600" style="height: 1em;">
+              {{ getErrorMessageOnCreate('jobtitle_id') }}
+            </small>
+        </div>
+        <div class="col-12 flex column-gap-3 row-gap-2 flex-wrap">
+          @if(jobtitleSelected() != null){
+            @for(profile of jobtitleSelected().profiles ; track profile.id){
+              <div class="flex align-items-center column-gap-3" (click)="onClickProfileOption(profile)">
+                <input
+                type="checkbox"
+                [checked]="selectedOptions().includes(profile.id)"
+              >
+              <label class="p-checkbox-label ng-star-inserted">{{  profile.request_name }}</label>
+
+              </div>
+            }
+          }
+          @else {
+            <p class="w-full p-4 border-round text-center bg-yellow-100 text-indigo-600">Selecione un cargo</p>
+          }
+        </div>
+        <div class="col-12 flex justify-content-end">
+            <button
+                type="submit"
+                class="p-button p-button-outlined-primary p-button-lg"
+                (click)="handleSubmit()"
+                [disabled]="isSubmitting()">
+                <span class="w-full text-center">
+                    <ng-container *ngIf="isSubmitting(); else saveIcon">
+                        <i class="pi pi-spinner pi-spin mr-2"></i>
+                        ENVIANDO...
+                    </ng-container>
+                    <ng-template #saveIcon>
+                        <i class="pi pi-save"></i>
+                        GUARDAR
+                    </ng-template>
+                </span>
+            </button>
+        </div>
+    </form>
+</p-dialog>

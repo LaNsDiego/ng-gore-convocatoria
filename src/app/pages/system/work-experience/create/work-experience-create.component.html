@@ -6,7 +6,7 @@ header="Nuevo experiencia laboral"
 [draggable]="false"
 [resizable]="false"
 [visible]="workExperienceStore.isOpenCreate()"
-(visibleChange)="onCloseModalCreate($event)"
+(visibleChange)="onCloseModalCreate()"
 [formGroup]="frmCreate">
     <p-fieldset legend="Datos personales">
       <form class="grid">
@@ -14,21 +14,21 @@ header="Nuevo experiencia laboral"
           <div class="flex column-gap-4">
               <label for="">Tipo de sector</label>
               <label>
-                <input type="radio" formControlName="sector_type" name="sector_type" value="publico" /> Publico
+                <input type="radio" formControlName="sector" name="sector" value="publico" /> Publico
               </label>
               <label>
-                <input type="radio" formControlName="sector_type" name="sector_type" value="privado" /> Privado
+                <input type="radio" formControlName="sector" name="sector" value="privado" /> Privado
               </label>
             </div>
 
             <small class="text-sm text-pink-600" style="height: 1em;">
-              {{ getErrorMessage('document_type') }}
+              {{ getErrorMessage('sector') }}
             </small>
         </div>
 
         <div class="col-6 flex flex-column">
           <p-dropdown
-          formControlName="sex"
+          formControlName="experience_type"
           styleClass="w-full"
           appendTo="body"
           [options]="experienceTypes()"
@@ -38,61 +38,61 @@ header="Nuevo experiencia laboral"
           placeholder="Seleccione un tipo experiencia *">
           </p-dropdown>
           <small class="text-sm text-pink-600" style="height: 1em;">
-            {{ getErrorMessage('sex') }}
+            {{ getErrorMessage('experience_type') }}
           </small>
       </div>
 
 
         <div class="col-6 flex flex-column">
             <p-floatLabel>
-                <input pInputText id="name" formControlName="name"  class="w-full"/>
-                <label for="name">Entidad *</label>
+                <input pInputText id="entity" formControlName="entity"  class="w-full"/>
+                <label for="entity">Entidad *</label>
             </p-floatLabel>
             <small class="text-sm text-pink-600" style="height: 1em;">
-              {{ getErrorMessage('name') }}
+              {{ getErrorMessage('entity') }}
             </small>
         </div>
         <div class="col-6 flex flex-column">
-            <p-floatLabel>
-                <input pInputText id="father_last_name" formControlName="father_last_name"  class="w-full"/>
-                <label for="father_last_name">Cargo ocupado *</label>
-            </p-floatLabel>
-            <small class="text-sm text-pink-600" style="height: 1em;">
-              {{ getErrorMessage('name') }}
+          <p-floatLabel>
+                <input pInputText id="job_title" formControlName="job_title"  class="w-full"/>
+                <label for="job_title">Cargo ocupado *</label>
+              </p-floatLabel>
+              <small class="text-sm text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('job_title') }}
             </small>
         </div>
 
         <div class="col-6 flex flex-column">
           <p-floatLabel>
-              <p-calendar
-                  formControlName="date_of_birth"
+            <p-calendar
+            formControlName="start_date"
                   [styleClass]="'w-full'"
                   appendTo="body"
                   [iconDisplay]="'input'"
                   dataType="string"
                   [showButtonBar]="true"
-                  inputId="date_of_birth"/>
-              <label for="date_of_birth">Fecha de inicio</label>
-          </p-floatLabel>
-          <small class="text-sm text-pink-600" style="height: 1em;">
-            {{ getErrorMessage('date_of_birth') }}
-          </small>
-        </div>
+                  inputId="start_date"/>
+                  <label for="start_date">Fecha de inicio</label>
+                </p-floatLabel>
+                <small class="text-sm text-pink-600" style="height: 1em;">
+                  {{ getErrorMessage('start_date') }}
+                </small>
+              </div>
 
         <div class="col-6 flex flex-column">
           <p-floatLabel>
-              <p-calendar
-                  formControlName="date_of_birth"
-                  [styleClass]="'w-full'"
-                  appendTo="body"
-                  [iconDisplay]="'input'"
-                  dataType="string"
-                  [showButtonBar]="true"
-                  inputId="date_of_birth"/>
-              <label for="date_of_birth">Fecha de fin</label>
+            <p-calendar
+            formControlName="end_date"
+            [styleClass]="'w-full'"
+            appendTo="body"
+            [iconDisplay]="'input'"
+            dataType="string"
+            [showButtonBar]="true"
+            inputId="end_date"/>
+            <label for="end_date">Fecha de fin</label>
           </p-floatLabel>
           <small class="text-sm text-pink-600" style="height: 1em;">
-            {{ getErrorMessage('date_of_birth') }}
+            {{ getErrorMessage('end_date') }}
           </small>
         </div>
 
@@ -100,32 +100,42 @@ header="Nuevo experiencia laboral"
         <div class="col-12 flex-column">
           <p-floatLabel>
             <textarea
-                formControlName="observation"
-                id="observation"
-                rows="5" cols="10"
-                pInputTextarea>
-            </textarea>
-            <label for="observation">Funciones principales desempeñadas</label>
+            formControlName="functions_performed"
+            id="functions_performed"
+            rows="5" cols="10"
+            pInputTextarea>
+          </textarea>
+          <label for="functions_performed">Funciones principales desempeñadas</label>
           </p-floatLabel>
           <small class="text-sm text-pink-600" style="height: 1em;">
-            {{ getErrorMessage('observation') }}
+            {{ getErrorMessage('functions_performed') }}
           </small>
         </div>
 
-        <div class="col-12 flex justify-content-end px-0">
+        <div class="col-6 flex flex-column">
+            <p-floatLabel>
+                <input pInputText id="document_name" formControlName="document_name"  class="w-full"/>
+                <label for="document_name">Documento *</label>
+            </p-floatLabel>
+            <small class="text-sm text-pink-600" style="height: 1em;">
+              {{ getErrorMessage('document_name') }}
+            </small>
+        </div>
+
+        <div class="col-6 flex justify-content-end">
           <div class="w-full flex justify-content-end">
             <p-fileUpload
-              mode="basic"
-              chooseLabel="SUBIR ARCHIVO"
-              chooseIcon="pi pi-upload"
-              maxFileSize="1000000"
-              (onSelect)="null"
-              (onUpload)="null" />
+            mode="basic"
+            chooseLabel="SUBIR ARCHIVO"
+            chooseIcon="pi pi-upload"
+            maxFileSize="1000000"
+            (onSelect)="onSelectFile($event)"
+            (onUpload)="null" />
           </div>
         </div>
 
 
-    </form>
+      </form>
     </p-fieldset>
 
 

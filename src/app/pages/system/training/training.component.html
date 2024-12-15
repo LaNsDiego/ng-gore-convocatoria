@@ -1,0 +1,223 @@
+<div class="w-100 py-3 flex justify-content-between">
+  <div>
+      <p-breadcrumb  styleClass="max-w-full pt-2" [style]="{background:'transparent', padding:'0px'}" [model]="items">
+          <ng-template pTemplate="item" let-item>
+              <ng-container *ngIf="item.route; else elseBlock">
+                  <a [routerLink]="item.route" class="p-menuitem-link bg-transparent p-0">
+                      <span class="text-primary">{{ item.label }}</span>
+                  </a>
+              </ng-container>
+              <ng-template #elseBlock>
+                  <a [href]="item.url "class="p-menuitem-link bg-transparent">
+                      <span class="text-color">{{ item.label }}</span>
+                  </a>
+              </ng-template>
+          </ng-template>
+      </p-breadcrumb>
+      <div class="flex flex-column">
+        <h1 class="text-2xl pt-3">Capacitaciones</h1>
+        <h3 class="text-xl text-gray-700 mt-2">Registro de capacitaciones de un empleado</h3>
+      </div>
+  </div>
+  <div>
+      <div class="flex justify-content-end py-3">
+          <p-button label="NUEVA CAPACITACION" icon="pi pi-plus" severity="success" size="large" (click)="onOpenCreate()"/>
+        </div>
+  </div>
+</div>
+
+<p-card>
+  <ng-template pTemplate="header">
+      <div class="grid px-3 pt-3">
+          <div class="col-12 text-right">
+              <p-iconField iconPosition="left">
+                  <p-inputIcon>
+                      <i class="pi pi-search"></i>
+                  </p-inputIcon>
+                  <input
+                      pInputText
+                      class="w-auto"
+                      type="text"
+                      (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
+                      placeholder="Buscador" />
+              </p-iconField>
+          </div>
+      </div>
+  </ng-template>
+
+  <p-table
+  #dt1
+  [value]="trainingStore.entities()"
+  selectionMode="single"
+  dataKey="id"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [rows]="5"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[5, 10, 25, 50]"
+  [paginator]="true"
+  currentPageReportTemplate="Visualizar {first} a {last} de {totalRecords} registros"
+  [globalFilterFields]="['id', 'document_number','name','job_title.name','establishment.code','establishment.name']"
+  styleClass="p-datatable-gridlines p-datatable-sm">
+
+  <ng-template pTemplate="header">
+      <tr>
+          <th>
+              N°
+          </th>
+          <th pSortableColumn="document_number" style="min-width: 280px;">
+              Tipo de estudios <p-sortIcon field="document_number" />
+          </th>
+          <th pSortableColumn="sex" style="min-width: 160px;">
+              Tema <p-sortIcon field="sex" />
+          </th>
+          <th pSortableColumn="email" style="min-width: 100px;">
+              Fec. Inicio <p-sortIcon field="email" />
+          </th>
+          <th pSortableColumn="birth_city.name" style="min-width: 170px;">
+              Fec. Final <p-sortIcon field="birth_city.name" />
+          </th>
+          <th pSortableColumn="name" style="min-width: 100px;">
+              Tipo Participacion <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="name" style="min-width: 100px;">
+              Pais <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="name" style="min-width: 100px;">
+              Ciudad <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="name" style="min-width: 100px;">
+              Institucion <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="birth_city.name" style="min-width: 170px;">
+              Fec. eexpedicion <p-sortIcon field="birth_city.name" />
+          </th>
+          <th pSortableColumn="birth_city.name" style="min-width: 170px;">
+              Entidad de control <p-sortIcon field="birth_city.name" />
+          </th>
+          <th pSortableColumn="address_city.name" style="min-width: 120px;">
+              Fec. emisión <p-sortIcon field="address_city.name" />
+          </th>
+          <th pSortableColumn="bank" style="min-width: 100px;">
+              Creditos <p-sortIcon field="bank" />
+          </th>
+          <th pSortableColumn="bank" style="min-width: 100px;">
+              Nro de registro <p-sortIcon field="bank" />
+          </th>
+          <th pSortableColumn="bank" style="min-width: 100px;">
+              Centro de registro <p-sortIcon field="bank" />
+          </th>
+          <th pSortableColumn="bank" style="min-width: 100px;">
+              Fec. Resolución <p-sortIcon field="bank" />
+          </th>
+          <th pSortableColumn="bank" style="min-width: 100px;">
+              Nro Resolución <p-sortIcon field="bank" />
+          </th>
+          <th pSortableColumn="bank" style="min-width: 100px;">
+              Archivo <p-sortIcon field="bank" />
+          </th>
+          <th class="text-center" pFrozenColumn>
+              Acciones
+          </th>
+      </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="row">
+          <td>
+              {{rowIndex + 1}}
+          </td>
+          <td>
+              {{ row.study_type }}
+          </td>
+          <td>
+              {{ row.topic }}
+          </td>
+          <td>
+              {{ row.start_date }}
+          </td>
+          <td>
+              {{ row.end_date }}
+          </td>
+          <td>
+            {{ row.participation_type }}
+        </td>
+
+          <td>
+              {{ row.country_id }}
+          </td>
+          <td>
+            {{ row.city_id }}
+        </td>
+        <td>
+          {{ row.institution }}
+        </td>
+
+        <td>
+            {{ row.date_expedition }}
+        </td>
+          <td>
+              {{ row.qualification_entity_control }}
+          </td>
+          <td>
+              {{ row.issue_date }}
+          </td>
+          <td>
+            {{ row.credits }}
+          </td>
+          <td>
+            {{ row.registry_number }}
+        </td>
+        <td>
+          {{ row.registry_center }}
+      </td>
+          <td>
+              {{ row.date_resolution }}
+          </td>
+          <td>
+              {{ row.number_resolution }}
+          </td>
+
+          <td class="text-center">
+              <a [href]="row?.full_path_file"
+              pTooltip="Ver archivo"
+              tooltipPosition="top"
+              target="_blank" class="p-button p-component p-button-text p-button-rounded p-button-icon-only p-button-success">
+                <i class="pi pi-file"></i>
+              </a>
+          </td>
+
+
+          <td class="" pFrozenColumn>
+              <div class="inline-flex">
+                <p-button pTooltip="Editar"
+                  tooltipPosition="top"
+                  (click)="trainingStore.openModalEdit(row)"
+                  severity="info" [rounded]="true" [text]="true"
+                  icon="pi pi-pencil" styleClass="mr-1"/>
+                <p-button pTooltip="Eliminar"
+                  tooltipPosition="top"
+
+                  (click)="onDelete(row)"
+                  severity="danger" [rounded]="true" [text]="true"
+                  icon="pi pi-trash" styleClass="mr-1"/>
+                <p-button pTooltip="Imprimir"
+                  tooltipPosition="top"
+                  (click)="null"
+                  severity="success" [rounded]="true" [text]="true"
+                  icon="pi pi-print" styleClass="mr-1"/>
+              </div>
+          </td>
+
+      </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+      <tr>
+          <td colspan="12" class="text-center py-3 bg-yellow-100 font-semibold">No se encontraron registros.</td>
+      </tr>
+  </ng-template>
+  </p-table>
+</p-card>
+
+<app-training-create />
+
