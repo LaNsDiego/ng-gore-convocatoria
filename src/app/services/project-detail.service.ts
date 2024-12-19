@@ -17,4 +17,8 @@ export class ProjectDetailService {
   update(values : any){
     return this.http.post<{ message : string}>(`${environment.apiUrl}/project-requirement-details/update`,values)
   }
+
+  delete(id : number){
+    return this.http.get<{message:string}>(`${environment.apiUrl}/project-requirement-details/delete/${id}`)
+  }
 }

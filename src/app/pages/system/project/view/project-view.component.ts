@@ -26,6 +26,7 @@ import { ProjectDetailRrhhComponent } from './project-detail-rrhh/project-detail
 import { AccessKey } from '@/constans';
 import { DtoResponseTreeRoleHasPermissionList } from '@/app/domain/dtos/permission/DtoResponseTreeRoleHasPermissionList';
 import { AuthStore } from '@/app/stores/AuthStore';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-project-view',
@@ -61,6 +62,7 @@ export class ProjectViewComponent {
   personService = inject(PersonService)
   projectDetailService = inject(ProjectDetailService)
   jobProfileAssignedStore = inject(JobProfileAssignedStore)
+  confirmationService = inject(ConfirmationService)
 
   frmCreate = this.formBuilder.group({
     id : new FormControl<number>(0,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true }),
@@ -92,6 +94,7 @@ export class ProjectViewComponent {
 
   employeeRequirements = signal<any[]>([])
   userRRHHisEditing = signal<boolean>(false)
+  isFreeze = signal<boolean>(false)
 
   constructor(){
     effect(()=> {
@@ -127,6 +130,17 @@ export class ProjectViewComponent {
           }
         })
 
+      }
+
+      if(entityToView && entityToView.is_freeze){
+        this.isFreeze.set(entityToView.is_freeze)
+        Object.keys(this.frmEmployeeRequirement.controls).forEach((key) => {
+          this.frmEmployeeRequirement.get(key)?.disable();
+        })
+
+        Object.keys(this.frmCreate.controls).forEach((key) => {
+          this.frmCreate.get(key)?.disable();
+        })
       }
     },{
       allowSignalWrites : true
@@ -197,6 +211,42 @@ export class ProjectViewComponent {
   onClickJobTitle(row : any){
     this.jobProfileAssignedStore.openModalCreate(row)
   }
+
+
+
+    onDelete(entity : any|null){
+      if(entity){
+        this.confirmationService.confirm({
+          message: '¿Estás seguro de que quieres continuar?',
+          header: 'Confirmación',
+          icon: 'pi pi-exclamation-triangle',
+          acceptLabel: 'Si',
+          rejectLabel: 'No',
+          acceptIcon:"none",
+          rejectIcon:"none",
+          rejectButtonStyleClass:"p-button-text",
+          accept: () => {
+            this.projectDetailService.delete(entity.id).subscribe({
+              next : (response) => {
+                console.log(response)
+                this.helperStore.showToast({severity : 'success', summary : 'Success', detail : response.message})
+                this.projectStore.doListByProjectRequirement(this.projectStore.entityToView().id)
+              },
+              error : (error) => {
+                console.error(error)
+                this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
+              }
+            })
+          },
+          reject: () => {
+            this.helperStore.showToast({severity: 'warn', summary: 'Cancelado', detail: 'Ha cancelado la eliminación' })
+          }
+        })
+
+      }else{
+        console.warn("El personal para eliminar no esta seleccionado")
+      }
+    }
 
 
   realSaldoFromProject(val :any){

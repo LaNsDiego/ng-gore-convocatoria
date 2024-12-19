@@ -16,6 +16,10 @@ import { TableModule } from 'primeng/table';
 import { ProjectCreateComponent } from './create/project-create.component';
 import { ProjectViewComponent } from './view/project-view.component';
 import { JobProfileAssignedComponent } from './job-profile-assigned/job-profile-assigned.component';
+import { AccessKey } from '@/constans';
+import { DtoResponseTreeRoleHasPermissionList } from '@/app/domain/dtos/permission/DtoResponseTreeRoleHasPermissionList';
+import { hasAccess } from '@/helpers';
+import { AuthStore } from '@/app/stores/AuthStore';
 
 @Component({
   selector: 'app-project',
@@ -41,6 +45,7 @@ export class ProjectComponent {
   items: MenuItem[] | undefined;
   home: MenuItem | undefined;
 
+  authStore = inject(AuthStore)
   helperStore = inject(HelperStore)
   projectStore = inject(ProjectStore)
   projectService = inject(ProjectService)
@@ -78,14 +83,32 @@ export class ProjectComponent {
     this.projectStore.openModalCreate()
   }
 
-  onEdit(jobtitle : DtoResponseProject|null){
-    console.log(jobtitle)
-    if(jobtitle){
-      this.projectStore.openModalEdit(jobtitle)
+  onEdit(project : DtoResponseProject|null){
+    console.log(project)
+    if(project){
+      this.projectStore.openModalEdit(project)
     }else{
-      console.warn("VEHICULO para editar no esta seleccionado")
+      console.warn("registro para editar no esta seleccionado")
     }
   }
+
+  onFreeze(project : DtoResponseProject|null){
+    if(project){
+      this.projectService.freeze(project.id).subscribe({
+        next: (response) => {
+          this.projectStore.doList()
+          this.helperStore.showToast({severity: 'success', summary: 'Congelado', detail: response.message })
+        },
+        error: (error) => {
+          console.error(error)
+          this.helperStore.showToast({severity: 'error', summary: 'Error', detail: 'No se pudo congelar' })
+        }
+      })
+    }else{
+      console.warn("registro para editar no esta seleccionado")
+    }
+  }
+
   onDelete(entity : DtoResponseProject|null){
     if(entity){
       this.confirmationService.confirm({
@@ -124,4 +147,8 @@ export class ProjectComponent {
     menu.toggle(event)
 
   }
+
+  hasAccessKey(key : AccessKey,hasPermissions : DtoResponseTreeRoleHasPermissionList){
+      return hasAccess(key,hasPermissions)
+    }
 }

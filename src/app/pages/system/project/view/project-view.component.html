@@ -142,6 +142,7 @@ header="REQUERIMIENTO DE PERSONAL"
               name="demo[]"
               accept="image/*"
               maxFileSize="1000000"
+              [disabled]="isFreeze()"
               (onUpload)="null" />
 
 
@@ -218,7 +219,14 @@ header="REQUERIMIENTO DE PERSONAL"
 
             <div class="col-12  flex justify-content-end">
 
-              <p-button label="AGREGAR REQUERIMIENTO" severity="secondary" outlined="true" icon="pi pi-plus" (onClick)="addEmployeeRequirement()"></p-button>
+              <p-button
+                label="AGREGAR REQUERIMIENTO"
+                severity="secondary"
+                outlined="true"
+                icon="pi pi-plus"
+                (onClick)="addEmployeeRequirement()"
+                [disabled]="isFreeze()"
+                ></p-button>
             </div>
 
             <div class="col-12 px-0">
@@ -283,6 +291,7 @@ header="REQUERIMIENTO DE PERSONAL"
                             tooltipPosition="top"
                             (click)="projectStore.setProjectDetailToEditRRHH(row)"
                             severity="info" [rounded]="true" [text]="true"
+                            [disabled]="isFreeze()"
                             icon="pi pi-pencil"/>
                           }
                           </div>
@@ -295,6 +304,7 @@ header="REQUERIMIENTO DE PERSONAL"
                             @if(hasAccessKey('requerimiento-personal-editar',authStore.permissions())){
                               <p-button pTooltip="Editar MONTO"
                               size="small"
+                              [disabled]="isFreeze()"
                               tooltipPosition="top"
                               (click)="projectStore.setProjectDetailToEditRRHH(row)"
                               severity="info" [rounded]="true" [text]="true"
@@ -309,18 +319,21 @@ header="REQUERIMIENTO DE PERSONAL"
                             <p-button pTooltip="Editar"
                             tooltipPosition="top"
                             (click)="null"
+                            [disabled]="isFreeze()"
                             severity="contrast" [rounded]="true" [text]="true"
                             icon="pi pi-pencil" styleClass="mr-1"/>
 
                             <p-button pTooltip="Cargo"
                             tooltipPosition="top"
+                            [disabled]="isFreeze()"
                             (click)="onClickJobTitle(row)"
                             severity="info" [rounded]="true" [text]="true"
                             icon="pi pi-user" styleClass="mr-1"/>
 
                             <p-button pTooltip="Eliminar"
                               tooltipPosition="top"
-                              (click)="null"
+                              [disabled]="isFreeze()"
+                              (click)="onDelete(row)"
                               severity="danger" [rounded]="true" [text]="true"
                               icon="pi pi-trash" styleClass="mr-1"/>
                           </div>
@@ -344,7 +357,9 @@ header="REQUERIMIENTO DE PERSONAL"
 
 
         <div class="col-12 flex justify-content-end">
-            <p-button label="GUARDAR REQUIRIMIENTOS" severity="success" iconPos="left" icon="pi pi-save" (onClick)="handleSubmit()"/>
+            <p-button label="GUARDAR REQUIRIMIENTOS" severity="success" iconPos="left" icon="pi pi-save" (onClick)="handleSubmit()"
+              [disabled]="isFreeze()"
+            />
         </div>
     </form>
 

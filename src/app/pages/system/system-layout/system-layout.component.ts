@@ -80,6 +80,7 @@ export class SystemLayoutComponent implements OnInit{
     let valuePermissions = JSON.parse(localStorage.getItem('permissions') ?? '{}').permissions
     this.permissions.update(() =>  valuePermissions)
     this.authStore.setPermissions(valuePermissions)
+    console.log("DATA USER",decoded.user);
     this.user.update(() => decoded.user)
     this.visibleSidebar = localStorage.getItem('visibleSidebar') === 'true';
     // effect(() => {
