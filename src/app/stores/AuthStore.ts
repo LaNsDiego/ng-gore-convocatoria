@@ -21,6 +21,7 @@ const initialState : AuthState = {
     created_at : '',
     updated_at : '',
     role_id : 0,
+    executor_unit : '',
   },
   isAuthenticated : false,
   permissions : []

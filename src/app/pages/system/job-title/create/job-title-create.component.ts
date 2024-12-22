@@ -1,5 +1,6 @@
 import { DtoJobTitleCreate } from '@/app/domain/dtos/job-title/DtoJobTitleCreate';
 import { JobTitleService } from '@/app/services/job-title.service';
+import { AuthStore } from '@/app/stores/AuthStore';
 import { HelperStore } from '@/app/stores/HelpersStore';
 import { JobTitleStore } from '@/app/stores/JobTitleStore';
 import { getErrorByKey } from '@/helpers';
@@ -33,7 +34,7 @@ export class JobTitleCreateComponent {
   jobTitleService = inject(JobTitleService)
   helperStore = inject(HelperStore)
   formBuilder = inject(FormBuilder)
-
+  authStore = inject(AuthStore)
 
   statusOptions = signal<any[]>([
     { label : 'Activo' },
@@ -45,12 +46,17 @@ export class JobTitleCreateComponent {
     name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     status : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     observation : new FormControl<string>('',{ validators : [] , nonNullable : true }),
+    executor_unit : new FormControl<any>('',{ validators : [] , nonNullable : true }),
   })
 
   constructor(){
     effect(() => {
+      console.log('is open create',this.authStore.userAuthenticated());
+
       const isOpen = this.jobTitleStore.isOpenCreate()
       if(isOpen){
+
+        this.frmCreate.controls.executor_unit.setValue(this.authStore.userAuthenticated()?.executor_unit)
         this.jobTitleService.nextCode().subscribe({
           next : (generatedCode) => {
             this.frmCreate.controls.code.setValue(generatedCode)
@@ -71,6 +77,8 @@ export class JobTitleCreateComponent {
   }
 
   handleSubmit(){
+
+    console.warn(this.frmCreate.getRawValue())
     this.frmCreate.markAllAsTouched()
     if(this.frmCreate.status === 'VALID'){
       const values = this.frmCreate.getRawValue()

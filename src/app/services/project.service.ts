@@ -38,6 +38,7 @@ export class ProjectService {
 
 
   findVFP(values : {functional_sequence : string , specific_expenditure : string}){
+    // 192.168.1.117/driversiaf
     // http://localhost:9000/servicio/test.php?sec=0770&clasif=6.8.1.4.1
     // http://localhost/driversiaf/servicio/test.php?clasif=6.8.1.4.1&sec=0770
     return this.http.get<any>(`http://localhost:9000/servicio/test.php?sec=${values.functional_sequence}&clasif=${values.specific_expenditure}`)

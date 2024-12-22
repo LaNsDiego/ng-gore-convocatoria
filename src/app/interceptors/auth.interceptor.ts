@@ -14,6 +14,7 @@ import { AuthStore } from '../stores/AuthStore';
     if(JWT === null){
       return next(req)
     }
+
       authRequest = req.clone({
       setHeaders: {
         Authorization: `Bearer ${JWT}`

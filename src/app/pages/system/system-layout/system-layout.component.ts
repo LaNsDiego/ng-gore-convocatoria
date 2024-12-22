@@ -66,6 +66,7 @@ export class SystemLayoutComponent implements OnInit{
     created_at : '',
     updated_at : '',
     role_id : 0,
+    executor_unit : '',
     role :{
       id : 0,
       name : '',
@@ -83,15 +84,17 @@ export class SystemLayoutComponent implements OnInit{
     console.log("DATA USER",decoded.user);
     this.user.update(() => decoded.user)
     this.visibleSidebar = localStorage.getItem('visibleSidebar') === 'true';
-    // effect(() => {
-    //   const authenticated = this.authStore.userAuthenticated()
-    //   console.log("EFFECT",authenticated)
-    //   if(authenticated){
-    //     this.user.update(() => authenticated)
-    //   }
-    // },{
-    //   allowSignalWrites : true
-    // })
+    effect(() => {
+      const decodedJWT = this.authStore.decodeJWT(this.authStore.getJWT() || '')
+      this.authStore.setUserAuthenticated(decodedJWT.user)
+      // const authenticated = this.authStore.userAuthenticated()
+      // console.log("EFFECT",authenticated)
+      // if(authenticated){
+      //   this.user.update(() => authenticated)
+      // }
+    },{
+      allowSignalWrites : true
+    })
   }
 
   @HostListener('document:keydown.escape', ['$event'])

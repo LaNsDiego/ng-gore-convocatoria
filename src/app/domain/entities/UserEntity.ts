@@ -9,4 +9,6 @@ export type UserEntity = {
   remember_token : string
   created_at : string
   updated_at : string
+  executor_unit : string
+
 }

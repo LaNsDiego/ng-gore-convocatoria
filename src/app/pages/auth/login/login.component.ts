@@ -84,8 +84,8 @@ export class LoginComponent {
             this.authStore.saveJWT(response.access_token)
             // localStorage.setItem('permissions',JSON.stringify(response))
             localStorage.setItem('permissions',JSON.stringify(response.role))
-            // const decodedJWT = this.authStore.decodeJWT(response.access_token)
-            // this.authStore.setUserAuthenticated(decodedJWT.user)
+            const decodedJWT = this.authStore.decodeJWT(response.access_token)
+            this.authStore.setUserAuthenticated(decodedJWT.user)
 
             this.router.navigate(['/system/panel'])
 
