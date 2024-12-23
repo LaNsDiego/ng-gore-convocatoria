@@ -51,7 +51,6 @@ export class JobTitleCreateComponent {
 
   constructor(){
     effect(() => {
-      console.log('is open create',this.authStore.userAuthenticated());
 
       const isOpen = this.jobTitleStore.isOpenCreate()
       if(isOpen){

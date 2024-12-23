@@ -14,6 +14,10 @@ export class ProjectDetailService {
     return this.http.get<any[]>(`${environment.apiUrl}/project-requirement-details/list-by-project-requirement/${project_requirement_id}`)
   }
 
+  store(values : any){
+    return this.http.post<{ message : string}>(`${environment.apiUrl}/project-requirement-details/store`,values)
+  }
+
   update(values : any){
     return this.http.post<{ message : string}>(`${environment.apiUrl}/project-requirement-details/update`,values)
   }

@@ -7,6 +7,7 @@ import { EmployeeService } from '@/app/services/employee.service';
 // import { EstablishmentService } from '@/app/services/establishment.service';
 import { JobTitleService } from '@/app/services/job-title.service';
 import { PersonService } from '@/app/services/person.service';
+import { AuthStore } from '@/app/stores/AuthStore';
 import { EmployeeStore } from '@/app/stores/EmployeeStore';
 import { HelperStore } from '@/app/stores/HelpersStore';
 import { getErrorByKey, getErrosOnControls } from '@/helpers';
@@ -82,6 +83,7 @@ export class EmployeeCreateComponent {
     cci : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     file_bank_account : new FormControl<File|null>(null,{ validators : [] , nonNullable : true }),
 
+    executor_unit : new FormControl<any>(null,{ validators : [Validators.required] , nonNullable : true }),
 
   })
 
@@ -108,6 +110,7 @@ export class EmployeeCreateComponent {
   addressCities = signal<any[]>([])
 
   isFindingPerson = signal(false)
+  authStore = inject(AuthStore)
 
   banks = signal<any[]>([
     { label : 'BCP'},
@@ -128,6 +131,7 @@ export class EmployeeCreateComponent {
 
   constructor() {
     effect(() => {
+      this.frmCreate.controls.executor_unit.setValue(this.authStore.userAuthenticated()?.executor_unit)
       this.frmCreate.controls.document_type.valueChanges.subscribe(value => {
         this.setDocumentNumberValidators(value);
       });

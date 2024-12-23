@@ -118,29 +118,31 @@
           </td>
           <td class="">
             <div class="inline-flex column-gap-1">
-              <p-button pTooltip="Editar"
+              <!-- <p-button pTooltip="Editar"
                 tooltipPosition="top"
                 (click)="projectStore.openModalEdit(row)"
                 severity="info" [rounded]="true" [text]="true"
-                icon="pi pi-pencil" styleClass="mr-1"/>
-              <p-button pTooltip="Eliminar"
-                tooltipPosition="top"
-                (click)="onDelete(row)"
-                severity="danger" [rounded]="true" [text]="true"
-                icon="pi pi-trash" styleClass="mr-1"/>
-              <p-button pTooltip="Requerimientos"
+                icon="pi pi-pencil" styleClass="mr-1"/> -->
+
+              <p-button pTooltip="Editar requerimientos"
                 tooltipPosition="top"
                 (click)="projectStore.openModalView(row)"
-                severity="warning" [rounded]="true" [text]="true"
-                icon="pi pi-list-check" styleClass="mr-1"/>
+                severity="info" [rounded]="true" [text]="true"
+                icon="pi pi-pencil" styleClass="mr-1"/>
 
                 @if(hasAccessKey('requerimiento-personal-cerrar',authStore.permissions())){
                   <p-button pTooltip="Cerrar"
                   tooltipPosition="top"
                   (click)="onFreeze(row)"
-                  severity="danger" [rounded]="true" [text]="true"
+                  severity="warning" [rounded]="true" [text]="true"
                   icon="pi pi-lock" styleClass="mr-1"/>
                 }
+
+                <p-button pTooltip="Eliminar"
+                tooltipPosition="top"
+                (click)="onDelete(row)"
+                severity="danger" [rounded]="true" [text]="true"
+                icon="pi pi-trash" styleClass="mr-1"/>
 
             </div>
         </td>

@@ -23,6 +23,6 @@ export class JobProfileService {
     return this.http.post<{message : string}>(`${environment.apiUrl}/job-profiles/update`,values)
   }
   delete(id : number){
-    return this.http.post<{message : string}>(`${environment.apiUrl}/job-profiles/delete`,{id})
+    return this.http.get<{message : string}>(`${environment.apiUrl}/job-profiles/delete/${id}`)
   }
 }

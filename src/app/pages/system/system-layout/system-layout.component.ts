@@ -21,6 +21,10 @@ import { ChipModule } from 'primeng/chip';
 import { AuthStore } from '@/app/stores/AuthStore';
 import { ToolbarStore } from '@/app/stores/ToolbarStore';
 import { RoleEntity } from '@/app/domain/entities/RoleEntity';
+import { ProjectStore } from '@/app/stores/ProjectStore';
+import { EmployeeStore } from '@/app/stores/EmployeeStore';
+import { JobProfileStore } from '@/app/stores/JobProfileStore';
+import { JobTitleStore } from '@/app/stores/JobTitleStore';
 @Component({
   selector: 'app-system-layout',
   standalone: true,
@@ -50,6 +54,10 @@ export class SystemLayoutComponent implements OnInit{
   items: any[] = [];
   visibleSidebar: boolean = true;
   isScreenWide: boolean = true;
+  projectStore = inject(ProjectStore)
+  employeeStore = inject(EmployeeStore)
+  jobProfileStore = inject(JobProfileStore)
+  jobTitleStore = inject(JobTitleStore)
 
   displayDialog: boolean = false;
   authStore = inject(AuthStore)
@@ -139,6 +147,10 @@ export class SystemLayoutComponent implements OnInit{
   }
 
   onLogout() {
+    this.projectStore.reset()
+    this.employeeStore.reset()
+    this.jobProfileStore.reset()
+    this.jobTitleStore.reset()
     this.authService.logout()
   }
 

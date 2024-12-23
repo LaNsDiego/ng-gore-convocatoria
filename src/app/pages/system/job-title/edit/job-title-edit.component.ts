@@ -9,29 +9,46 @@ import { Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @Component({
   selector: 'app-job-title-edit',
   standalone: true,
   imports: [
-    ReactiveFormsModule,CommonModule,DialogModule,FloatLabelModule,InputTextModule,ButtonModule
+    ReactiveFormsModule,
+    CommonModule,
+    DialogModule,
+    FloatLabelModule,
+    InputTextModule,
+    ButtonModule,
+    DropdownModule,
+    InputTextareaModule
   ],
   templateUrl: './job-title-edit.component.html',
   styleUrl: './job-title-edit.component.css'
 })
 export class JobTitleEditComponent {
-  jobtitleStore = inject(JobTitleStore)
+  jobTitleStore = inject(JobTitleStore)
   jobtitleService = inject(JobTitleService)
   helperStore = inject(HelperStore)
   formBuilder = inject(FormBuilder)
   uploadedFiles: any[] = [];
 
+  statusOptions = signal<any[]>([
+    { label : 'Activo' },
+    { label : 'Inactivo' },
+  ])
+
   frmEdit  = this.formBuilder.group({
     id : new FormControl<number>(0,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true} ),
+    code : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-
+    status : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
+    observation : new FormControl<string>('',{ validators : [] , nonNullable : true }),
+    executor_unit : new FormControl<any>('',{ validators : [] , nonNullable : true }),
   })
 
   jobtitles = signal<JobTitleEntity[]>([])
@@ -39,7 +56,7 @@ export class JobTitleEditComponent {
   constructor() {
 
     effect(async () => {
-      const entityEdit = this.jobtitleStore.entityEdit()
+      const entityEdit = this.jobTitleStore.entityEdit()
       console.log(`updated entity edit`,entityEdit);
       if(entityEdit != null){
         this.frmEdit.patchValue(entityEdit)
@@ -52,7 +69,7 @@ export class JobTitleEditComponent {
 
 
   ngAfterViewInit(){
-    const entityEdit = this.jobtitleStore.entityEdit()
+    const entityEdit = this.jobTitleStore.entityEdit()
     if( entityEdit != null){
       console.log("after",entityEdit);
       this.frmEdit.patchValue(entityEdit)
@@ -63,7 +80,7 @@ export class JobTitleEditComponent {
 
 
   onCloseModal(a : boolean){
-    this.jobtitleStore.closeModalEdit()
+    this.jobTitleStore.closeModalEdit()
     this.frmEdit.reset()
   }
 
@@ -77,10 +94,10 @@ export class JobTitleEditComponent {
       .subscribe({
         next : (response) => {
           console.log({response})
-          this.jobtitleStore.closeModalEdit()
+          this.jobTitleStore.closeModalEdit()
           this.frmEdit.reset()
           this.helperStore.showToast({severity : 'success', summary : 'Success', detail : 'JobTitle Service created successfully'})
-          this.jobtitleStore.doList()
+          this.jobTitleStore.doList()
         },
         error : (error) => {
           console.log({error})

@@ -79,11 +79,10 @@ export class JobProfileEditComponent {
     this.frmCreate.markAllAsTouched()
     if(this.frmCreate.status === 'VALID'){
       const values = this.frmCreate.getRawValue()
-      this.jobProfileService.store(values)
+      this.jobProfileService.update(values)
       .subscribe({
         next : (response) => {
-          console.log(response)
-          this.jobProfileStore.closeModalCreate()
+          this.jobProfileStore.closeModalEdit()
           this.frmCreate.reset()
           this.helperStore.showToast({severity : 'success', summary : 'Success', detail : response.message})
           this.jobProfileStore.doList()

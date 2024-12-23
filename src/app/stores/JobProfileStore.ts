@@ -49,7 +49,10 @@ export const JobProfileStore = signalStore(
                         console.log({error})
                     }
                 })
-            }
+            },
+            reset(){
+                          patchState(state,initialState)
+                        }
         })
     )
 )

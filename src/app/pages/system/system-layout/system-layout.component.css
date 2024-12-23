@@ -65,6 +65,10 @@
   background-color: rgba(36, 72, 255, 0.2) !important;
 }
 
+:host ::ng-deep .p-menu-list .p-menuitem-content{
+  background-color: inherit !important;
+}
+
 /* :host ::ng-deep .p-panelmenu-header-content:hover::before{
   content: "";
   border-radius: 0.5rem;

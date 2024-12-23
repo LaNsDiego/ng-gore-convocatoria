@@ -56,11 +56,12 @@ import { ConfirmationService } from 'primeng/api';
 export class ProjectViewComponent {
   projectStore = inject(ProjectStore)
   projectService = inject(ProjectService)
+  projectDetailService = inject(ProjectDetailService)
   helperStore = inject(HelperStore)
   authStore = inject(AuthStore)
   formBuilder = inject(FormBuilder)
   personService = inject(PersonService)
-  projectDetailService = inject(ProjectDetailService)
+
   jobProfileAssignedStore = inject(JobProfileAssignedStore)
   confirmationService = inject(ConfirmationService)
 
@@ -80,6 +81,7 @@ export class ProjectViewComponent {
   })
 
   frmEmployeeRequirement = this.formBuilder.group({
+    project_requirement_id : new FormControl<number>(0,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true }),
     dni : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     first_name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     father_last_name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
@@ -101,6 +103,7 @@ export class ProjectViewComponent {
       const entityToView = this.projectStore.entityToView()
       if(entityToView){
         this.frmCreate.patchValue(entityToView)
+        this.frmEmployeeRequirement.controls.project_requirement_id.setValue(entityToView.id)
         this.projectStore.doListByProjectRequirement(entityToView.id)
 
         this.realSaldoFromProject({
@@ -153,30 +156,30 @@ export class ProjectViewComponent {
     this.frmCreate.reset()
   }
 
-  handleSubmit(){
-    this.frmCreate.markAllAsTouched()
-    if(this.frmCreate.status === 'VALID'){
-      const values = this.frmCreate.getRawValue()
-      this.projectService.update(values)
-      .subscribe({
-        next : (response) => {
-          console.log(response)
-          this.projectStore.closeModalView()
-          this.frmCreate.reset()
-          this.helperStore.showToast({severity : 'success', summary : 'Success', detail : response.message})
-          this.projectStore.doList()
-        },
-        error : (error) => {
-          console.error(error)
-          this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
-        }
+  // handleSubmit(){
+  //   this.frmCreate.markAllAsTouched()
+  //   if(this.frmCreate.status === 'VALID'){
+  //     const values = this.frmCreate.getRawValue()
+  //     this.projectService.update(values)
+  //     .subscribe({
+  //       next : (response) => {
+  //         console.log(response)
+  //         this.projectStore.closeModalView()
+  //         this.frmCreate.reset()
+  //         this.helperStore.showToast({severity : 'success', summary : 'Success', detail : response.message})
+  //         this.projectStore.doList()
+  //       },
+  //       error : (error) => {
+  //         console.error(error)
+  //         this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
+  //       }
 
-      })
-    }else{
-      console.warn(getErrosOnControls(this.frmCreate))
-    }
+  //     })
+  //   }else{
+  //     console.warn(getErrosOnControls(this.frmCreate))
+  //   }
 
-  }
+  // }
 
   addEmployeeRequirement(){
     this.frmEmployeeRequirement.markAllAsTouched()
@@ -196,12 +199,23 @@ export class ProjectViewComponent {
         return
       }
       this.frmCreate.controls.balance_amount_as_specified.setValue(diferrenceResult)
-      // this.employeeRequirements.update((prev) => [...prev,values])
+
       this.projectStore.requirementDetails().push(values)
       this.projectStore.setEmployeeRequirements(this.projectStore.requirementDetails())
       this.frmEmployeeRequirement.reset()
-      // console.log("requerimientos",this.employeeRequirements());
       this.frmCreate.controls.employeeRequirements.setValue(this.projectStore.requirementDetails())
+
+      this.projectDetailService.store(values).subscribe({
+        next : (response) => {
+          console.log(response)
+          this.helperStore.showToast({severity : 'success', summary : 'Success', detail : response.message})
+          this.projectStore.doListByProjectRequirement(this.projectStore.entityToView().id)
+        },
+        error : (error) => {
+          console.error(error)
+          this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
+        }
+      })
 
     }else{
       console.warn(getErrosOnControls(this.frmEmployeeRequirement))

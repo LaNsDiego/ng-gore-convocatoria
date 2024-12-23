@@ -123,7 +123,7 @@ header="Nuevo empleado"
 
       <div class="col-6 flex flex-column">
         <p-floatLabel>
-          <input pInputText id="phone_number" formControlName="phone_number"  class="w-full"/>
+          <input pInputText id="phone_number" formControlName="phone_number"  class="w-full" maxlength="9"/>
           <label for="phone_number">Numero celular</label>
         </p-floatLabel>
         <small class="text-sm text-pink-600" style="height: 1em;">
@@ -367,7 +367,7 @@ header="Nuevo empleado"
 
       <div class="col-6 lg:col-4">
         <p-floatLabel>
-            <input pInputText id="account_number" formControlName="account_number"  class="w-full"/>
+            <input pInputText id="account_number" formControlName="account_number"  class="w-full" maxlength="18"/>
             <label for="account_number">Número de cuenta *</label>
         </p-floatLabel>
         <small class="text-sm text-pink-600" style="height: 1em;">
@@ -377,7 +377,7 @@ header="Nuevo empleado"
 
       <div class="col-6 lg:col-4">
         <p-floatLabel>
-            <input pInputText id="cci" formControlName="cci"  class="w-full"/>
+            <input pInputText id="cci" formControlName="cci"  class="w-full" maxlength="23"/>
             <label for="cci">CCI *</label>
         </p-floatLabel>
         <small class="text-sm text-pink-600" style="height: 1em;">

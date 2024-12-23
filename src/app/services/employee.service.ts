@@ -37,7 +37,7 @@ export class EmployeeService {
   }
 
   delete(employee_id : number){
-    return this.http.post<{message : string}>(`${environment.apiUrl}/employees/delete`, { employee_id })
+    return this.http.get<{message : string}>(`${environment.apiUrl}/employees/delete/${employee_id}`)
   }
 
   getOneById(employee_id : number){

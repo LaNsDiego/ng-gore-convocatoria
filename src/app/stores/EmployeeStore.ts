@@ -49,6 +49,9 @@ export const EmployeeStore = signalStore(
                         console.log({error})
                     }
                 })
+            },
+            reset(){
+              patchState(state,initialState)
             }
         })
     )

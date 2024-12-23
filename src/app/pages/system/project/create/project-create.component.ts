@@ -3,7 +3,7 @@ import { ProjectService } from '@/app/services/project.service';
 import { HelperStore } from '@/app/stores/HelpersStore';
 import { ProjectStore } from '@/app/stores/ProjectStore';
 import { getErrorByKey, getErrosOnControls, pointsAndNumericValidator } from '@/helpers';
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -18,6 +18,7 @@ import { TableModule } from 'primeng/table';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { AuthStore } from '@/app/stores/AuthStore';
 
 @Component({
   selector: 'app-project-create',
@@ -47,6 +48,7 @@ export class ProjectCreateComponent {
   helperStore = inject(HelperStore)
   formBuilder = inject(FormBuilder)
   personService = inject(PersonService)
+  authStore = inject(AuthStore)
 
   frmCreate = this.formBuilder.group({
     functional_sequence : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
@@ -59,6 +61,7 @@ export class ProjectCreateComponent {
     document_type : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     document_number : new FormControl<string>('',{ validators : [] , nonNullable : true }),
     employeeRequirements : new FormControl<any[]>([],{ validators : [Validators.required,Validators.minLength(1)] , nonNullable : true }),
+    executor_unit : new FormControl<any>('',{ validators : [] , nonNullable : true }),
   })
 
   frmEmployeeRequirement = this.formBuilder.group({
@@ -78,6 +81,16 @@ export class ProjectCreateComponent {
 
 
   constructor(){
+
+    effect(() => {
+      const isOpen = this.projectStore.isOpenCreate()
+      if(isOpen){
+        this.frmCreate.controls.executor_unit.setValue(this.authStore.userAuthenticated()?.executor_unit)
+      }
+    },{
+      allowSignalWrites : true
+    })
+
     this.frmCreate.controls.dni_responsible.valueChanges.subscribe((value) => {
       console.log(value);
       if(value.length === 8){
@@ -149,7 +162,7 @@ export class ProjectCreateComponent {
       specific_expenditure
     }).subscribe({
       next : (response) => {
-        console.log("BUSQUEDA",response)
+
         if(response != null){
           this.frmCreate.controls.project_name.setValue(response.nombre)
           this.frmCreate.controls.amount_as_specified.setValue(response.saldo)

@@ -88,10 +88,10 @@ export class UserCreateComponent  {
 
     this.frmCreate.controls.dni.valueChanges.subscribe((val) => {
       if(val.length === 8){
-        const userSir = this.sirUsers().find((user) => user.usuario_dni === val)
+        const userSir = this.sirUsers().find((user) => user.pers_cod === val)
         // usuario_nomb,usuario_apat,usuario_amat
         if(userSir){
-          this.frmCreate.controls.name.setValue(`${userSir.usuario_nomb} ${userSir.usuario_apat} ${userSir.usuario_amat}`)
+          this.frmCreate.controls.name.setValue(`${userSir.pers_nombre} ${userSir.pers_apepat} ${userSir.pers_apemat}`)
         }else{
           console.log('no hay usuario con ese dni',val);
         }

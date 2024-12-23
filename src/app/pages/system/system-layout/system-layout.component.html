@@ -1,10 +1,11 @@
 <p-menubar>
     <ng-template pTemplate="start">
         <p-button icon="pi pi-bars" [rounded]="true" [text]="true" (click)="toggleSidebar()"/>
-    </ng-template>
-    <ng-template pTemplate="end">
-      <div class="flex flex-col justify-content-center align-items-center">
-      <p-chip label="SISTEMA DE CONVOCATORIA"  styleClass="mr-6 uppercase"/>
+      </ng-template>
+      <ng-template pTemplate="end">
+        <div class="flex flex-col justify-content-center align-items-center">
+          <p-chip label="SISTEMA DE CONVOCATORIA"  styleClass="mr-6 uppercase"/>
+          <p-chip [label]="'Unidad ejecutora '+user().executor_unit"  styleClass="mr-6 uppercase"/>
       <div class="flex flex-col justify-content-center align-items-center">
         <!-- <p-button
         [icon]="toolbarStore.isDark() ? 'pi pi-sun' : 'pi pi-moon'"

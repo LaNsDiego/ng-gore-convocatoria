@@ -80,6 +80,9 @@ export const ProjectStore = signalStore(
                   console.error(error)
                 }
               })
+            },
+            reset(){
+              patchState(state,initialState)
             }
         })
     )
