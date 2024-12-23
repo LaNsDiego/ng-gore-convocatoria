@@ -34,7 +34,7 @@ export class JobTitleService {
   }
 
   delete(job_title_id : number){
-    return this.http.post<{message : string}>(`${environment.apiUrl}/job-titles/delete/`, { job_title_id })
+    return this.http.post<{message : string}>(`${environment.apiUrl}/job-titles/delete`, { job_title_id })
   }
 
   nextCode(){

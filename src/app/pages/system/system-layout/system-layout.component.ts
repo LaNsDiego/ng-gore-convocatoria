@@ -13,7 +13,7 @@ import { MenuModule } from 'primeng/menu';
 import { AuthService } from '@/app/services/auth.service';
 import { UserEntity } from '@/app/domain/entities/UserEntity';
 import { FooterLayoutComponent } from './footer/footer-layout.component';
-// import { hasAccess } from '@/helpers';
+import { hasAccess } from '@/helpers';
 // import { DtoResponseTreeRoleHasPermissionList } from '@/app/domain/dtos/permission/DtoResponseTreeRoleHasPermissionList';
 import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
@@ -95,11 +95,11 @@ export class SystemLayoutComponent implements OnInit{
     effect(() => {
       const decodedJWT = this.authStore.decodeJWT(this.authStore.getJWT() || '')
       this.authStore.setUserAuthenticated(decodedJWT.user)
-      // const authenticated = this.authStore.userAuthenticated()
-      // console.log("EFFECT",authenticated)
-      // if(authenticated){
-      //   this.user.update(() => authenticated)
-      // }
+      const authenticated = this.authStore.userAuthenticated()
+      console.log("EFFECT",authenticated)
+      if(authenticated){
+        this.user.update(() => authenticated as any)
+      }
     },{
       allowSignalWrites : true
     })
@@ -118,6 +118,7 @@ export class SystemLayoutComponent implements OnInit{
         group:true,
         items: [
           { label: 'Roles y permisos', icon: 'pi pi-fw pi-shield', route: ['/system/permisos'], badge : 'NUEVO', visible : true },
+          // { label: 'Roles y permisos', icon: 'pi pi-fw pi-shield', route: ['/system/permisos'], badge : 'NUEVO', visible : hasAccess('roles-y-permisos-leer') },
           { label: 'Usuarios', icon: 'pi pi-fw pi-users', route: ['/system/usuarios'] , visible : true },
         ]
       },

@@ -22,6 +22,10 @@ export class ProjectDetailService {
     return this.http.post<{ message : string}>(`${environment.apiUrl}/project-requirement-details/update`,values)
   }
 
+  updateNoRRHH(values : any){
+    return this.http.post<{ message : string}>(`${environment.apiUrl}/project-requirement-details/update/no-rrhh`,values)
+  }
+
   delete(id : number){
     return this.http.get<{message:string}>(`${environment.apiUrl}/project-requirement-details/delete/${id}`)
   }

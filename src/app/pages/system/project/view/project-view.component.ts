@@ -27,6 +27,7 @@ import { AccessKey } from '@/constans';
 import { DtoResponseTreeRoleHasPermissionList } from '@/app/domain/dtos/permission/DtoResponseTreeRoleHasPermissionList';
 import { AuthStore } from '@/app/stores/AuthStore';
 import { ConfirmationService } from 'primeng/api';
+import { ProjectDetailEditComponent } from './project-detail-edit/project-detail-edit.component';
 
 @Component({
   selector: 'app-project-view',
@@ -48,7 +49,8 @@ import { ConfirmationService } from 'primeng/api';
     InputGroupAddonModule,
     TooltipModule,
     CheckboxModule,
-    ProjectDetailRrhhComponent
+    ProjectDetailRrhhComponent,
+    ProjectDetailEditComponent,
   ],
   templateUrl: './project-view.component.html',
   styleUrl: './project-view.component.css'
@@ -64,6 +66,8 @@ export class ProjectViewComponent {
 
   jobProfileAssignedStore = inject(JobProfileAssignedStore)
   confirmationService = inject(ConfirmationService)
+
+  saldo = signal<number>(0)
 
   frmCreate = this.formBuilder.group({
     id : new FormControl<number>(0,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true }),
@@ -145,6 +149,15 @@ export class ProjectViewComponent {
           this.frmCreate.get(key)?.disable();
         })
       }
+
+      this.frmCreate.controls.balance_amount_as_specified.valueChanges.subscribe((value) => {
+        if(!isNaN(value)){
+          this.saldo.set(value)
+          console.log("saldo",value);
+
+
+        }
+      })
     },{
       allowSignalWrites : true
     })
@@ -224,6 +237,10 @@ export class ProjectViewComponent {
 
   onClickJobTitle(row : any){
     this.jobProfileAssignedStore.openModalCreate(row)
+  }
+
+  onEdit(row : any){
+    this.projectStore.setProjectDetailToEdit(row)
   }
 
 

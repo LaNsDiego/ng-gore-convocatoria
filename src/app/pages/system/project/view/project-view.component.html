@@ -318,7 +318,7 @@ header="REQUERIMIENTO DE PERSONAL"
 
                             <p-button pTooltip="Editar"
                             tooltipPosition="top"
-                            (click)="null"
+                            (click)="onEdit(row)"
                             [disabled]="isFreeze()"
                             severity="contrast" [rounded]="true" [text]="true"
                             icon="pi pi-pencil" styleClass="mr-1"/>
@@ -367,3 +367,4 @@ header="REQUERIMIENTO DE PERSONAL"
 
 
 <app-project-detail-rrhh/>
+<app-project-detail-edit [saldo]="saldo()"/>

@@ -81,6 +81,8 @@ export class JobTitleComponent {
   }
   onDelete(entity : JobTitleEntity|null){
     if(entity){
+      console.log("ELIMINAR",entity);
+
       this.confirmationService.confirm({
         message: '¿Estás seguro de que quieres continuar?',
         header: 'Confirmación',

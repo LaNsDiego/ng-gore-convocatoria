@@ -11,6 +11,7 @@ export type ProjectState = {
     entityEdit : DtoResponseProject | null
     entityToView : any | null
     projectDetailToEditRRHH : any | null
+    projectDetailToEdit : any | null
     requirementDetails : any[]
 }
 const initialState : ProjectState = {
@@ -20,6 +21,7 @@ const initialState : ProjectState = {
     entityEdit : null,
     entityToView : null,
     projectDetailToEditRRHH : null,
+    projectDetailToEdit : null,
     requirementDetails : []
 }
 
@@ -55,6 +57,9 @@ export const ProjectStore = signalStore(
             },
             setProjectDetailToEditRRHH(projectDetail:any){
                 patchState(state,{ projectDetailToEditRRHH : projectDetail})
+            },
+            setProjectDetailToEdit(projectDetail:any){
+                patchState(state,{ projectDetailToEdit : projectDetail})
             },
             doList(){
                 projectService.list().subscribe({
