@@ -24,8 +24,8 @@ export class ProjectService {
     return this.http.post<{message : string}>(`${environment.apiUrl}/project-requirements/update`, values)
   }
 
-  delete(employee_id : number){
-    return this.http.post<{message : string}>(`${environment.apiUrl}/project-requirements/delete`, { employee_id })
+  delete(id : number){
+    return this.http.get<{message : string}>(`${environment.apiUrl}/project-requirements/delete/${id}`)
   }
 
   realSaldo(val :any){
