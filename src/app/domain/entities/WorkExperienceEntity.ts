@@ -9,5 +9,6 @@ export type WorkExperienceEntity = {
     start_date : string
     end_date : string
     document_name : string
-    file : string
+    file : null|File
+    full_path_file : string
 }

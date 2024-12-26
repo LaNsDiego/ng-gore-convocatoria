@@ -26,6 +26,17 @@ export class WorkExperienceService {
     return this.http.post<{message : string}>(`${environment.apiUrl}/work-experiences/store`,formData)
   }
 
+  update(values : any){
+    const formData = new FormData();
+    for (const key in values) {
+      if (values.hasOwnProperty(key)) {
+        formData.append(key, values[key]);
+      }
+    }
+
+    return this.http.post<{message : string}>(`${environment.apiUrl}/work-experiences/update`,formData)
+  }
+
   delete(id : number){
     return this.http.get<{message : string}>(`${environment.apiUrl}/work-experiences/delete/${id}`)
   }

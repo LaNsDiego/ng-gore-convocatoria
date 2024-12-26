@@ -19,6 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DtoResponseEmployee } from '@/app/domain/dtos/employee/DtoResponseEmployee';
 import { EmployeeService } from '@/app/services/employee.service';
 import { calcularExperienciaTotal } from '@/helpers';
+import { WorkExperienceEditComponent } from './edit/work-experience-edit.component';
 
 @Component({
   selector: 'app-work-experience',
@@ -35,6 +36,7 @@ import { calcularExperienciaTotal } from '@/helpers';
     InputIconModule,
     InputTextModule,
     WorkExperienceCreateComponent,
+    WorkExperienceEditComponent,
   ],
   templateUrl: './work-experience.component.html',
   styleUrl: './work-experience.component.css'
