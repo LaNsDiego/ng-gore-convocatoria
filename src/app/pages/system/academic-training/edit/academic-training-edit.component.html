@@ -1,13 +1,13 @@
 <p-dialog
-header="Nuevo formación académica"
+header="Editar formación académica"
 [modal]="true"
-[breakpoints]="{'960px': '100vw'}"
-[style]="{ width: '960px',maxHeight: '100%'}"
+[breakpoints]="{'1080px': '100vw'}"
+[style]="{ width: '1080px'}"
 [draggable]="false"
 [resizable]="false"
-[visible]="academicTrainingStore.isOpenCreate()"
-(visibleChange)="this.frmCreate.reset();this.academicTrainingStore.closeModalCreate()"
-[formGroup]="frmCreate">
+[visible]="academicTrainingStore.isOpenEdit()"
+(visibleChange)="this.frmEdit.reset();this.academicTrainingStore.closeModalEdit()"
+[formGroup]="frmEdit">
     <p-fieldset legend="Datos de formación académica">
       <div class="grid">
 
@@ -385,8 +385,26 @@ header="Nuevo formación académica"
           </small>
         </div>
 
+
+        <!-- <div class="col-6 flex justify-content-end px-0">
+          <div class="w-full flex justify-content-end align-items-center">
+            <p-fileUpload
+              mode="basic"
+              chooseLabel="SUBIR ARCHIVO"
+              chooseIcon="pi pi-upload"
+              (onSelect)="onSelectFileDataEmployee($event)"
+              accept="image/*"
+              maxFileSize="1000000" />
+              <button
+                (click)="onClickPreviewImage(frmEdit.controls.file_data_employee.value)"
+                class="my-auto p-ripple p-element p-button p-component p-button-icon-only p-button-info" type="button" style="border-radius: 0 4px 4px 0px;">
+                <span class="p-button-icon pi pi-eye ng-star-inserted"></span>
+              </button>
+          </div>
+        </div> -->
+
         <div class="col-6 flex justify-content-end">
-          <div class="w-full flex justify-content-end">
+          <div class="w-full flex justify-content-end align-items-center">
             <p-fileUpload
             mode="basic"
             chooseLabel="SUBIR ARCHIVO"
@@ -394,6 +412,12 @@ header="Nuevo formación académica"
             maxFileSize="1000000"
             (onSelect)="onSelectQualificationFile($event)"
             (onUpload)="null" />
+            <a
+                target="_blank"
+                [href]="frmEdit.controls.qualification_file.value ? $any(frmEdit.controls.qualification_file.value).global_url : ''"
+                class="my-auto p-ripple p-element p-button p-component p-button-icon-only p-button-info" type="button" style="border-radius: 0 4px 4px 0px;">
+                <span class="p-button-icon pi pi-eye ng-star-inserted"></span>
+              </a>
           </div>
         </div>
 
@@ -442,7 +466,7 @@ header="Nuevo formación académica"
         </div>
 
         <div class="col-6 flex justify-content-end">
-          <div class="w-full flex justify-content-end">
+          <div class="w-full flex justify-content-end align-items-center">
             <p-fileUpload
             mode="basic"
             chooseLabel="SUBIR ARCHIVO"
@@ -450,6 +474,13 @@ header="Nuevo formación académica"
             maxFileSize="1000000"
             (onSelect)="onSelectTuitionFile($event)"
             (onUpload)="null" />
+
+            <a
+                target="_blank"
+                [href]="frmEdit.controls.tuition_file.value ? $any(frmEdit.controls.tuition_file.value).global_url : ''"
+                class="my-auto p-ripple p-element p-button p-component p-button-icon-only p-button-info" type="button" style="border-radius: 0 4px 4px 0px;">
+                <span class="p-button-icon pi pi-eye ng-star-inserted"></span>
+              </a>
           </div>
         </div>
 
@@ -505,7 +536,7 @@ header="Nuevo formación académica"
         </div>
 
         <div class="col-6 flex justify-content-end">
-          <div class="w-full flex justify-content-end">
+          <div class="w-full flex justify-content-end align-items-center">
             <p-fileUpload
             #fileAuthorization
             mode="basic"
@@ -581,15 +612,17 @@ header="Nuevo formación académica"
               {{ row.authorization_end_date }}
           </td>
           <td class="text-center">
-            <i class="pi pi-file-pdf" style="font-size: 1.5rem"></i>
-            {{ row.authorization_file.name }}
+            <a [href]="row.authorization_file ? row.full_path_authorization_file : ''">
+              <i class="pi pi-file-pdf" style="font-size: 1.5rem"></i>
+            </a>
+
           </td>
           <td class="" pFrozenColumn>
               <div class="inline-flex">
                 <p-button pTooltip="Eliminar"
                   tooltipPosition="top"
 
-                  (click)="null"
+                  (click)="onDeleteAuthorizationCertificate(row)"
                   severity="danger" [rounded]="true" [text]="true"
                   icon="pi pi-trash" styleClass="mr-1"/>
               </div>

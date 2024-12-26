@@ -105,16 +105,21 @@ export class ProjectViewComponent {
   constructor(){
     effect(()=> {
       const entityToView = this.projectStore.entityToView()
+      console.log("entityToView",entityToView);
+
       if(entityToView){
         this.frmCreate.patchValue(entityToView)
         this.frmEmployeeRequirement.controls.project_requirement_id.setValue(entityToView.id)
         this.projectStore.doListByProjectRequirement(entityToView.id)
 
-        this.realSaldoFromProject({
-          functional_sequence : entityToView.functional_sequence,
-          specific_expenditure : entityToView.specific_expenditure
-        })
+        this.frmCreate.controls.balance_amount_as_specified.setValue(this.projectStore.balanceAmountAsSpecific())
+        // this.realSaldoFromProject({
+        //   functional_sequence : entityToView.functional_sequence,
+        //   specific_expenditure : entityToView.specific_expenditure
+        // })
+        // console.log("change");
 
+        this.projectStore.doRealSaldo()
         this.frmEmployeeRequirement.controls.dni.valueChanges.subscribe((value) => {
           if(value.length === 8){
             this.personService.find(value).subscribe({
@@ -169,31 +174,6 @@ export class ProjectViewComponent {
     this.frmCreate.reset()
   }
 
-  // handleSubmit(){
-  //   this.frmCreate.markAllAsTouched()
-  //   if(this.frmCreate.status === 'VALID'){
-  //     const values = this.frmCreate.getRawValue()
-  //     this.projectService.update(values)
-  //     .subscribe({
-  //       next : (response) => {
-  //         console.log(response)
-  //         this.projectStore.closeModalView()
-  //         this.frmCreate.reset()
-  //         this.helperStore.showToast({severity : 'success', summary : 'Success', detail : response.message})
-  //         this.projectStore.doList()
-  //       },
-  //       error : (error) => {
-  //         console.error(error)
-  //         this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
-  //       }
-
-  //     })
-  //   }else{
-  //     console.warn(getErrosOnControls(this.frmCreate))
-  //   }
-
-  // }
-
   addEmployeeRequirement(){
     this.frmEmployeeRequirement.markAllAsTouched()
     if(this.frmEmployeeRequirement.status === 'VALID'){
@@ -223,6 +203,7 @@ export class ProjectViewComponent {
           console.log(response)
           this.helperStore.showToast({severity : 'success', summary : 'Success', detail : response.message})
           this.projectStore.doListByProjectRequirement(this.projectStore.entityToView().id)
+          this.projectStore.doRealSaldo()
         },
         error : (error) => {
           console.error(error)
@@ -280,25 +261,20 @@ export class ProjectViewComponent {
     }
 
 
-  realSaldoFromProject(val :any){
-    console.log("buscando saldo");
-
-    this.projectService.realSaldo(val).subscribe({
-      next : (response) => {
-
-        console.log("SALDO",response);
-
-        if(response != null || response.hasOwnProperty('amount_as_specified')){
-          // this.frmCreate.controls.amount_as_specified.setValue(response.amount_as_specified)
-          this.frmCreate.controls.balance_amount_as_specified.setValue(response.amount_as_specified)
-        }
-      },
-      error : (error) => {
-        console.error(error)
-        this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
-      }
-    })
-  }
+  // realSaldoFromProject(val :any){
+  //   this.projectService.realSaldo(val).subscribe({
+  //     next : (response) => {
+  //       if(response != null || response.hasOwnProperty('amount_as_specified')){
+  //         // this.frmCreate.controls.amount_as_specified.setValue(response.amount_as_specified)
+  //         this.frmCreate.controls.balance_amount_as_specified.setValue(response.amount_as_specified)
+  //       }
+  //     },
+  //     error : (error) => {
+  //       console.error(error)
+  //       this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
+  //     }
+  //   })
+  // }
 
   // FUNCTIONS VALIDATION
   getErrorMessageOnCreate(controlName: string): string {

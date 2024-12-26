@@ -3,7 +3,7 @@ import { HelperStore } from '@/app/stores/HelpersStore';
 import { ProjectStore } from '@/app/stores/ProjectStore';
 import { getErrorByKey, getErrosOnControls } from '@/helpers';
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -32,6 +32,9 @@ import { KeyFilterModule } from 'primeng/keyfilter';
 })
 export class ProjectDetailRrhhComponent {
 
+  saldo = input.required<number>()
+  amountToRestore = signal(0)
+
   projectStore = inject(ProjectStore)
   helperStore = inject(HelperStore)
   formBuilder = inject(FormBuilder)
@@ -48,6 +51,11 @@ export class ProjectDetailRrhhComponent {
     effect(()=> {
       const projectDetailReq = this.projectStore.projectDetailToEditRRHH()
       if(projectDetailReq){
+        if(projectDetailReq.amount_rrhh == 0 ){
+          this.amountToRestore.set(projectDetailReq.amount_required)
+        }else{
+          this.amountToRestore.set(projectDetailReq.amount_rrhh)
+        }
         this.frmCreate.patchValue({
           id : projectDetailReq.id,
           amount_rrhh : projectDetailReq.amount_rrhh,
@@ -66,6 +74,15 @@ export class ProjectDetailRrhhComponent {
     this.frmCreate.markAllAsTouched()
     if(this.frmCreate.status === 'VALID'){
       const values = this.frmCreate.getRawValue()
+      const differenceRresult = Number(this.saldo()) + Number(this.amountToRestore()) - this.frmCreate.controls.amount_rrhh.value
+      console.log("differenceRresult",`${this.saldo()}  + ${this.amountToRestore()} - ${this.frmCreate.controls.amount_rrhh.value} = ${differenceRresult} ` );
+
+      if( differenceRresult < 0){
+        this.helperStore.showToast({severity : 'error', summary : 'Error', detail : `Saldo insuficiente. Excedente de ${differenceRresult * (-1)}`})
+        return
+
+      }
+
       this.projectDetailService.update(values)
       .subscribe({
         next : (response) => {
@@ -73,6 +90,7 @@ export class ProjectDetailRrhhComponent {
           this.projectStore.setProjectDetailToEditRRHH(null)
           this.frmCreate.reset()
           this.helperStore.showToast({severity : 'success', summary : 'Success', detail : response.message})
+          this.projectStore.doRealSaldo()
           this.projectStore.doListByProjectRequirement(this.projectStore.entityToView().id)
         },
         error : (error) => {

@@ -13,6 +13,7 @@ export type ProjectState = {
     projectDetailToEditRRHH : any | null
     projectDetailToEdit : any | null
     requirementDetails : any[]
+    balanceAmountAsSpecific : any
 }
 const initialState : ProjectState = {
     isOpenCreate : false,
@@ -22,7 +23,8 @@ const initialState : ProjectState = {
     entityToView : null,
     projectDetailToEditRRHH : null,
     projectDetailToEdit : null,
-    requirementDetails : []
+    requirementDetails : [],
+    balanceAmountAsSpecific : null
 }
 
 
@@ -88,6 +90,24 @@ export const ProjectStore = signalStore(
             },
             reset(){
               patchState(state,initialState)
+            },
+            doRealSaldo(){
+              projectService.realSaldo({
+                functional_sequence : state.entityToView().functional_sequence,
+                specific_expenditure : state.entityToView().specific_expenditure
+              }).subscribe({
+                next : (response) => {
+                  if(response != null || response.hasOwnProperty('amount_as_specified')){
+                    patchState(state,{ balanceAmountAsSpecific : response.amount_as_specified })
+                    // // this.frmCreate.controls.amount_as_specified.setValue(response.amount_as_specified)
+                    // this.frmCreate.controls.balance_amount_as_specified.setValue(response.amount_as_specified)
+                  }
+                },
+                error : (error) => {
+                  console.error(error)
+                  // this.helperStore.showToast({severity : 'error', summary : 'Error', detail : error.error.message})
+                }
+              })
             }
         })
     )

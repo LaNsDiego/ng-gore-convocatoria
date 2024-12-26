@@ -3,10 +3,12 @@ import { AcademicTrainingService } from '@/app/services/academic-training.servic
 import { CountryService } from '@/app/services/country.service';
 import { AcademicTrainingStore } from '@/app/stores/AcademicTrainingStore';
 import { HelperStore } from '@/app/stores/HelpersStore';
+import { ACADEMIC_DEGREE, ACADEMIC_DEGREE_LEVELS, ACADEMIC_DEGREE_SPECIALTY, SITUATION_ACADEMIC, STUDY_CENTERS } from '@/constans';
 import { getErrorByKey, getErrosOnControls } from '@/helpers';
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
@@ -44,9 +46,7 @@ import { TableModule } from 'primeng/table';
 })
 export class AcademicTrainingCreateComponent {
   academicTrainingStore = inject(AcademicTrainingStore)
-  workExperienceService = inject(AcademicTrainingService)
-  // jobTitleService = inject(JobTitleService)
-  // personService = inject(PersonService)
+  academicTrainingService = inject(AcademicTrainingService)
   countryService = inject(CountryService)
   helperStore = inject(HelperStore)
   formBuilder = inject(FormBuilder)
@@ -64,96 +64,55 @@ export class AcademicTrainingCreateComponent {
     academic_situation_department_id : new FormControl<number|null>(null,{ validators : [Validators.required,Validators.min(1)] , nonNullable : false}),
     academic_situation_province_id : new FormControl<number|null>(null,{ validators : [Validators.required,Validators.min(1)] , nonNullable : false}),
     academic_situation_city_id : new FormControl<number|null>(null,{ validators : [Validators.required,Validators.min(1)] , nonNullable : false}),
-    academic_degree : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    academic_degree_level : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    academic_degree_specialty : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
+    academic_degree : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    academic_degree_level : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    academic_degree_specialty : new FormControl<string>('',{ validators : [] , nonNullable : false}),
 
-    qualification_title : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    qualification_specialty : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    qualification_expedition_date : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    qualification_entity_control : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    qualification_registration_center : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    qualification_registration_number : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    qualification_registration_date : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    qualification_resolution_date : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    qualification_resolution_number : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    qualification_file : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
+    qualification_title : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    qualification_specialty : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    qualification_expedition_date : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    qualification_entity_control : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    qualification_registration_center : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    qualification_registration_number : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    qualification_registration_date : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    qualification_resolution_date : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    qualification_resolution_number : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    qualification_file : new FormControl<File|null>(null,{ validators : [] , nonNullable : true }),
 
-    tuition_school : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    tuition_number : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    tuition_date : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    tuition_file : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
+    tuition_school : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    tuition_number : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    tuition_date : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    tuition_file : new FormControl<File|null>(null,{ validators : [] , nonNullable : true }),
 
-    authorization_certificates : new FormControl<any[]>([],{ validators : [Validators.required] , nonNullable : true }),
-    // authorization_certificate : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    // authorization_start_date : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    // authorization_end_date : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    // authorization_file : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
+    authorization_certificates : new FormControl<any[]>([],{ validators : [] , nonNullable : true }),
   })
   frmAuthorizationCertificate = this.formBuilder.group({
-    authorization_certificate : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    authorization_start_date : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    authorization_end_date : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : false}),
-    authorization_file : new FormControl<File|null>(null,{ validators : [Validators.required] , nonNullable : true }),
+    authorization_certificate : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    authorization_start_date : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    authorization_end_date : new FormControl<string>('',{ validators : [] , nonNullable : false}),
+    authorization_file : new FormControl<File|null>(null,{ validators : [] , nonNullable : true }),
   })
 
   authorizationCertificates = signal<any[]>([])
 
   educationalLevels = signal<any[]>([
-    { label : 'SUPERIOR UNIVERSITARIO'},
-    { label : 'TECNICA'},
+    { label : 'PRIMARIA'},
+    { label : 'SECUNDARIA COMUN'},
+    { label : 'SECUNDARIA TECNICA'},
+    { label : 'SUPERIOR ARTISTICA'},
+    { label : 'SUPERIOR TECNICA'},
+    { label : 'SUPERIOR UNIVERSITARIA'},
+    { label : 'SUPERIOR POST GRADO'},
+    { label : 'SUPERIOR DOCTORADO'},
   ])
 
-  academicSituations = signal<any[]>([
-    { label : 'TITULADO'},
-    { label : 'BACHILLER'},
-    { label : 'EGRESADO'},
-  ])
-  studyCenters = signal<any[]>([
-    { label : 'UNIVERSIDAD PRIVADA DE TACNA'},
-    { label : 'UNIVESIDAD NACIONAL JORGE BASADRE'},
-    { label : 'UNIVERSIDAD NACIONAL DE INGENIERIA'},
-  ])
-  academicDegrees = signal<any[]>([
-    { label : 'INGENIERIA'},
-    { label : 'CIENCIAS DE LA SALUD'},
-  ])
-  academicDegreeLevels = signal<any[]>([
-    { label : 'PREGRADO'},
-    { label : 'POSTGRADO'},
-  ])
+  academicSituations = signal<any[]>(SITUATION_ACADEMIC)
+  studyCenters = signal<any[]>(STUDY_CENTERS)
+  academicDegrees = signal<any[]>(ACADEMIC_DEGREE)
+  academicDegreeLevels = signal<any[]>(ACADEMIC_DEGREE_LEVELS)
+  academicDegreeSpecialties = signal<any[]>(ACADEMIC_DEGREE_SPECIALTY)
 
-  academicDegreeSpecialties = signal<any[]>([
-    { label : "Ingeniería Civil"},
-    { label : "Ingeniería de Sistemas"},
-    { label : "Ingeniería Industrial"},
-    { label : "Ingeniería Ambiental"},
-    { label : "Ingeniería Electrónica"},
-    { label : "Ingeniería Mecánica"},
-    { label : "Ingeniería Mecatrónica"},
-    { label : "Ingeniería de Minas"},
-    { label : "Ingeniería Agrónoma"},
-    { label : "Ingeniería Pesquera"},
-    { label : "Ingeniería de Software"},
-    { label : "Ingeniería de Energías Renovables"},
-    { label : "Ingeniería Química"},
-    { label : "Ingeniería Aeroespacial"},
-    { label : "Ingeniería Biomédica"},
-    { label : "Medicina Humana"},
-    { label : "Enfermería"},
-    { label : "Odontología"},
-    { label : "Psicología"},
-    { label : "Tecnología Médica"},
-    { label : "Farmacia y Bioquímica"},
-    { label : "Nutrición"},
-    { label : "Medicina Veterinaria"}  ,
-  ])
-
-  experienceTypes = signal<any[]>([
-    { label : 'ESPECIFICA'},
-    { label : 'GENERAL'},
-  ])
-
+  activedRoute = inject(ActivatedRoute)
   countries = signal<DtoResponseCountry[]>([])
   departments = signal<any[]>([])
   provincies = signal<any[]>([])
@@ -215,20 +174,23 @@ export class AcademicTrainingCreateComponent {
 
 
     effect(() => {
-      const employee = this.academicTrainingStore.employeeToCreate()
-      if(employee){
-        this.frmCreate.controls.employee_id.setValue(employee.id)
-      }else{
-        this.frmCreate.reset()
-      }
+
+      this.activedRoute.paramMap.subscribe(params => {
+        const employeeId = Number(params.get('employee_id'))
+        console.log("employeeId",employeeId)
+
+        if(!isNaN(employeeId) && employeeId > 0){
+
+          console.log("employeeId on create",employeeId);
+          this.frmCreate.controls.employee_id.setValue(employeeId)
+
+        }else{
+          this.helperStore.showToast({severity:'error', summary:'Error', detail:'No se ha podido cargar la experiencia del empleado'})
+        }
+      })
     },{
       allowSignalWrites : true
     })
-  }
-
-  onCloseModalCreate(){
-    this.frmCreate.reset()
-    this.academicTrainingStore.closeModalCreate()
   }
 
   handleSubmit(){
@@ -236,7 +198,7 @@ export class AcademicTrainingCreateComponent {
     if(this.frmCreate.status === 'VALID'){
       console.log(this.frmCreate.value)
       const values = this.frmCreate.getRawValue()
-      this.workExperienceService.store(values as any)
+      this.academicTrainingService.store(values as any)
       .subscribe({
         next : (response) => {
           this.academicTrainingStore.doListByEmployee(this.frmCreate.controls.employee_id.value)

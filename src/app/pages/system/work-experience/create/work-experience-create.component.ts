@@ -41,9 +41,6 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 export class WorkExperienceCreateComponent {
   workExperienceStore = inject(WorkExperienceStore)
   workExperienceService = inject(WorkExperienceService)
-  // jobTitleService = inject(JobTitleService)
-  // personService = inject(PersonService)
-  // countryService = inject(CountryService)
   helperStore = inject(HelperStore)
   formBuilder = inject(FormBuilder)
   frmCreate = this.formBuilder.group({

@@ -10,6 +10,7 @@ import { PersonService } from '@/app/services/person.service';
 import { AuthStore } from '@/app/stores/AuthStore';
 import { EmployeeStore } from '@/app/stores/EmployeeStore';
 import { HelperStore } from '@/app/stores/HelpersStore';
+import { BANKS } from '@/constans';
 import { getErrorByKey, getErrosOnControls } from '@/helpers';
 import { Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -53,27 +54,27 @@ export class EmployeeCreateComponent {
   formBuilder = inject(FormBuilder)
   frmCreate = this.formBuilder.group({
     document_type : new FormControl<string|null>(null,{ validators : [Validators.required,Validators.minLength(1)] , nonNullable : true}),
-    document_number : new FormControl<string>( { value: '', disabled: true },{ nonNullable : true}),
+    document_number : new FormControl<string>('',{validators : [Validators.required ] , nonNullable : true}),
     name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     father_last_name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     mother_last_name : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     sex : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     marital_status : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     date_of_birth : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
-    email : new FormControl<string>('',{ validators : [Validators.email] , nonNullable : false}),
-    phone_number : new FormControl<string>('',{ validators: [Validators.pattern('^[0-9]*$')] , nonNullable : false }),
+    email : new FormControl<string>('',{ validators : [Validators.required,Validators.email] , nonNullable : false}),
+    phone_number : new FormControl<string>('',{ validators: [Validators.required,Validators.pattern('^[0-9]*$')] , nonNullable : false }),
     file_data_employee : new FormControl<File|null>(null,{ validators : [] , nonNullable : true }),
 
-    birth_country_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    birth_department_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    birth_province_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    birth_city_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
+    birth_country_id : new FormControl<number|null>(null,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true}),
+    birth_department_id : new FormControl<number|null>(null,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true}),
+    birth_province_id : new FormControl<number|null>(null,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true}),
+    birth_city_id : new FormControl<number|null>(null,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true}),
     file_place_of_birth : new FormControl<File|null>(null,{ validators : [] , nonNullable : true }),
 
-    address_country_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    address_department_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    address_province_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
-    address_city_id : new FormControl<number|null>(null,{ validators : [Validators.min(1)] , nonNullable : true}),
+    address_country_id : new FormControl<number|null>(null,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true}),
+    address_department_id : new FormControl<number|null>(null,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true}),
+    address_province_id : new FormControl<number|null>(null,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true}),
+    address_city_id : new FormControl<number|null>(null,{ validators : [Validators.required,Validators.min(1)] , nonNullable : true}),
     address : new FormControl<string>('',{ validators : [Validators.required] , nonNullable : true }),
     file_address : new FormControl<File|null>(null,{ validators : [] , nonNullable : true }),
 
@@ -112,15 +113,7 @@ export class EmployeeCreateComponent {
   isFindingPerson = signal(false)
   authStore = inject(AuthStore)
 
-  banks = signal<any[]>([
-    { label : 'BCP'},
-    { label : 'BBVA'},
-    { label : 'INTERBANK'},
-    { label : 'SCOTIABANK'},
-    { label : 'BANBIF'},
-    { label : 'BANCO DE LA NACION'},
-    { label : 'BANCO PICHINCHA'},
-  ])
+  banks = signal<any[]>(BANKS)
 
   accountTypes = signal<any[]>([
     { label : 'CUENTA DE AHORROS'},

@@ -29,14 +29,17 @@ export type AcademicTrainingEntity = {
   qualification_resolution_date : string
   qualification_resolution_number : string
   qualification_file : string
+  full_path_qualification_file : string
 
   tuition_school : string
   tuition_number : string
   tuition_date : string
   tuition_file : string
+  full_path_tuition_file : string
 
-  authorization_certificate : string
-  authorization_start_date : string
-  authorization_end_date : string
-  authorization_file : string
+  // authorization_certificate : string
+  // authorization_start_date : string
+  // authorization_end_date : string
+  // authorization_file : string
+  // full_path_authorization_file : string
 }

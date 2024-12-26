@@ -28,7 +28,7 @@ export class ProjectService {
     return this.http.get<{message : string}>(`${environment.apiUrl}/project-requirements/delete/${id}`)
   }
 
-  realSaldo(val :any){
+  realSaldo(val :{functional_sequence  : string, specific_expenditure : string }){
     return this.http.post<any>(`${environment.apiUrl}/project-requirements/real-saldo`, val)
   }
 

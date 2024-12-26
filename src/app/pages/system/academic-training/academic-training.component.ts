@@ -18,6 +18,7 @@ import { AcademicTrainingStore } from '@/app/stores/AcademicTrainingStore';
 import { AcademicTrainingService } from '@/app/services/academic-training.service';
 import { DtoResponseAcademicTraining } from '@/app/domain/dtos/academic-training/DtoResponseAcademicTraining';
 import { AcademicTrainingCreateComponent } from './create/academic-training-create.component';
+import { AcademicTrainingEditComponent } from './edit/academic-training-edit.component';
 
 @Component({
   selector: 'app-academic-training',
@@ -34,6 +35,7 @@ import { AcademicTrainingCreateComponent } from './create/academic-training-crea
     InputIconModule,
     InputTextModule,
     AcademicTrainingCreateComponent,
+    AcademicTrainingEditComponent,
   ],
   templateUrl: './academic-training.component.html',
   styleUrl: './academic-training.component.css'
@@ -93,7 +95,11 @@ export class AcademicTrainingComponent {
       }
     })
 
-    this.items = [{ label: 'Inicio', route: '/system/dashboard' }, { label: 'Formación académica' }];
+    this.items = [
+      { label: 'Inicio', route: '/system/dashboard' },
+      { label: 'Datos personales', route: '/system/datos-personales' },
+      { label: 'Formación académica' }
+    ];
   }
 
 
@@ -126,16 +132,19 @@ export class AcademicTrainingComponent {
         rejectIcon:"none",
         rejectButtonStyleClass:"p-button-text",
         accept: () => {
-            // this.workExperienceService.delete(entity.id).subscribe({
-            //   next: (response) => {
-            //     this.workExperienceStore.doList()
-            //     this.helperStore.showToast({severity: 'success', summary: 'Eliminado', detail: response.message })
-            //   },
-            //   error: (error) => {
-            //     console.error(error)
-            //     this.helperStore.showToast({severity: 'error', summary: 'Error', detail: 'No se pudo eliminar' })
-            //   }
-            // })
+            this.academicTrainingService.delete(entity.id).subscribe({
+              next: (response) => {
+                const employee = this.employee()
+                if(employee){
+                  this.academicTrainingStore.doListByEmployee(employee.id)
+                }
+                this.helperStore.showToast({severity: 'success', summary: 'Eliminado', detail: response.message })
+              },
+              error: (error) => {
+                console.error(error)
+                this.helperStore.showToast({severity: 'error', summary: 'Error', detail: 'No se pudo eliminar' })
+              }
+            })
         },
         reject: () => {
           this.helperStore.showToast({severity: 'warn', summary: 'Cancelado', detail: 'Ha cancelado la eliminación' })

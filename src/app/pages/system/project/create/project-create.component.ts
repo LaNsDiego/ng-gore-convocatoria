@@ -19,6 +19,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { AuthStore } from '@/app/stores/AuthStore';
+import { DOCUMENT_TYPES } from '@/constans';
 
 @Component({
   selector: 'app-project-create',
@@ -72,10 +73,7 @@ export class ProjectCreateComponent {
     amount_required : new FormControl<number>(0,{ validators : [Validators.required] , nonNullable : true }),
   })
 
-  documentTypes = signal<any[]>([
-    { label : 'INFORME'},
-    { label : 'OTROS'},
-  ])
+  documentTypes = signal<any[]>(DOCUMENT_TYPES)
 
   employeeRequirements = signal<any[]>([])
 
@@ -220,6 +218,7 @@ export class ProjectCreateComponent {
           this.frmCreate.reset()
           this.helperStore.showToast({severity : 'success', summary : 'Success', detail : response.message})
           this.projectStore.doList()
+          this.employeeRequirements.set([])
         },
         error : (error) => {
           console.error(error)
@@ -259,6 +258,15 @@ export class ProjectCreateComponent {
     }else{
       console.warn(getErrosOnControls(this.frmEmployeeRequirement))
     }
+  }
+
+  removeEmployeeRequirement(row : any){
+    const index = this.employeeRequirements().findIndex(er => er.id === row.id)
+    const employee = this.employeeRequirements()[index]
+    const diferrenceResult = Number(this.frmCreate.controls.balance_amount_as_specified.value) + Number(employee.amount_required)
+    this.frmCreate.controls.balance_amount_as_specified.setValue(diferrenceResult)
+    this.employeeRequirements.update((prev) => prev.filter((_,i) => i !== index))
+    this.frmCreate.controls.employeeRequirements.setValue(this.employeeRequirements())
   }
 
   // FUNCTIONS VALIDATION

@@ -6,7 +6,7 @@ header="Nuevo experiencia laboral"
 [draggable]="false"
 [resizable]="false"
 [visible]="workExperienceStore.isOpenCreate()"
-(visibleChange)="onCloseModalCreate()"
+(visibleChange)="onCloseModalCreate();fileExperience.clear()"
 [formGroup]="frmCreate">
     <p-fieldset legend="Datos personales">
       <form class="grid">
@@ -125,6 +125,7 @@ header="Nuevo experiencia laboral"
         <div class="col-6 flex justify-content-end">
           <div class="w-full flex justify-content-end">
             <p-fileUpload
+            #fileExperience
             mode="basic"
             chooseLabel="SUBIR ARCHIVO"
             chooseIcon="pi pi-upload"
