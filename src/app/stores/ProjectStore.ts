@@ -10,6 +10,7 @@ export type ProjectState = {
     entities : DtoResponseProject[]
     entityEdit : DtoResponseProject | null
     entityToView : any | null
+    projectToAssign : any | null
     projectDetailToEditRRHH : any | null
     projectDetailToEdit : any | null
     requirementDetails : any[]
@@ -22,6 +23,7 @@ const initialState : ProjectState = {
     entityEdit : null,
     entityToView : null,
     projectDetailToEditRRHH : null,
+    projectToAssign : null,
     projectDetailToEdit : null,
     requirementDetails : [],
     balanceAmountAsSpecific : null
@@ -41,6 +43,12 @@ export const ProjectStore = signalStore(
             },
             closeModalCreate(){
                 patchState(state,{ isOpenCreate : false})
+            },
+            openModalAssignation(projectToAssign : any){
+                patchState(state,{ projectToAssign  })
+            },
+            closeModalAssignation(){
+                patchState(state,{ projectToAssign : null})
             },
             openModalView(entityToView : any){
                 patchState(state,{ entityToView })
@@ -66,9 +74,7 @@ export const ProjectStore = signalStore(
             doList(){
                 projectService.list().subscribe({
                     next : (response) => {
-                      console.log("PROJECS",response);
-
-                            patchState(state,{ entities : response})
+                      patchState(state,{ entities : response})
                     },
                     error : (error) => {
                         console.error(error)

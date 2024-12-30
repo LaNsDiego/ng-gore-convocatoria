@@ -43,6 +43,8 @@ export const JobProfileStore = signalStore(
             doList(){
                 jobProfileService.list().subscribe({
                     next : (entities) => {
+                      console.log("PROFILES",entities);
+
                       patchState(state,{ entities })
                     },
                     error : (error) => {

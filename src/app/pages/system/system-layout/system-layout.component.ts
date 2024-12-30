@@ -89,14 +89,13 @@ export class SystemLayoutComponent implements OnInit{
     let valuePermissions = JSON.parse(localStorage.getItem('permissions') ?? '{}').permissions
     this.permissions.update(() =>  valuePermissions)
     this.authStore.setPermissions(valuePermissions)
-    console.log("DATA USER",decoded.user);
+
     this.user.update(() => decoded.user)
     this.visibleSidebar = localStorage.getItem('visibleSidebar') === 'true';
     effect(() => {
       const decodedJWT = this.authStore.decodeJWT(this.authStore.getJWT() || '')
       this.authStore.setUserAuthenticated(decodedJWT.user)
       const authenticated = this.authStore.userAuthenticated()
-      console.log("EFFECT",authenticated)
       if(authenticated){
         this.user.update(() => authenticated as any)
       }
@@ -117,9 +116,8 @@ export class SystemLayoutComponent implements OnInit{
         icon: 'pi pi-fw pi-home',
         group:true,
         items: [
-          { label: 'Roles y permisos', icon: 'pi pi-fw pi-shield', route: ['/system/permisos'], badge : 'NUEVO', visible : true },
-          // { label: 'Roles y permisos', icon: 'pi pi-fw pi-shield', route: ['/system/permisos'], badge : 'NUEVO', visible : hasAccess('roles-y-permisos-leer') },
-          { label: 'Usuarios', icon: 'pi pi-fw pi-users', route: ['/system/usuarios'] , visible : true },
+          { label: 'Roles y permisos', icon: 'pi pi-fw pi-shield', route: ['/system/permisos'], badge : 'NUEVO', visible : hasAccess('roles-y-permisos-leer',this.permissions()) },
+          { label: 'Usuarios', icon: 'pi pi-fw pi-users', route: ['/system/usuarios'] , visible : hasAccess('usuarios-leer',this.permissions()) },
         ]
       },
       {
@@ -127,13 +125,9 @@ export class SystemLayoutComponent implements OnInit{
         icon: 'pi pi-fw pi-desktop',
         group:true,
         items: [
-          { label: 'Cargos', icon: 'pi pi-fw pi-briefcase', route: ['/system/cargos'] , visible : true, badge : 'NUEVO'},
-          { label: 'Perfiles', icon: 'pi pi-fw pi-slack', route: ['/system/perfiles'] , visible : true, badge : 'NUEVO'},
-          // { label: 'Actividades laborales', icon: 'pi pi-fw pi-list-check', route: ['/system/actividades-laborales'],visible : true, badge : 'NUEVO' },
-          // { label: 'Personal', icon: 'pi pi-fw pi-id-card', route: ['/system/personales'] , tooltip : 'Registro y control de personal', visible : true },
-          { label: 'Requerimiento Personal', icon: 'pi pi-fw pi-id-card', route: ['/system/requerimiento-personal'] , tooltip : 'Requerimiento de personal', visible : true },
-          { label: 'Datos personales', icon: 'pi pi-fw pi-id-card', route: ['/system/datos-personales'] , tooltip : 'Datos personales', visible : true },
-
+          { label: 'Perfiles', icon: 'pi pi-fw pi-slack', route: ['/system/perfiles'] , badge : 'NUEVO' , visible : hasAccess('perfiles-convocatoria-leer',this.permissions())},
+          { label: 'Requerimiento Personal', icon: 'pi pi-fw pi-id-card', route: ['/system/requerimiento-personal'] , tooltip : 'Requerimiento de personal', visible : hasAccess('requerimiento-personal-leer',this.permissions()) },
+          { label: 'Datos personales', icon: 'pi pi-fw pi-id-card', route: ['/system/datos-personales'] , tooltip : 'Datos personales', visible : hasAccess('datos-personales-leer',this.permissions()) },
         ]
       },
     ]

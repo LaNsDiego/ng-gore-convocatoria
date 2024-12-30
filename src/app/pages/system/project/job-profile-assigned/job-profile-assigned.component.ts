@@ -1,4 +1,6 @@
 import { JobProfileAssignedService } from '@/app/services/job-profile-assigned.service';
+import { JobProfileService } from '@/app/services/job-profile.service';
+import { JobTitleSirService } from '@/app/services/job-title-sir.service';
 import { JobTitleService } from '@/app/services/job-title.service';
 import { HelperStore } from '@/app/stores/HelpersStore';
 import { JobProfileAssignedStore } from '@/app/stores/JobProfileAssignedStore';
@@ -32,7 +34,8 @@ export class JobProfileAssignedComponent {
 
   jobProfileAssignedStore = inject(JobProfileAssignedStore)
   jobProfileAssignedService = inject(JobProfileAssignedService)
-  jobtitleService = inject(JobTitleService)
+  jobProfileService = inject(JobProfileService)
+  jobTitleSirService = inject(JobTitleSirService)
   helperStore = inject(HelperStore)
   formBuilder = inject(FormBuilder)
 
@@ -46,7 +49,7 @@ export class JobProfileAssignedComponent {
 
   jobtitles = signal<any[]>([])
   selectedOptions = signal<any[]>([])
-  jobtitleSelected = signal<any>(null)
+  profiles = signal<any[]>([])
 
 
   constructor(){
@@ -78,9 +81,9 @@ export class JobProfileAssignedComponent {
       allowSignalWrites : true
     })
 
-    this.jobtitleService.listWithProfiles().subscribe({
+    this.jobTitleSirService.listJobTitlesSir().subscribe({
       next : (response) => {
-        console.log("PROFILES",response);
+        // console.log("JOB TITLES",response);
 
         this.jobtitles.set(response)
       },
@@ -92,11 +95,18 @@ export class JobProfileAssignedComponent {
     this.frmCreate.controls.jobtitle_id.valueChanges.subscribe((value) => {
       const jobtitleId = Number(value)
       if(!isNaN(jobtitleId)){
-        const jobtitle = this.jobtitles().find((jobtitle : any) => jobtitle.id === jobtitleId)
-        console.log("JOB TITLE",jobtitle)
-        this.jobtitleSelected.set(jobtitle)
+        this.jobProfileService.listByJobTitle(jobtitleId).subscribe({
+
+          next : (response) => {
+            this.profiles.set(response)
+          },
+          error : (error) => {
+            console.error(error)
+          }
+        })
+
       }else{
-        this.jobtitleSelected.set(null)
+        this.profiles.set([])
       }
     })
   }

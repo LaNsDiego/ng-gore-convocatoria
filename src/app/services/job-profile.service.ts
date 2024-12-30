@@ -16,6 +16,11 @@ export class JobProfileService {
     return this.http.get<DtoResponseJobProfile[]>(`${environment.apiUrl}/job-profiles/list`)
   }
 
+
+  listByJobTitle(jobTitleId : number){
+    return this.http.get<DtoResponseJobProfile[]>(`${environment.apiUrl}/job-profiles/list-by-cargo-sir/${jobTitleId}`)
+  }
+
   store( values : any){
     return this.http.post<{message : string}>(`${environment.apiUrl}/job-profiles/store`,values)
   }

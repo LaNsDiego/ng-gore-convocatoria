@@ -20,6 +20,8 @@ import { AccessKey } from '@/constans';
 import { DtoResponseTreeRoleHasPermissionList } from '@/app/domain/dtos/permission/DtoResponseTreeRoleHasPermissionList';
 import { hasAccess } from '@/helpers';
 import { AuthStore } from '@/app/stores/AuthStore';
+import { ProjectAssignationComponent } from './project-assignation/project-assignation.component';
+
 
 @Component({
   selector: 'app-project',
@@ -36,7 +38,8 @@ import { AuthStore } from '@/app/stores/AuthStore';
     CardModule,
     ProjectCreateComponent,
     ProjectViewComponent,
-    JobProfileAssignedComponent
+    ProjectAssignationComponent,
+    JobProfileAssignedComponent,
   ],
   templateUrl: './project.component.html',
   styleUrl: './project.component.css'

@@ -22,7 +22,7 @@ export class JobTitleService {
   }
 
   listWithProfiles(){
-    return this.http.get<(JobTitleEntity & { profiles : JobProfileEntity []})[]>(`${environment.apiUrl}/job-titles/list-with-profiles`)
+    return this.http.get<(JobTitleEntity & { profiles : JobProfileEntity []})[]>(`${environment.apiUrl}/job-titles-sir/list-with-profiles`)
   }
 
   store(values : DtoJobTitleCreate){

@@ -105,8 +105,6 @@ export class ProjectViewComponent {
   constructor(){
     effect(()=> {
       const entityToView = this.projectStore.entityToView()
-      console.log("entityToView",entityToView);
-
       if(entityToView){
         this.frmCreate.patchValue(entityToView)
         this.frmEmployeeRequirement.controls.project_requirement_id.setValue(entityToView.id)

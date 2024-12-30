@@ -15,13 +15,13 @@ header="CREAR PERFIL"
           styleClass="w-full"
           appendTo="body"
           [options]="jobTitles()"
-          optionLabel="name"
-          optionValue="id"
+          optionLabel="nombre"
+          optionValue="id_cargo"
           [showClear]="true"
-          filterBy="name"
+          filterBy="nombre"
           filter="true"
-          [virtualScroll]="true"
-          [virtualScrollItemSize]="38"
+          [virtualScroll]="jobTitles().length > 38 ? true : false"
+          [virtualScrollItemSize]="jobTitles().length > 38 ? 38 : jobTitles().length"
           placeholder="Seleccione un cargo *">
           </p-dropdown>
           <small class="text-sm text-pink-600" style="height: 1em;">

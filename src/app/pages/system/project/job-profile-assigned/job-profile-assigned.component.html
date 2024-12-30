@@ -14,17 +14,20 @@
             styleClass="w-full"
             appendTo="body"
             [options]="jobtitles()"
-            optionLabel="name"
-            optionValue="id"
+            optionLabel="nombre"
+            optionValue="id_cargo"
             [filter]="true"
-            filterBy="name"
+            filterBy="nombre"
+            [virtualScroll]="jobtitles().length > 38 ? true : false"
+            [virtualScrollItemSize]="jobtitles().length > 38 ? 38 : jobtitles().length"
             [showClear]="true"
+
             placeholder="Seleccione un cargo *">
                 <ng-template let-row pTemplate="item">
-                    {{ row.name }}
+                    {{ row.nombre }}
                 </ng-template>
                 <ng-template let-row pTemplate="selectedItem">
-                  {{ row.name }}
+                  {{ row.nombre }}
               </ng-template>
             </p-dropdown>
             <small class="text-xs text-pink-600" style="height: 1em;">
@@ -32,8 +35,8 @@
             </small>
         </div>
         <div class="col-12 flex column-gap-3 row-gap-2 flex-wrap">
-          @if(jobtitleSelected() != null){
-            @for(profile of jobtitleSelected().profiles ; track profile.id){
+          @if(frmCreate.controls.jobtitle_id.value != null){
+            @for(profile of profiles() ; track profile.id){
               <div class="flex align-items-center column-gap-3" (click)="onClickProfileOption(profile)">
                 <input
                 type="checkbox"

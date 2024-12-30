@@ -1,5 +1,7 @@
 import { JobTitleEntity } from '@/app/domain/entities/JobTitleEntity';
+import { JobTitleSirEntity } from '@/app/domain/entities/JobTitleSirEntity';
 import { JobProfileService } from '@/app/services/job-profile.service';
+import { JobTitleSirService } from '@/app/services/job-title-sir.service';
 import { JobTitleService } from '@/app/services/job-title.service';
 import { AuthStore } from '@/app/stores/AuthStore';
 import { HelperStore } from '@/app/stores/HelpersStore';
@@ -33,13 +35,13 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 export class JobProfileCreateComponent {
   jobProfileStore = inject(JobProfileStore)
   jobProfileService = inject(JobProfileService)
-  jobTitleService = inject(JobTitleService)
+  JobTitleSirService = inject(JobTitleSirService)
   helperStore = inject(HelperStore)
   formBuilder = inject(FormBuilder)
   authStore = inject(AuthStore)
 
 
-  jobTitles = signal<JobTitleEntity[]>([])
+  jobTitles = signal<JobTitleSirEntity[]>([])
   statusOptions = signal<any[]>([
     { label : 'Activo' },
     { label : 'Inactivo' },
@@ -58,7 +60,7 @@ export class JobProfileCreateComponent {
       const isOpen = this.jobProfileStore.isOpenCreate()
       if(isOpen){
         this.frmCreate.controls.executor_unit.setValue(this.authStore.userAuthenticated()?.executor_unit)
-        this.jobTitleService.list().subscribe({
+        this.JobTitleSirService.listJobTitlesSir().subscribe({
           next : (entities) => {
             this.jobTitles.set(entities)
           },

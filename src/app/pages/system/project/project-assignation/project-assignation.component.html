@@ -1,0 +1,48 @@
+<p-dialog
+header="ASIGNAR RESPONSABLES"
+[modal]="true"
+[breakpoints]="{'960px': '100vw'}"
+[style]="{ width: '960px'}"
+[draggable]="false"
+[resizable]="false"
+[visible]="projectStore.projectToAssign() != null"
+(visibleChange)="projectStore.closeModalAssignation()">
+    <form class="grid row-gap-2" [formGroup]="frmCreate">
+
+      <div class="col-12">
+
+
+        <p-pickList
+        [target]="userAssigned"
+          [source]="userNotAssigned"
+          sourceHeader="Usuarios"
+          targetHeader="Usuarios asignados"
+          [dragdrop]="true"
+          [responsive]="true"
+          [sourceStyle]="{ height: '30rem' }"
+          [targetStyle]="{ height: '30rem' }"
+          filterBy="name"
+          sourceFilterPlaceholder="Buscar por dni,nombre"
+          targetFilterPlaceholder="Buscar por dni,nombre"
+          (onMoveToSource)="onMoveToNotAssigned($event)"
+          (onMoveToTarget)="onMoveToAssigned($event)"
+          (onMoveAllToSource)="onMoveAllToNotAssigned($event)"
+          (onMoveAllToTarget)="onMoveAllToAssigned($event)"
+          breakpoint="1400px">
+          <ng-template let-item #item pTemplate="item">
+            <div class="flex flex-wrap p-2 align-items-center">
+
+              {{ item.name}}
+            </div>
+        </ng-template>
+      </p-pickList>
+
+
+      </div>
+
+        <!-- <div class="col-12 flex justify-content-end">
+            <p-button label="GUARDAR ASIGNACIONES" severity="success" iconPos="left" icon="pi pi-save" (onClick)="handleSubmit()"/>
+        </div> -->
+    </form>
+
+</p-dialog>

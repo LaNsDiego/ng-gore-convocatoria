@@ -20,8 +20,8 @@ header="EDITAR PERFIL"
           [showClear]="true"
           filterBy="name"
           filter="true"
-          [virtualScroll]="true"
-          [virtualScrollItemSize]="38"
+          [virtualScroll]="jobTitles().length > 38 ? true : false"
+          [virtualScrollItemSize]="jobTitles().length > 38 ? 38 : jobTitles().length"
           placeholder="Seleccione un cargo *">
           </p-dropdown>
           <small class="text-sm text-pink-600" style="height: 1em;">

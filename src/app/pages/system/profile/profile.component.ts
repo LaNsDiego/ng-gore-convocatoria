@@ -88,7 +88,7 @@ export class ProfileComponent {
   handleSubmit(){
     this.frmEdit.markAllAsTouched();
     const user = this.user()
-    if(this.frmEdit.status === 'VALID' && user ){
+    if(this.frmEdit.status === 'VALID' && user ) {
       this.frmEdit.get('user_id')?.setValue(user.id)
       const values = this.frmEdit.getRawValue()
       this.userService.updatePassword(values as DtoUserEditPassword)
@@ -99,7 +99,7 @@ export class ProfileComponent {
           this.frmEdit.reset()
         },
         error : (error) => {
-          console.log({error})
+          console.error(error)
         }
 
       })

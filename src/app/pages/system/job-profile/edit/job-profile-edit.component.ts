@@ -1,5 +1,6 @@
 import { JobTitleEntity } from '@/app/domain/entities/JobTitleEntity';
 import { JobProfileService } from '@/app/services/job-profile.service';
+import { JobTitleSirService } from '@/app/services/job-title-sir.service';
 import { JobTitleService } from '@/app/services/job-title.service';
 import { HelperStore } from '@/app/stores/HelpersStore';
 import { JobProfileStore } from '@/app/stores/JobProfileStore';
@@ -31,7 +32,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 export class JobProfileEditComponent {
   jobProfileStore = inject(JobProfileStore)
   jobProfileService = inject(JobProfileService)
-  jobTitleService = inject(JobTitleService)
+  JobTitleSirService = inject(JobTitleSirService)
   helperStore = inject(HelperStore)
   formBuilder = inject(FormBuilder)
 
@@ -51,7 +52,7 @@ export class JobProfileEditComponent {
   })
 
   constructor() {
-    this.jobTitleService.list().subscribe({
+    this.JobTitleSirService.listJobTitlesSir().subscribe({
       next : (entities) => {
         this.jobTitles.set(entities)
       },

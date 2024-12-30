@@ -118,11 +118,11 @@
           </td>
           <td class="">
             <div class="inline-flex column-gap-1">
-              <!-- <p-button pTooltip="Editar"
+              <p-button pTooltip="Asignaciones"
                 tooltipPosition="top"
-                (click)="projectStore.openModalEdit(row)"
-                severity="info" [rounded]="true" [text]="true"
-                icon="pi pi-pencil" styleClass="mr-1"/> -->
+                (click)="projectStore.openModalAssignation(row)"
+                severity="help" [rounded]="true" [text]="true"
+                icon="pi pi-users" styleClass="mr-1"/>
 
               <p-button pTooltip="Editar requerimientos"
                 tooltipPosition="top"
@@ -160,3 +160,4 @@
 <app-project-create/>
 <app-project-view/>
 <app-job-profile-assigned/>
+<app-assignation/>

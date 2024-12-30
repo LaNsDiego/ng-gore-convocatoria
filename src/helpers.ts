@@ -134,7 +134,7 @@ export function hasAccess(canAccess : AccessKey , roleHasPermissions : DtoRespon
     let hasAccess = textAvailablePermissions.some(p => {
       // console.log(`${p} === ${canAccess.toLocaleLowerCase()}` );
       if(p.toLocaleLowerCase() == canAccess.toLocaleLowerCase()){
-        // console.warn(`${p} === ${canAccess.toLocaleLowerCase()}` );
+        // console.warn(`${p} === ${canAccess.toLocaleLowerCase()} TIENES PERMISO` );
 
       }
       return p.toLocaleLowerCase() == canAccess.toLocaleLowerCase()
