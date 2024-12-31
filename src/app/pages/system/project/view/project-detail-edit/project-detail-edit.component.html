@@ -5,6 +5,7 @@
     [style]="{ width: '500px', maxHeight: '100%'}"
     [draggable]="false"
     [resizable]="false"
+    [closeOnEscape]="false"
     [visible]="projectStore.projectDetailToEdit() != null"
     (visibleChange)="projectStore.setProjectDetailToEdit(null);frmCreate.reset()">
     <form class="grid pt-2" [formGroup]="frmCreate">

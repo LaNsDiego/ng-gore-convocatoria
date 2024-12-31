@@ -28,6 +28,8 @@ import { DtoResponseTreeRoleHasPermissionList } from '@/app/domain/dtos/permissi
 import { AuthStore } from '@/app/stores/AuthStore';
 import { ConfirmationService } from 'primeng/api';
 import { ProjectDetailEditComponent } from './project-detail-edit/project-detail-edit.component';
+import { PeriodRequirementDetailStore } from '@/app/stores/PeriodRequirementDetail';
+import { PeriodReqDetailComponent } from './period-req-detail/period-req-detail.component';
 
 @Component({
   selector: 'app-project-view',
@@ -51,6 +53,7 @@ import { ProjectDetailEditComponent } from './project-detail-edit/project-detail
     CheckboxModule,
     ProjectDetailRrhhComponent,
     ProjectDetailEditComponent,
+    PeriodReqDetailComponent
   ],
   templateUrl: './project-view.component.html',
   styleUrl: './project-view.component.css'
@@ -63,6 +66,7 @@ export class ProjectViewComponent {
   authStore = inject(AuthStore)
   formBuilder = inject(FormBuilder)
   personService = inject(PersonService)
+  periodRequirementDetailStore = inject(PeriodRequirementDetailStore)
 
   jobProfileAssignedStore = inject(JobProfileAssignedStore)
   confirmationService = inject(ConfirmationService)
@@ -111,12 +115,6 @@ export class ProjectViewComponent {
         this.projectStore.doListByProjectRequirement(entityToView.id)
 
         this.frmCreate.controls.balance_amount_as_specified.setValue(this.projectStore.balanceAmountAsSpecific())
-        // this.realSaldoFromProject({
-        //   functional_sequence : entityToView.functional_sequence,
-        //   specific_expenditure : entityToView.specific_expenditure
-        // })
-        // console.log("change");
-
         this.projectStore.doRealSaldo()
         this.frmEmployeeRequirement.controls.dni.valueChanges.subscribe((value) => {
           if(value.length === 8){
@@ -220,6 +218,10 @@ export class ProjectViewComponent {
 
   onEdit(row : any){
     this.projectStore.setProjectDetailToEdit(row)
+  }
+
+  onClickPeriods(row : any){
+    this.periodRequirementDetailStore.openModalCrud(row)
   }
 
 

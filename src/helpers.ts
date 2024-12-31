@@ -328,3 +328,14 @@ export function pointsAndNumericValidator(): ValidatorFn {
     return null;
   };
 }
+
+
+export function getMonthNameFromDDMMYY(fechaString : string) {
+   // Convertir el string a objeto Date
+   const [dia, mes, anio] = fechaString.split('/').map(Number);
+   const fecha = new Date(anio, mes - 1, dia);
+
+   // Obtener solo el nombre del mes
+
+   return new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(fecha).toUpperCase();
+}

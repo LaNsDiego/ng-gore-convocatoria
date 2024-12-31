@@ -5,6 +5,7 @@ header="REQUERIMIENTO DE PERSONAL"
 [style]="{ width: '960px'}"
 [draggable]="false"
 [resizable]="false"
+[closeOnEscape]="false"
 [visible]="projectStore.entityToView() != null"
 (visibleChange)="onCloseModalCreate($event)">
 
@@ -229,132 +230,157 @@ header="REQUERIMIENTO DE PERSONAL"
                 ></p-button>
             </div>
 
-            <div class="col-12 px-0">
 
-
-              <p-table
-                #dt1
-                [value]="projectStore.requirementDetails()"
-                selectionMode="single"
-                dataKey="id"
-                [tableStyle]="{ 'min-width': '50rem' }"
-                [rows]="15"
-
-                currentPageReportTemplate="Visualizar {first} a {last} de {totalRecords} registros"
-                [globalFilterFields]="['id','name']"
-                styleClass="p-datatable-gridlines p-datatable-sm">
-
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th style="width: 35px;">
-                            N°
-                        </th>
-                        <th pSortableColumn="name" style="width: 85px;">
-                            DNI
-                        </th>
-                        <th pSortableColumn="name" style="width: 240px;">
-                            APELLIDOS Y NOMBRES
-                        </th>
-                        <th pSortableColumn="name" style="width:160px">
-                            MONTO REQUERIDO
-                        </th>
-                        <th pSortableColumn="name" style="width:140px">
-                            MONTO RRHH
-                        </th>
-                        <th pSortableColumn="name" style="width:240px">
-                            OBSERVACIÓN
-                        </th>
-                        <th style="width: 60px;">REMOVER</th>
-                    </tr>
-                </ng-template>
-
-                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
-                    <tr>
-                        <td class="text-sm">
-                            {{rowIndex + 1}}
-                        </td>
-                        <td class="text-sm">
-                            {{ row.dni }}
-                        </td>
-                        <td class="text-sm">
-                            {{ row.father_last_name }} {{ row.mother_last_name }}, {{ row.first_name }}
-                        </td>
-                        <td class="text-sm">
-                          <span>S/. {{ row.amount_required }}</span>
-                        </td>
-                        <td >
-                          <div class="flex justify-content-between align-items-center text-sm">
-                            <span>S/. {{ row.amount_rrhh }}</span>
-                          @if(hasAccessKey('requerimiento-personal-editar',authStore.permissions())){
-                            <p-button pTooltip="Editar"
-                            size="small"
-                            tooltipPosition="top"
-                            (click)="projectStore.setProjectDetailToEditRRHH(row)"
-                            severity="info" [rounded]="true" [text]="true"
-                            [disabled]="isFreeze()"
-                            icon="pi pi-pencil"/>
-                          }
-                          </div>
-                        </td>
-
-                        <td>
-                          <div class="flex justify-content-between align-items-center">
-
-                            <span>{{ row.observation?.length > 0 ? row.observation : ' --'   }}</span>
-                            @if(hasAccessKey('requerimiento-personal-editar',authStore.permissions())){
-                              <p-button pTooltip="Editar MONTO"
-                              size="small"
-                              [disabled]="isFreeze()"
-                              tooltipPosition="top"
-                              (click)="projectStore.setProjectDetailToEditRRHH(row)"
-                              severity="info" [rounded]="true" [text]="true"
-                              icon="pi pi-pencil"/>
-                            }
-                          </div>
-                        </td>
-                        <td class="" pFrozenColumn>
-                          <div class="inline-flex">
-
-
-                            <p-button pTooltip="Editar"
-                            tooltipPosition="top"
-                            (click)="onEdit(row)"
-                            [disabled]="isFreeze()"
-                            severity="contrast" [rounded]="true" [text]="true"
-                            icon="pi pi-pencil" styleClass="mr-1"/>
-
-                            <p-button pTooltip="Cargo"
-                            tooltipPosition="top"
-                            [disabled]="isFreeze()"
-                            (click)="onClickJobTitle(row)"
-                            severity="info" [rounded]="true" [text]="true"
-                            icon="pi pi-user" styleClass="mr-1"/>
-
-                            <p-button pTooltip="Eliminar"
-                              tooltipPosition="top"
-                              [disabled]="isFreeze()"
-                              (click)="onDelete(row)"
-                              severity="danger" [rounded]="true" [text]="true"
-                              icon="pi pi-trash" styleClass="mr-1"/>
-                          </div>
-                      </td>
-                    </tr>
-                </ng-template>
-
-                <ng-template pTemplate="emptymessage">
-                    <tr>
-                        <td colspan="7" class="text-center bg-yellow-100">No hay requerimientos de personal.</td>
-                    </tr>
-                </ng-template>
-
-              </p-table>
-
-            </div>
 
           </div>
         </p-fieldset>
 
 
+        <div class="col-12 px-0">
+
+
+          <p-table
+            #dt1
+            [value]="projectStore.requirementDetails()"
+            selectionMode="single"
+            dataKey="id"
+            [tableStyle]="{ 'min-width': '50rem' }"
+            [rows]="15"
+
+            currentPageReportTemplate="Visualizar {first} a {last} de {totalRecords} registros"
+            [globalFilterFields]="['id','name']"
+            styleClass="p-datatable-gridlines p-datatable-sm">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 35px;">
+                        N°
+                    </th>
+                    <!-- <th pSortableColumn="name" style="width: 85px;">
+                        DNI
+                    </th> -->
+                    <th pSortableColumn="name" style="width: 240px;">
+                        APELLIDOS Y NOMBRES
+                    </th>
+                    <th pSortableColumn="name" style="width:160px">
+                        MONTO REQUERIDO
+                    </th>
+                    <th pSortableColumn="name" style="width:140px">
+                        MONTO RRHH
+                    </th>
+                    <th pSortableColumn="essalud" style="width:140px">
+                        ESSALUD(9%)
+                    </th>
+                    <th pSortableColumn="essalud" style="width:140px">
+                        Total Remuneración
+                    </th>
+                    <th pSortableColumn="name" style="width:240px">
+                        OBSERVACIÓN
+                    </th>
+                    <th style="width: 60px;" class="text-center">ACCIONES</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                <tr>
+                    <td class="text-sm">
+                        {{rowIndex + 1}}
+                    </td>
+                    <td class="text-sm">
+                        <span class="text-sm">{{ row.father_last_name }} {{ row.mother_last_name }}, {{ row.first_name }} <br/></span>
+                        <span class="text-sm text-gray-600">{{ row.dni }}</span>
+
+                    </td>
+                    <td class="text-center">
+                      <span class="text-sm w-full text-center">S/. {{ row.amount_required }}</span>
+                    </td>
+                    <td >
+                      <div class="flex justify-content-between align-items-center text-sm">
+                        <span class="text-sm">S/. {{ row.amount_rrhh }}</span>
+                      @if(hasAccessKey('requerimiento-personal-editar',authStore.permissions())){
+                        <p-button pTooltip="Editar monto RRHH"
+                        size="small"
+                        tooltipPosition="top"
+                        (click)="projectStore.setProjectDetailToEditRRHH(row)"
+                        severity="info" [rounded]="true" [text]="true"
+                        [disabled]="isFreeze()"
+                        icon="pi pi-pencil"/>
+                      }
+                      </div>
+                    </td>
+                    <td class="text-sm text-center">
+                      <span class="text-sm text-center">S/. {{ row.essalud }}</span>
+                    </td>
+                    <td class="text-sm">
+                      <span class="text-sm">S/. {{ row.total_amount }}</span>
+                    </td>
+
+                    <td>
+                      <div class="flex justify-content-between align-items-center">
+
+                        <span>{{ row.observation?.length > 0 ? row.observation : ' --'   }}</span>
+                        @if(hasAccessKey('requerimiento-personal-editar',authStore.permissions())){
+                          <p-button pTooltip="Editar observacion"
+                          size="small"
+                          [disabled]="isFreeze()"
+                          tooltipPosition="top"
+                          (click)="projectStore.setProjectDetailToEditRRHH(row)"
+                          severity="info" [rounded]="true" [text]="true"
+                          icon="pi pi-pencil"/>
+                        }
+                      </div>
+                    </td>
+                    <td class="" pFrozenColumn>
+                      <div class="inline-flex">
+
+
+                        <p-button pTooltip="Editar"
+                        tooltipPosition="top"
+                        (click)="onEdit(row)"
+                        [disabled]="isFreeze()"
+                        severity="contrast" [rounded]="true" [text]="true"
+                        icon="pi pi-pencil" styleClass="mr-1"/>
+
+                        <p-button pTooltip="Cargo"
+                        tooltipPosition="top"
+                        [disabled]="isFreeze()"
+                        (click)="onClickJobTitle(row)"
+                        severity="info" [rounded]="true" [text]="true"
+                        icon="pi pi-user" styleClass="mr-1"/>
+
+                        <p-button pTooltip="Periodos"
+                        tooltipPosition="top"
+                        (click)="onClickPeriods(row)"
+                        severity="contrast" [rounded]="true" [text]="true"
+                        icon="pi pi-calendar" styleClass="mr-1"/>
+
+                        <!-- <p-button pTooltip="Cargo"
+                        tooltipPosition="top"
+                        [disabled]="isFreeze()"
+                        (click)="onClickJobTitle(row)"
+                        severity="info" [rounded]="true" [text]="true"
+                        icon="pi pi-user" styleClass="mr-1"/> -->
+
+                        <p-button pTooltip="Eliminar"
+                          tooltipPosition="top"
+                          [disabled]="isFreeze()"
+                          (click)="onDelete(row)"
+                          severity="danger" [rounded]="true" [text]="true"
+                          icon="pi pi-trash" styleClass="mr-1"/>
+                      </div>
+                  </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center bg-yellow-100">No hay requerimientos de personal.</td>
+                </tr>
+            </ng-template>
+
+          </p-table>
+
+        </div>
 
         <!-- <div class="col-12 flex justify-content-end">
             <p-button label="GUARDAR REQUIRIMIENTOS" severity="success" iconPos="left" icon="pi pi-save" (onClick)="handleSubmit()"
@@ -368,3 +394,4 @@ header="REQUERIMIENTO DE PERSONAL"
 
 <app-project-detail-rrhh [saldo]="saldo()" />
 <app-project-detail-edit [saldo]="saldo()"/>
+<app-period-req-detail/>
