@@ -67,6 +67,7 @@ export class ProjectViewComponent {
   formBuilder = inject(FormBuilder)
   personService = inject(PersonService)
   periodRequirementDetailStore = inject(PeriodRequirementDetailStore)
+  jobtitlesRequirementDetailStore = inject(PeriodRequirementDetailStore)
 
   jobProfileAssignedStore = inject(JobProfileAssignedStore)
   confirmationService = inject(ConfirmationService)
@@ -168,6 +169,7 @@ export class ProjectViewComponent {
   onCloseModalCreate(a : boolean){
     this.projectStore.closeModalView()
     this.frmCreate.reset()
+    this.frmEmployeeRequirement.reset()
   }
 
   addEmployeeRequirement(){
@@ -221,6 +223,10 @@ export class ProjectViewComponent {
   }
 
   onClickPeriods(row : any){
+    this.periodRequirementDetailStore.openModalCrud(row)
+  }
+
+  onClickJobTitlePeriod(row : any){
     this.periodRequirementDetailStore.openModalCrud(row)
   }
 
