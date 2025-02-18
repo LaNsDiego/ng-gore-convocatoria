@@ -339,3 +339,15 @@ export function getMonthNameFromDDMMYY(fechaString : string) {
 
    return new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(fecha).toUpperCase();
 }
+
+
+export function groupBy(objects : any[], key : string){
+  const groupedData = objects.reduce((acc, item) => {
+    if (!acc[item[key]]) {
+        acc[item[key]] = [];
+    }
+    acc[item[key]].push(item);
+    return acc;
+  }, {})
+  return groupedData
+}

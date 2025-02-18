@@ -1,0 +1,128 @@
+<p-dialog
+  header="REQUERIMIENTO DE PERSONAL"
+  [modal]="true"
+  [breakpoints]="{'960px': '100vw'}"
+  [style]="{ width: '960px'}"
+  [draggable]="false"
+  [resizable]="false"
+  [closeOnEscape]="false"
+  [visible]="projectStore.entityToView() != null"
+  (visibleChange)="onCloseModalCreate($event)">
+
+<div class="w-100 py-3 flex justify-content-between">
+  <div>
+      <p-breadcrumb  styleClass="max-w-full pt-2" [style]="{background:'transparent', padding:'0px'}" [model]="items">
+          <ng-template pTemplate="item" let-item>
+              <ng-container *ngIf="item.route; else elseBlock">
+                  <a [routerLink]="item.route" class="p-menuitem-link bg-transparent p-0">
+                      <span class="text-primary">{{ item.label }}</span>
+                  </a>
+              </ng-container>
+              <ng-template #elseBlock>
+                  <a [href]="item.url "class="p-menuitem-link bg-transparent">
+                      <span class="text-color">{{ item.label }}</span>
+                  </a>
+              </ng-template>
+          </ng-template>
+      </p-breadcrumb>
+      <h1 class="text-2xl pt-3">PLANILLA</h1>
+  </div>
+  <div>
+      <div class="flex justify-content-end py-3">
+          <p-button label="NUEVO" icon="pi pi-save" size="large" (click)="onOpenModalCreateJobTitleService()"/>
+        </div>
+  </div>
+</div>
+
+<p-card>
+  <ng-template pTemplate="header">
+      <div class="grid px-3 pt-3">
+          <div class="col-12 text-right">
+              <p-iconField iconPosition="left">
+                  <p-inputIcon>
+                      <i class="pi pi-search"></i>
+                  </p-inputIcon>
+                  <input
+                      pInputText
+                      class="w-auto"
+                      type="text"
+                      (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
+                      placeholder="Buscador" />
+              </p-iconField>
+          </div>
+      </div>
+  </ng-template>
+
+  <p-table
+  #dt1
+  [value]="jobtitleStore.entities()"
+  selectionMode="single"
+  dataKey="id"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [rows]="5"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[5, 10, 25, 50]"
+  [paginator]="true"
+  currentPageReportTemplate="Visualizar {first} a {last} de {totalRecords} registros"
+  [globalFilterFields]="['id','name']"
+  styleClass="p-datatable-gridlines">
+
+  <ng-template pTemplate="header">
+      <tr>
+          <th>
+              N°
+          </th>
+          <th pSortableColumn="name" style="width:25%">
+              CÓDIGO <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="name" style="width:25%">
+              NOMBRE <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="name" style="width:25%">
+              ESTADO <p-sortIcon field="name" />
+          </th>
+          <th>ACCIONES</th>
+      </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="row">
+          <td>
+              {{rowIndex + 1}}
+          </td>
+          <td>
+              {{ row.code }}
+          </td>
+          <td>
+              {{ row.name }}
+          </td>
+          <td>
+              {{ row.status }}
+          </td>
+
+          <td class="text-center">
+            <div class="inline-flex column-gap-1">
+              <p-button pTooltip="Editar"
+                tooltipPosition="top"
+                (click)="onEdit(row)"
+                severity="info" [rounded]="true" [text]="true"
+                icon="pi pi-pencil" styleClass="mr-1"/>
+              <p-button pTooltip="Eliminar"
+                tooltipPosition="top"
+                (click)="onDelete(row)"
+                severity="danger" [rounded]="true" [text]="true"
+                icon="pi pi-trash" styleClass="mr-1"/>
+            </div>
+        </td>
+      </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+      <tr>
+          <td colspan="7">No se encontraron registros.</td>
+      </tr>
+  </ng-template>
+  </p-table>
+</p-card>
+
+</p-dialog>

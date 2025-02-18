@@ -1,60 +1,67 @@
 <p-dialog
     header="VERIFICAR PERFIL DE PUESTO"
     [modal]="true"
-    [breakpoints]="{'575px': '100vw'}"
-    [style]="{ width: '500px', maxHeight: '100%'}"
+    [breakpoints]="{'975px': '100vw'}"
+    [style]="{ width: '975px', maxHeight: '100%'}"
     [draggable]="false"
     [resizable]="false"
     [visible]="jobProfileAssignedStore.projectReqDetailToCreate() != null"
     (visibleChange)="jobProfileAssignedStore.closeModalCreate();frmCreate.reset()">
-    <form class="grid pt-2" [formGroup]="frmCreate">
-        <div class="col-12">
-            <p-dropdown
-            formControlName="jobtitle_id"
-            styleClass="w-full"
-            appendTo="body"
-            [options]="jobtitles()"
-            optionLabel="nombre"
-            optionValue="id_cargo"
-            [filter]="true"
-            filterBy="nombre"
-            [virtualScroll]="jobtitles().length > 38 ? true : false"
-            [virtualScrollItemSize]="jobtitles().length > 38 ? 38 : jobtitles().length"
-            [showClear]="true"
 
-            placeholder="Seleccione un cargo *">
-                <ng-template let-row pTemplate="item">
+
+    <p-fieldset legend="Datos de cargo y tipo trabajador">
+
+      <form class="grid" [formGroup]="frmCreate">
+
+          <div class="col-12">
+              <p-dropdown
+              formControlName="jobtitle_id"
+              styleClass="w-full"
+              appendTo="body"
+              [options]="jobtitles()"
+              optionLabel="nombre"
+              optionValue="id_cargo"
+              [filter]="true"
+              filterBy="nombre"
+              [virtualScroll]="jobtitles().length > 38 ? true : false"
+              [virtualScrollItemSize]="jobtitles().length > 38 ? 38 : jobtitles().length"
+              [showClear]="true"
+
+              placeholder="Seleccione un cargo *">
+                  <ng-template let-row pTemplate="item">
+                      {{ row.nombre }}
+                  </ng-template>
+                  <ng-template let-row pTemplate="selectedItem">
                     {{ row.nombre }}
                 </ng-template>
-                <ng-template let-row pTemplate="selectedItem">
-                  {{ row.nombre }}
-              </ng-template>
-            </p-dropdown>
-            <small class="text-xs text-pink-600" style="height: 1em;">
-              {{ getErrorMessageOnCreate('jobtitle_id') }}
-            </small>
-        </div>
-        <div class="col-12 flex column-gap-3 row-gap-2 flex-wrap">
-          @if(frmCreate.controls.jobtitle_id.value != null){
-            @for(profile of profiles() ; track profile.id){
-              <div class="flex align-items-center column-gap-3" (click)="onClickProfileOption(profile)">
-                <input
-                type="checkbox"
-                [checked]="selectedOptions().includes(profile.id)"
-              >
-              <label class="p-checkbox-label ng-star-inserted">{{  profile.request_name }}</label>
+              </p-dropdown>
+              <small class="text-xs text-pink-600" style="height: 1em;">
+                {{ getErrorMessageOnCreate('jobtitle_id') }}
+              </small>
+          </div>
+          <div class="col-12 flex column-gap-3 row-gap-2 flex-wrap">
+            @if(frmCreate.controls.jobtitle_id.value != null){
+              @for(profile of profiles() ; track profile.id){
+                <div class="flex align-items-center column-gap-3" (click)="onClickProfileOption(profile)">
+                  <input
+                  type="checkbox"
+                  [checked]="selectedOptions().includes(profile.id)"
+                >
+                <label class="p-checkbox-label ng-star-inserted">{{  profile.request_name }}</label>
 
-              </div>
+                </div>
+              }
             }
-          }
-          @else {
-            <p class="w-full p-4 border-round text-center bg-yellow-100 text-indigo-600">Selecione un cargo</p>
-          }
-        </div>
-        <div class="col-12 flex justify-content-end">
+            @else {
+              <p class="w-full p-4 border-round text-center bg-yellow-100 text-indigo-600">Selecione un cargo</p>
+            }
+          </div>
+
+
+          <div class="col-12 flex justify-content-end">
             <button
                 type="submit"
-                class="p-button p-button-outlined-primary p-button-lg"
+                class="p-button p-component p-button-success p-button-lg"
                 (click)="handleSubmit()"
                 [disabled]="isSubmitting()">
                 <span class="w-full text-center">
@@ -69,5 +76,198 @@
                 </span>
             </button>
         </div>
-    </form>
+
+      </form>
+
+    </p-fieldset>
+
+    <p-fieldset legend="Planilla">
+
+      <div class="grid" [formGroup]="frmPlanilla">
+
+        <div class="col-12">
+          <p-selectButton
+          [options]="optionsCivil"
+          formControlName="is_civil"
+          optionLabel="label"
+          optionValue="value" />
+        </div>
+
+        @if(this.frmPlanilla.controls.is_civil.value != 'ADMINISTRATIVO'){
+
+
+
+          <div class="col-12 overflow-x-auto">
+
+            <table class="p-datatable-table p-datatable-gridlines p-datatable-sm w-100">
+
+            <thead class="p-datatable-thead">
+              <tr>
+                <th class="text-sm" style="min-width:90px">
+                    Dias laborados
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    Domingos
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    Feriados
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    Hijos
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    REM Basica
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    BUC
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    VAC. TRUNC.
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    CTS
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    MOVILIDAD
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    ESCOLARIDAD
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    JORNAL DOMINICAL
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    GRATIFICACION
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    BONO L29714
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    PAGO FERIADO
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    TOTAL REM
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    REM ASEG.
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    ESSALUD
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    ESSALUD + VIDA
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    SCTR
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    CRECER SEG.
+                </th>
+                <th class="text-sm" style="min-width:90px">
+                    TOTAL APORTES
+                </th>
+                <th class="text-sm">TOTAL</th>
+            </tr>
+            </thead>
+            <tbody class="p-datatable-tbody">
+              @for (item of [1]; track $index) {
+                <tr>
+                  <td>
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="dias_laborados" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="cantidad_domingos" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="cantidad_feriados" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="hijos" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="remuneracion_basica" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="buc" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="vacaciones_truncas" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="cts" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="movilidad" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="escolaridad" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="jornal_dominical" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="gratificacion" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="bonificacion_l29714" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="pago_feriado" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="total_remuneracion" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="remuneracion_asegur" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="essalud" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="essalud_vida" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="sctr" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="crecer_seg" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="total_aportes" style="width:50%; min-width: 60px;">
+                  </td>
+                  <td >
+                      <input class="w-full px-2 py-1 my-0 mx-0" formControlName="total" style="width:50%; min-width: 60px;">
+                  </td>
+                </tr>
+              }
+            </tbody>
+
+            </table>
+
+          </div>
+
+        }
+
+        <div class="col-12 flex justify-content-end">
+          <button
+              type="submit"
+              class="p-button p-component p-button-outlined-primary p-button-lg"
+              (click)="handleSubmitPlanilla()">
+              <span class="w-full text-center">
+                  <ng-container *ngIf="isSubmitting(); else saveIcon">
+                      <i class="pi pi-spinner pi-spin mr-2"></i>
+                      ENVIANDO...
+                  </ng-container>
+                  <ng-template #saveIcon>
+                      <i class="pi pi-save"></i>
+                      GUARDAR PLANILLA
+                  </ng-template>
+              </span>
+          </button>
+        </div>
+
+      </div>
+
+    </p-fieldset>
+
 </p-dialog>

@@ -14,6 +14,10 @@ export class PeriodRequirementDetailService {
     return this.http.get<any[]>(`${environment.apiUrl}/period-requirement-details/list-by-req-detail/${project_requirement_id}`)
   }
 
+  findByReqDetailId(project_requirement_id : number){
+    return this.http.get<any>(`${environment.apiUrl}/period-requirement-details/find-by-req-detail/${project_requirement_id}`)
+  }
+
   store(values : any){
     return this.http.post<{message:string}>(`${environment.apiUrl}/period-requirement-details/store`,values)
   }

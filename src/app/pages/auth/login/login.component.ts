@@ -54,7 +54,7 @@ export class LoginComponent {
     this.frmLogin = this.fb.group({
       executing_unit : new FormControl<string|null>(null,[Validators.required]),
       dni : new FormControl('00000000',[Validators.required]),
-      password : new FormControl('12345678',[Validators.required]),
+      password : new FormControl('123123123',[Validators.required]),
     })
     // this.toolbarStore.restoreStorageIsDark()
     this.executingUnitService.list().subscribe({
