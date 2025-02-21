@@ -6,7 +6,7 @@
     [draggable]="false"
     [resizable]="false"
     [visible]="jobProfileAssignedStore.projectReqDetailToCreate() != null"
-    (visibleChange)="jobProfileAssignedStore.closeModalCreate();frmCreate.reset()">
+    (visibleChange)="onCloseModalCreate()">
 
 
     <p-fieldset legend="Datos de cargo y tipo trabajador">
