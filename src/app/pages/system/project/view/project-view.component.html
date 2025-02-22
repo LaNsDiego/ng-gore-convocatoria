@@ -259,22 +259,25 @@ header="REQUERIMIENTO DE PERSONAL"
                     <!-- <th pSortableColumn="name" style="width: 85px;">
                         DNI
                     </th> -->
-                    <th pSortableColumn="name" style="width: 240px;">
+                    <th class="text-sm" pSortableColumn="name" style="min-width: 240px;">
                         APELLIDOS Y NOMBRES
                     </th>
-                    <th pSortableColumn="name" style="width:160px">
+                    <th class="text-sm" pSortableColumn="name" style="width: 240px;">
+                        TIPO TRABAJADOR
+                    </th>
+                    <th class="text-sm" pSortableColumn="name" style="width:160px">
                         MONTO REQUERIDO
                     </th>
-                    <th pSortableColumn="name" style="width:140px">
+                    <th class="text-sm" pSortableColumn="name" style="width:140px">
                         MONTO RRHH
                     </th>
-                    <th pSortableColumn="essalud" style="width:140px">
+                    <th class="text-sm" pSortableColumn="essalud" style="width:140px">
                         ESSALUD(9%)
                     </th>
-                    <th pSortableColumn="essalud" style="width:140px">
+                    <th class="text-sm" pSortableColumn="essalud" style="width:140px">
                         Total Remuneración
                     </th>
-                    <th pSortableColumn="name" style="width:240px">
+                    <th class="text-sm" pSortableColumn="name" style="width:240px">
                         OBSERVACIÓN
                     </th>
                     <th style="width: 60px;" class="text-center">ACCIONES</th>
@@ -286,9 +289,14 @@ header="REQUERIMIENTO DE PERSONAL"
                     <td class="text-sm">
                         {{rowIndex + 1}}
                     </td>
-                    <td class="text-sm">
+                    <td class="text-sm py-0">
                         <span class="text-sm">{{ row.father_last_name }} {{ row.mother_last_name }}, {{ row.first_name }} <br/></span>
                         <span class="text-sm text-gray-600">{{ row.dni }}</span>
+
+                    </td>
+                    <td class="text-sm">
+
+                        <span class="text-sm">{{ row.planilla && row.planilla.is_civil ? row.planilla.is_civil : row.job_title ? row.job_title.nombre : '--'  }}</span>
 
                     </td>
                     <td class="text-center">

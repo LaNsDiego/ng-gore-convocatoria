@@ -164,9 +164,9 @@ export class JobProfileAssignedComponent {
                 if( response != null && Object.keys(response).length == 0){
                   this.helperStore.showToast({severity : 'error', summary : 'Error', detail : 'No tiene periodo asignado. Por favor registre un periodo'})
                 }else{
-                  // console.log("PERIODO",response);
+                  console.log("DIAS SIN D",Number(response.days_in_period) - Number(response.sundays_count));
 
-                  this.frmPlanilla.controls.dias_laborados.setValue(response.days_in_period)
+                  this.frmPlanilla.controls.dias_laborados.setValue(Number(response.days_in_period) - Number(response.sundays_count))
                   this.frmPlanilla.controls.cantidad_domingos.setValue(response.sundays_count)
                   this.frmPlanilla.controls.cantidad_domingos.disable()
                   // console.log("DOMINGOS",this.frmPlanilla.controls.cantidad_domingos);
@@ -185,6 +185,7 @@ export class JobProfileAssignedComponent {
 
       const projectRequiementDetail = this.jobProfileAssignedStore.projectReqDetailToCreate()
       if(projectRequiementDetail){
+        console.log("PROJECT REQ DETAIL",projectRequiementDetail);
 
         this.frmCreate.controls.project_requirement_detail_id.setValue(projectRequiementDetail.id)
         this.frmPlanilla.controls.project_requirement_detail_id.setValue(projectRequiementDetail.id)
